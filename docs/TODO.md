@@ -3,6 +3,7 @@
 ## 🎯 FASE 0: PREPARACIÓN Y DISCOVERY
 
 ### Reuniones con Cliente
+
 - [ ] Presentar propuesta al cliente
 - [ ] Agendar sesión de Q&A sobre la propuesta
 - [ ] Sesión de validación de flujo de trabajo actual
@@ -15,6 +16,7 @@
 - [ ] Definir métricas de éxito del proyecto
 
 ### Documentación Inicial
+
 - [ ] Crear documento de requerimientos funcionales
 - [ ] Mapear flujo completo de pedidos (diagrama)
 - [ ] Documentar estructura de datos necesaria
@@ -27,16 +29,18 @@
 ## 🏗️ FASE 1: SETUP DEL PROYECTO
 
 ### Configuración de Entorno
-- [ ] Inicializar proyecto Next.js 14+ (App Router)
-- [ ] Configurar TypeScript
-- [ ] Instalar y configurar Tailwind CSS
-- [ ] Configurar ESLint y Prettier
-- [ ] Configurar Git y crear repositorio
-- [ ] Crear estructura de carpetas modular
-- [ ] Configurar variables de entorno (.env)
-- [ ] Crear README.md con instrucciones de setup
+
+- [x] Inicializar proyecto Next.js 14+ (App Router)
+- [x] Configurar TypeScript
+- [x] Instalar y configurar Tailwind CSS
+- [x] Configurar ESLint y Prettier
+- [x] Configurar Git y crear repositorio
+- [x] Crear estructura de carpetas modular
+- [x] Configurar variables de entorno (.env)
+- [x] Crear README.md con instrucciones de setup
 
 ### Firebase Setup
+
 - [ ] Crear proyecto en Firebase Console
 - [ ] Habilitar Firestore Database
 - [ ] Habilitar Firebase Authentication
@@ -49,19 +53,21 @@
 - [ ] Crear archivo de configuración de Firebase (`lib/firebase/config.ts`)
 
 ### Dependencias Base
-- [ ] Instalar Firebase SDK (`firebase`)
-- [ ] Instalar Zustand (estado global)
-- [ ] Instalar React Hook Form
-- [ ] Instalar date-fns (manejo de fechas)
-- [ ] Instalar lucide-react (iconos)
-- [ ] Instalar sonner o react-hot-toast (notificaciones UI)
-- [ ] Configurar file de tipos TypeScript globales
+
+- [x] Instalar Firebase SDK (`firebase`)
+- [x] Instalar Zustand (estado global)
+- [x] Instalar React Hook Form
+- [x] Instalar date-fns (manejo de fechas)
+- [x] Instalar lucide-react (iconos)
+- [x] Instalar sonner o react-hot-toast (notificaciones UI)
+- [x] Configurar file de tipos TypeScript globales
 
 ---
 
 ## 🗄️ FASE 2: ARQUITECTURA DE DATOS
 
 ### Modelo de Datos Firestore
+
 - [ ] Diseñar colección `usuarios`
 - [ ] Diseñar colección `pedidos`
 - [ ] Diseñar colección `productos`
@@ -74,6 +80,7 @@
 - [ ] Crear scripts de seed data para testing
 
 ### Servicios de Datos (CRUD)
+
 - [ ] Crear `pedidosService.ts` (CRUD pedidos)
 - [ ] Crear `productosService.ts` (CRUD productos)
 - [ ] Crear `usuariosService.ts` (CRUD usuarios)
@@ -90,6 +97,7 @@
 ## 🔐 FASE 3: AUTENTICACIÓN Y ROLES
 
 ### Sistema de Auth
+
 - [ ] Implementar login con email/password (Firebase Auth)
 - [ ] Crear página de login (`/login`)
 - [ ] Crear componente `ProtectedRoute`
@@ -102,6 +110,7 @@
 - [ ] Crear flujo de cambio de contraseña
 
 ### Sistema de Roles
+
 - [ ] Definir enum de roles (`cajera`, `cocina`, `repartidor`, `encargado`, `admin`)
 - [ ] Implementar HOC `withRole` para protección por rol
 - [ ] Crear hook `useRole` para verificar permisos
@@ -116,6 +125,7 @@
 ## 📱 FASE 4: MÓDULO DE PEDIDOS (CAJERA)
 
 ### UI - Captura de Pedidos
+
 - [ ] Crear página `/pedidos/nuevo`
 - [ ] Crear componente `FormPedido`
 - [ ] Implementar selector de canal (WhatsApp/Mostrador/Uber/Didi/Llamada/Web)
@@ -132,6 +142,7 @@
 - [ ] Implementar feedback visual de éxito/error
 
 ### Lógica de Negocio
+
 - [ ] Implementar hook `usePedidos`
 - [ ] Función para crear pedido (`createPedido`)
 - [ ] Función para editar pedido (`updatePedido`)
@@ -144,6 +155,7 @@
 - [ ] Trigger notificación a cocina al crear pedido
 
 ### Lista de Pedidos
+
 - [ ] Crear página `/pedidos`
 - [ ] Componente `ListaPedidos` con filtros
 - [ ] Filtro por estado (pendiente/en_preparacion/listo/en_reparto/entregado)
@@ -158,6 +170,7 @@
 - [ ] Vista en tiempo real (onSnapshot)
 
 ### Bitácora Digital
+
 - [ ] Crear componente `BitacoraDigital`
 - [ ] Vista tabla con todos los pedidos del día
 - [ ] Columnas: ID, Monto, Cambio, Colonia, Envío, Repartidor, Método de pago
@@ -170,6 +183,7 @@
 ## 👨‍🍳 FASE 5: MÓDULO DE COCINA
 
 ### Tablero de Comandas
+
 - [ ] Crear página `/cocina`
 - [ ] Componente `TableroComandas` (tipo Kanban)
 - [ ] Columnas: Pendiente | En Preparación | Listo
@@ -184,6 +198,7 @@
 - [ ] Modo pantalla completa (sin distracciones)
 
 ### Lógica de Cocina
+
 - [ ] Implementar hook `useCocina`
 - [ ] Función `marcarEnPreparacion(pedidoId)`
 - [ ] Función `marcarListo(pedidoId)`
@@ -197,6 +212,7 @@
 ## 🛵 FASE 6: MÓDULO DE REPARTO
 
 ### Panel de Repartidores
+
 - [ ] Crear página `/reparto`
 - [ ] Componente `PedidosListosParaRecoger`
 - [ ] Componente `MisPedidosAsignados`
@@ -210,6 +226,7 @@
 - [ ] Historial de mis entregas del día
 
 ### Lógica de Reparto
+
 - [ ] Implementar hook `useReparto`
 - [ ] Función `asignarRepartidor(pedidoId, repartidorId)`
 - [ ] Función `confirmarRecogida(pedidoId)`
@@ -222,6 +239,7 @@
 - [ ] Registrar timestamp de entrega
 
 ### Gestión de Liquidaciones
+
 - [ ] Componente `LiquidacionesPendientes`
 - [ ] Vista de pedidos por liquidar del repartidor
 - [ ] Botón "Liquidar" (repartidor o cajera)
@@ -234,6 +252,7 @@
 ## 💰 FASE 7: MÓDULO DE CORTE DE CAJA
 
 ### Corte de Turno
+
 - [ ] Crear página `/caja/corte`
 - [ ] Componente `CorteCaja`
 - [ ] Selector de turno (matutino/vespertino)
@@ -250,6 +269,7 @@
 - [ ] Exportar PDF del corte
 
 ### Reportes y Métricas
+
 - [ ] Crear página `/reportes`
 - [ ] Componente `ResumenDiario`
 - [ ] Gráfica de ventas por hora
@@ -266,6 +286,7 @@
 ## 🔔 FASE 8: SISTEMA DE NOTIFICACIONES
 
 ### Firebase Cloud Messaging (FCM)
+
 - [ ] Configurar FCM en Firebase Console
 - [ ] Agregar `firebase-messaging-sw.js` (service worker)
 - [ ] Crear `lib/notifications/fcm.ts`
@@ -276,6 +297,7 @@
 - [ ] Implementar `sendNotificationToRole(role, message)`
 
 ### Notificaciones UI (In-App)
+
 - [ ] Crear componente `NotificationCenter`
 - [ ] Implementar store de notificaciones (Zustand)
 - [ ] Componente `NotificationBadge` (contador)
@@ -286,6 +308,7 @@
 - [ ] Integrar sonidos de alerta (`/public/sounds/`)
 
 ### Triggers de Notificaciones
+
 - [ ] Notificar cocina cuando nuevo pedido
 - [ ] Notificar repartidores cuando pedido listo
 - [ ] Notificar cajera cuando pedido entregado
@@ -297,6 +320,7 @@
 ## 🌐 FASE 9: FORMULARIO WEB PÚBLICO
 
 ### Formulario de Pedidos Público
+
 - [ ] Crear página `/pedir` (sin autenticación)
 - [ ] Diseño atractivo y responsive
 - [ ] Mostrar catálogo de productos con fotos
@@ -311,6 +335,7 @@
 - [ ] Enviar notificación a cajera automáticamente
 
 ### Catálogo de Productos
+
 - [ ] Crear página `/catalogo` (pública)
 - [ ] Vista de productos disponibles
 - [ ] Filtros por categoría
@@ -323,6 +348,7 @@
 ## 🎨 FASE 10: UI/UX Y COMPONENTES COMPARTIDOS
 
 ### Layout y Navegación
+
 - [ ] Crear componente `Sidebar` con navegación por rol
 - [ ] Crear componente `Navbar` con info de usuario
 - [ ] Crear componente `Footer`
@@ -331,6 +357,7 @@
 - [ ] Tema dark/light (opcional)
 
 ### Componentes Compartidos
+
 - [ ] Componente `Button` (variantes)
 - [ ] Componente `Input` con validación
 - [ ] Componente `Select` estilizado
@@ -345,6 +372,7 @@
 - [ ] Componente `Tabs`
 
 ### Utilidades
+
 - [ ] Crear `formatters.ts` (formatear moneda, fecha, etc.)
 - [ ] Crear `validators.ts` (validar email, teléfono, etc.)
 - [ ] Crear `constants.ts` (estados, roles, canales, etc.)
@@ -357,6 +385,7 @@
 ## 🔒 FASE 11: SEGURIDAD Y PERMISOS
 
 ### Firestore Rules
+
 - [ ] Escribir reglas de seguridad por colección
 - [ ] Permitir lectura/escritura según rol
 - [ ] Validar estructura de documentos
@@ -367,12 +396,14 @@
 - [ ] Testear reglas con Firebase Emulator
 
 ### Storage Rules
+
 - [ ] Escribir reglas de seguridad para Storage
 - [ ] Permitir subida solo a usuarios autenticados
 - [ ] Validar tipo y tamaño de archivos
 - [ ] Organizar archivos por carpetas
 
 ### Validación y Sanitización
+
 - [ ] Validar todos los inputs en frontend
 - [ ] Sanitizar datos antes de guardar
 - [ ] Implementar rate limiting (opcional)
@@ -384,6 +415,7 @@
 ## 🧪 FASE 12: TESTING
 
 ### Unit Tests
+
 - [ ] Configurar Jest + React Testing Library
 - [ ] Tests para servicios de datos
 - [ ] Tests para hooks custom
@@ -391,12 +423,14 @@
 - [ ] Tests para componentes de formulario
 
 ### Integration Tests
+
 - [ ] Tests de flujo de creación de pedido
 - [ ] Tests de flujo de cocina
 - [ ] Tests de flujo de reparto
 - [ ] Tests de autenticación
 
 ### E2E Tests (Opcional)
+
 - [ ] Configurar Playwright o Cypress
 - [ ] Test de flujo completo de pedido
 - [ ] Test de corte de caja
@@ -406,6 +440,7 @@
 ## 📚 FASE 13: DOCUMENTACIÓN
 
 ### Documentación Técnica
+
 - [ ] Documentar arquitectura del proyecto
 - [ ] Documentar estructura de Firestore
 - [ ] Documentar API de servicios
@@ -415,6 +450,7 @@
 - [ ] Crear diagrama de flujo de datos
 
 ### Manual de Usuario
+
 - [ ] Manual para cajeras
 - [ ] Manual para cocina
 - [ ] Manual para repartidores
@@ -428,6 +464,7 @@
 ## 🚀 FASE 14: DEPLOYMENT Y LANZAMIENTO
 
 ### Preparación para Producción
+
 - [ ] Configurar variables de entorno de producción
 - [ ] Optimizar bundle size
 - [ ] Configurar SEO básico
@@ -439,6 +476,7 @@
 - [ ] Crear favicon y PWA manifest
 
 ### Deployment
+
 - [ ] Configurar Firebase Hosting
 - [ ] Configurar dominio personalizado
 - [ ] Deploy a staging environment
@@ -447,6 +485,7 @@
 - [ ] Configurar CI/CD (GitHub Actions, opcional)
 
 ### Lanzamiento
+
 - [ ] Capacitación inicial al equipo
 - [ ] Período de prueba con datos reales
 - [ ] Operación paralela (nuevo sistema + manual)
@@ -460,6 +499,7 @@
 ## 🔧 FASE 15: MANTENIMIENTO Y MEJORAS
 
 ### Post-Lanzamiento
+
 - [ ] Monitoreo de errores y bugs
 - [ ] Recopilar feedback de usuarios
 - [ ] Priorizar mejoras según feedback
@@ -468,6 +508,7 @@
 - [ ] Backups automáticos de Firestore
 
 ### Mejoras Futuras (Backlog)
+
 - [ ] Modo offline completo
 - [ ] App móvil nativa (React Native)
 - [ ] Integración con WhatsApp Business API
@@ -485,6 +526,7 @@
 ## 📊 MÉTRICAS DE ÉXITO
 
 ### KPIs a Medir
+
 - [ ] Tiempo promedio de captura de pedido
 - [ ] Tiempo promedio de preparación en cocina
 - [ ] Tiempo promedio de entrega
@@ -499,6 +541,7 @@
 ## 🎯 QUICK WINS (Tareas de Alto Impacto)
 
 ### Prioridad MÁXIMA para MVP
+
 1. [ ] Setup del proyecto + Firebase
 2. [ ] Autenticación básica
 3. [ ] Modelo de datos en Firestore
@@ -513,6 +556,7 @@
 ## 📝 NOTAS Y CONSIDERACIONES
 
 ### Decisiones Pendientes
+
 - [ ] Definir si se usará Loyverse en paralelo o se reemplaza
 - [ ] Decidir si se implementa geolocalización para reparto
 - [ ] Definir política de retención de datos (¿cuánto historial guardar?)
@@ -520,6 +564,7 @@
 - [ ] Evaluar necesidad de backup adicional externo a Firebase
 
 ### Riesgos Identificados
+
 - [ ] Resistencia al cambio por parte del equipo
 - [ ] Curva de aprendizaje del nuevo sistema
 - [ ] Posibles problemas de conectividad en ubicación física

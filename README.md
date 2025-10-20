@@ -21,12 +21,14 @@ Sistema integral de gestión para Old Texas BBQ. Automatiza el proceso completo 
 ## 📦 Instalación
 
 1. Clonar el repositorio
+
 ```bash
 git clone <repository-url>
 cd old-texas-bbq-crm
 ```
 
 2. Instalar dependencias
+
 ```bash
 npm install
 ```
@@ -42,6 +44,7 @@ cp .env.example .env.local
 Editar `.env.local` con tus credenciales de Firebase Console.
 
 4. Iniciar el servidor de desarrollo
+
 ```bash
 npm run dev
 ```
@@ -79,13 +82,13 @@ Abrir [http://localhost:3000](http://localhost:3000) en el navegador.
 
 ## 🔐 Roles del Sistema
 
-| Rol | Descripción |
-|-----|-------------|
-| **Admin** | Acceso total al sistema |
-| **Encargado** | Supervisión y reportes |
-| **Cajera** | Gestión de pedidos y caja |
-| **Cocina** | Vista de comandas |
-| **Repartidor** | Pedidos asignados |
+| Rol            | Descripción               |
+| -------------- | ------------------------- |
+| **Admin**      | Acceso total al sistema   |
+| **Encargado**  | Supervisión y reportes    |
+| **Cajera**     | Gestión de pedidos y caja |
+| **Cocina**     | Vista de comandas         |
+| **Repartidor** | Pedidos asignados         |
 
 ## 📝 Scripts Disponibles
 

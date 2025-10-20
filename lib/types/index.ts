@@ -2,16 +2,22 @@
 
 export type Role = 'cajera' | 'cocina' | 'repartidor' | 'encargado' | 'admin';
 
-export type Canal = 'whatsapp' | 'llamada' | 'mostrador' | 'uber' | 'didi' | 'web';
+export type Canal =
+  | 'whatsapp'
+  | 'llamada'
+  | 'mostrador'
+  | 'uber'
+  | 'didi'
+  | 'web';
 
 export type MetodoPago = 'efectivo' | 'tarjeta' | 'transferencia' | 'app';
 
-export type EstadoPedido = 
-  | 'recibido' 
-  | 'en_preparacion' 
-  | 'listo' 
-  | 'en_reparto' 
-  | 'entregado' 
+export type EstadoPedido =
+  | 'recibido'
+  | 'en_preparacion'
+  | 'listo'
+  | 'en_reparto'
+  | 'entregado'
   | 'cancelado';
 
 export type EstadoReparto = 'pendiente' | 'en_camino' | 'entregado';
