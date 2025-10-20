@@ -7,6 +7,7 @@ Se ha creado una configuración completa de Claude Code para mantener un context
 ## 📁 Archivos Creados
 
 ### `.claude/project_rules.md`
+
 **El archivo más importante** - Contiene todas las reglas de desarrollo del proyecto:
 
 - 🏗️ Stack tecnológico y arquitectura
@@ -22,11 +23,13 @@ Se ha creado una configuración completa de Claude Code para mantener un context
 ### `.claude/commands/` - Comandos Personalizados
 
 #### 1. `/new-component`
+
 Crea un componente React siguiendo las convenciones del proyecto.
 
 **Uso**: Simplemente escribe `/new-component` en el chat.
 
 **Hace**:
+
 - Pregunta el tipo de componente (UI, form, layout)
 - Genera estructura correcta en la carpeta adecuada
 - Incluye TypeScript estricto
@@ -34,62 +37,74 @@ Crea un componente React siguiendo las convenciones del proyecto.
 - Configura como Server/Client component según necesidad
 
 #### 2. `/new-service`
+
 Genera un servicio para interactuar con Firebase Firestore.
 
 **Uso**: `/new-service`
 
 **Hace**:
+
 - Crea operaciones CRUD completas
 - Incluye manejo de errores
 - Tipado TypeScript estricto
 - Logging para debugging
 
 #### 3. `/new-store`
+
 Crea un store de Zustand para estado global.
 
 **Uso**: `/new-store`
 
 **Hace**:
+
 - Genera estructura con immer middleware
 - Incluye persist si es necesario
 - Acciones tipadas
 - Estados de loading y error
 
 #### 4. `/new-page`
+
 Crea una página en Next.js con App Router.
 
 **Uso**: `/new-page`
 
 **Hace**:
+
 - Genera estructura de página
 - Configura metadata
 - Maneja rutas dinámicas
 - Incluye loading/error states
 
 #### 5. `/review-context`
+
 Revisa el estado actual del proyecto.
 
 **Uso**: Escribe `/review-context` al iniciar una sesión de desarrollo.
 
 **Hace**:
+
 - Lee CONTEXT.md y TODO.md
 - Muestra tareas completadas y pendientes
 - Identifica próxima tarea
 - Da recomendaciones
 
 #### 6. `/check-quality`
+
 Ejecuta revisión de calidad del código.
 
 **Uso**: `/check-quality` antes de hacer commits.
 
 **Hace**:
+
 - Ejecuta ESLint
 - Verifica build
 - Revisa cumplimiento de reglas
 - Genera reporte de mejoras
 
 ### `.claudeignore`
+
 Optimiza el contexto ignorando archivos innecesarios:
+
 - `node_modules/`
 - `.next/`
 - Build artifacts
@@ -111,12 +126,11 @@ Esto te dará un resumen completo del estado del proyecto y qué hacer a continu
 Simplemente menciona lo que necesitas y Claude Code usará automáticamente las reglas y comandos apropiados:
 
 **Ejemplos**:
+
 - "Necesito crear un componente para mostrar tarjetas de pedidos"
   → Claude usará `/new-component` internamente
-  
 - "Voy a crear el servicio de pedidos para Firebase"
   → Claude usará `/new-service`
-  
 - "Necesito un store para gestionar el estado de autenticación"
   → Claude usará `/new-store`
 
@@ -131,6 +145,7 @@ Esto verificará que todo cumpla con los estándares del proyecto.
 ## 📋 Archivos Clave a Conocer
 
 ### Para Claude Code (contexto automático):
+
 1. **`.claude/project_rules.md`** - Reglas del proyecto
 2. **`docs/CONTEXT.md`** - Contexto completo del negocio
 3. **`docs/TODO.md`** - Tareas y progreso
@@ -138,6 +153,7 @@ Esto verificará que todo cumpla con los estándares del proyecto.
 5. **`lib/constants/index.ts`** - Constantes
 
 ### Para Ti (documentación):
+
 1. **`README.md`** - Documentación general
 2. **`NEXT_STEPS.md`** - Próximos pasos (Firebase setup)
 3. **`.claude/README.md`** - Guía de comandos Claude
@@ -145,15 +161,18 @@ Esto verificará que todo cumpla con los estándares del proyecto.
 ## 🎯 Workflow Recomendado
 
 ### 1️⃣ Iniciar Sesión
+
 ```
 /review-context
 ```
 
 ### 2️⃣ Desarrollar
+
 - Usa los comandos `/new-*` según necesites
 - O simplemente describe lo que necesitas hacer
 
 ### 3️⃣ Antes de Commit
+
 ```
 /check-quality
 npm run format
@@ -164,6 +183,7 @@ git commit -m "..."
 ## 💡 Tips Importantes
 
 ### ✅ Haz Esto:
+
 - Usa `/review-context` al inicio de cada sesión
 - Consulta `project_rules.md` cuando tengas dudas
 - Usa los comandos personalizados para generación de código
@@ -171,6 +191,7 @@ git commit -m "..."
 - Ejecuta `/check-quality` regularmente
 
 ### ❌ Evita Esto:
+
 - Crear código sin consultar las reglas
 - Ignorar las convenciones de nomenclatura
 - Omitir tipado TypeScript
@@ -188,6 +209,7 @@ Claude Code ahora tiene acceso automático a:
 5. **Tipos del sistema** → `lib/types/index.ts`
 
 Esto significa que Claude mantendrá **consistencia** en:
+
 - Estilo de código
 - Nomenclatura
 - Arquitectura
