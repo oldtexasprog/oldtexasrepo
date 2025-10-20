@@ -1,248 +1,362 @@
 # 🤖 Configuración de Claude Code
 
-Esta carpeta contiene las reglas y comandos personalizados para mantener un contexto óptimo durante el desarrollo con Claude Code.
+Sistema inteligente de desarrollo para **Old Texas BBQ - CRM** con Agent Manager (Jarvis) y agentes especializados.
+
+## 🌟 NUEVO: Jarvis - Tu Asistente Inteligente
+
+### 🤖 ¿Qué es Jarvis?
+
+**Jarvis** es tu Agent Manager - un orquestador inteligente tipo Iron Man que:
+
+- 🎧 Escucha tus necesidades en **lenguaje natural**
+- 🧠 Analiza y decide qué agentes necesitas
+- 📋 Crea planes de ejecución optimizados
+- 🚀 Coordina múltiples agentes automáticamente
+- ✅ Verifica calidad y sugiere mejoras
+- 💡 Propone próximos pasos proactivamente
+
+### ⚡ Uso de Jarvis
+
+```bash
+/jarvis
+```
+
+Luego simplemente describe lo que necesitas:
+
+```
+"Necesito la pantalla de pedidos para cocina"
+"Optimiza el rendimiento de la lista de productos"
+"Los pedidos no se guardan, ayuda"
+"¿Cómo está el proyecto?"
+```
+
+**Jarvis coordina todo automáticamente** 🎯
+
+---
 
 ## 📁 Contenido
 
 ### `project_rules.md`
 
-**Reglas principales del proyecto** - Lee este archivo ANTES de desarrollar cualquier funcionalidad.
+Reglas principales del proyecto - Jarvis las sigue automáticamente.
 
-Incluye:
+### 🤖 **Agent Manager** (`agents/agent-manager.md`)
 
-- 🏗️ Stack tecnológico
-- 📁 Estructura de carpetas
-- 🎯 Principios de desarrollo
-- 📝 Nomenclatura y convenciones
-- 🚫 Prácticas a evitar
-- 🔐 Roles y permisos
+**Jarvis** - Tu orquestador central
 
-## 🤖 Agentes Especializados (`agents/`)
+**Comando**: `/jarvis`
+
+**Capacidades**:
+
+- Coordinación multi-agente inteligente
+- Análisis de contexto completo del proyecto
+- Planificación automática de tareas
+- Ejecución secuencial u paralela según necesidad
+- Detección y resolución de problemas
+- Sugerencias proactivas de mejoras
+
+**Cuándo usar**:
+
+- ✨ **Siempre** - Es tu punto de entrada principal
+- Features complejos que requieren múltiples agentes
+- Necesitas orientación sobre qué hacer
+- Quieres desarrollo con mínimo esfuerzo
+
+---
+
+## 🤖 Agentes Especializados
+
+Jarvis coordina estos agentes automáticamente, pero puedes invocarlos directamente:
 
 ### 🎨 UI/UX Designer
 
-**Archivo**: `agents/ui-ux-designer.md`
-
-Experto en diseño de interfaces usando **shadcn/ui** y Tailwind CSS.
-
-**Especialidad**:
-
-- Sistema de diseño BBQ personalizado
-- Componentes accesibles (WCAG 2.1 AA)
-- Mobile-first responsive design
-- Patrones UI específicos por rol
-- Uso eficiente de shadcn/ui (menos tokens)
-
+**Archivo**: `agents/ui-ux-designer.md`  
 **Comando**: `/design-ui`
+
+**Experto en**: shadcn/ui, Tailwind CSS, diseño accesible, patrones UI por rol
 
 ### ⚛️ Frontend Developer
 
-**Archivo**: `agents/frontend-developer.md`
-
-Experto en **Next.js 14+, React, TypeScript** y Zustand.
-
-**Especialidad**:
-
-- Server/Client Components
-- Formularios con React Hook Form + Zod
-- Estado global con Zustand + immer
-- Custom hooks y optimizaciones
-- Integración con shadcn/ui
-
+**Archivo**: `agents/frontend-developer.md`  
 **Comando**: `/build-frontend`
+
+**Experto en**: Next.js 14+, React, TypeScript, Zustand, React Hook Form
 
 ### 🔥 Backend Developer
 
-**Archivo**: `agents/backend-developer.md`
-
-Experto en **Firebase** (Firestore, Auth, Storage, FCM).
-
-**Especialidad**:
-
-- Servicios CRUD completos y tipados
-- Seguridad y encriptación de datos
-- Reglas de seguridad Firestore
-- Optimización de queries e índices
-- Transacciones y batch operations
-
+**Archivo**: `agents/backend-developer.md`  
 **Comando**: `/build-backend`
 
-## 📝 Comandos Disponibles
+**Experto en**: Firebase, Firestore, Auth, Storage, FCM, Security Rules
 
-### 🎨 Comandos de Agentes Especializados
+---
+
+## 📝 Todos los Comandos
+
+### 🤖 **Comando Principal**
+
+#### `/jarvis` ⭐
+
+**Tu asistente inteligente** - Punto de entrada recomendado
+
+Simplemente describe qué necesitas y Jarvis:
+
+1. Analiza tu request
+2. Crea un plan
+3. Coordina los agentes necesarios
+4. Ejecuta todo
+5. Verifica calidad
+6. Sugiere siguiente paso
+
+**Ejemplos**:
+
+```
+/jarvis
+→ "Necesito crear la pantalla de cocina"
+→ "Optimiza la lista de pedidos"
+→ "¿Qué debería hacer ahora?"
+```
+
+### 🎨 Comandos de Agentes
 
 #### `/design-ui`
 
-Activa el **UI/UX Designer** para diseñar interfaces.
-
-- Diseño completo con shadcn/ui
-- Estados: loading, error, success, empty
-- Responsive y accesible
-- Optimizado para tokens
+Activa UI/UX Designer directamente
 
 #### `/build-frontend`
 
-Activa el **Frontend Developer** para implementar lógica de cliente.
-
-- Componentes React con TypeScript
-- Estado global y formularios
-- Integración con servicios
-- Custom hooks
+Activa Frontend Developer directamente
 
 #### `/build-backend`
 
-Activa el **Backend Developer** para servicios Firebase.
-
-- CRUD operations
-- Autenticación y autorización
-- Seguridad y encriptación
-- Queries optimizadas
+Activa Backend Developer directamente
 
 ### 🛠️ Comandos de Generación
 
 #### `/new-component`
 
-Genera un componente React.
-
-- Pregunta tipo (UI, form, layout)
-- TypeScript estricto
-- Tailwind CSS
+Genera componente React
 
 #### `/new-service`
 
-Genera un servicio Firebase.
-
-- CRUD completo
-- Manejo de errores
-- Tipos TypeScript
+Genera servicio Firebase
 
 #### `/new-store`
 
-Genera un store Zustand.
-
-- Immer middleware
-- Persist opcional
-- Acciones tipadas
+Genera store Zustand
 
 #### `/new-page`
 
-Genera una página Next.js.
-
-- App Router
-- Metadata
-- Server/Client component
+Genera página Next.js
 
 ### 🔍 Comandos de Utilidad
 
 #### `/review-context`
 
-Revisa el estado del proyecto.
-
-- Lee CONTEXT.md y TODO.md
-- Muestra tareas completadas y pendientes
-- Próxima acción recomendada
+Revisa estado del proyecto
 
 #### `/check-quality`
 
-Verifica calidad del código.
+Verifica calidad de código
 
-- ESLint
-- Build test
-- Cumplimiento de reglas
+---
 
-## 🚀 Uso de Comandos
+## 🚀 Workflows Recomendados
 
-En tu conversación con Claude Code, simplemente escribe el comando:
-
-```
-/design-ui
-```
-
-O menciona lo que necesitas y Claude usará el agente apropiado automáticamente.
-
-## 📋 Workflow Recomendado
-
-### 1️⃣ Iniciar Sesión
+### 🌟 Workflow con Jarvis (Recomendado)
 
 ```bash
+# 1. Activar Jarvis
+/jarvis
+
+# 2. Describir lo que necesitas
+"Necesito la funcionalidad completa de pedidos para cajera"
+
+# 3. Jarvis hace todo:
+# - Analiza
+# - Planifica
+# - Coordina agentes (UI → Frontend → Backend)
+# - Ejecuta
+# - Verifica
+# - Sugiere siguiente paso
+
+# 4. Continuar desarrollo
+"Ahora necesito la vista de cocina"
+# Jarvis repite el proceso automáticamente
+```
+
+### 📋 Workflow Manual (Granular)
+
+```bash
+# 1. Revisar estado
 /review-context
-```
 
-### 2️⃣ Diseñar UI
-
-```bash
+# 2. Diseñar UI
 /design-ui
-# El UI/UX Designer preguntará detalles y diseñará la interfaz
-```
 
-### 3️⃣ Implementar Frontend
-
-```bash
+# 3. Implementar frontend
 /build-frontend
-# El Frontend Developer implementará la lógica de cliente
-```
 
-### 4️⃣ Crear Backend
-
-```bash
+# 4. Crear backend
 /build-backend
-# El Backend Developer creará los servicios Firebase
-```
 
-### 5️⃣ Verificar Calidad
-
-```bash
+# 5. Verificar calidad
 /check-quality
-npm run format
 ```
 
-## 💡 Ventajas de los Agentes
+---
 
-### 🎯 Especialización
+## 💬 Ejemplos de Uso con Jarvis
 
-Cada agente es experto en su área y sigue las mejores prácticas específicas.
-
-### 📦 Uso Eficiente de Tokens
-
-- **shadcn/ui**: Componentes listos, menos código custom
-- **Patrones probados**: Menos iteraciones
-- **Contexto enfocado**: Solo carga lo necesario
-
-### 🔄 Consistencia
-
-Todos los agentes siguen las mismas reglas del proyecto automáticamente.
-
-### ⚡ Velocidad
-
-Código production-ready desde el primer intento.
-
-## 🎯 Archivos Clave
-
-### Para Agentes (contexto automático):
-
-1. **`.claude/project_rules.md`** - Reglas del proyecto
-2. **`docs/CONTEXT.md`** - Contexto del negocio
-3. **`docs/TODO.md`** - Tareas y progreso
-4. **`lib/types/index.ts`** - Tipos del sistema
-5. **`lib/constants/index.ts`** - Constantes
-
-### Para Ti (documentación):
-
-1. **`README.md`** - Documentación general
-2. **`NEXT_STEPS.md`** - Próximos pasos
-3. **`CLAUDE_SETUP.md`** - Guía de Claude Code
-
-## 🎨 Ejemplo de Uso
+### Ejemplo 1: Feature Completo
 
 ```
-Usuario: Necesito diseñar una tarjeta para mostrar pedidos en la vista de cocina
+Tú: /jarvis
+Tú: Necesito la pantalla de gestión de productos para el encargado
 
-Claude: Voy a activar el UI/UX Designer para diseñar esta interfaz.
+Jarvis:
+📋 Plan de Ejecución:
+1. Diseñar interfaz CRUD (UI/UX Designer)
+2. Implementar componente (Frontend Developer)
+3. Crear servicios (Backend Developer)
+4. Upload de imágenes (Backend Developer)
 
-[Lee .claude/agents/ui-ux-designer.md]
-[Diseña usando shadcn/ui]
-[Proporciona código completo y responsive]
+[Ejecuta automáticamente todo el plan]
+
+✅ Completado!
+💡 Siguiente: ¿Agregar gestión de categorías?
 ```
+
+### Ejemplo 2: Debugging
+
+```
+Tú: /jarvis
+Tú: Los pedidos no se están guardando
+
+Jarvis:
+🔍 Diagnosticando...
+❌ Encontrado: Reglas Firestore bloqueando
+🛠️ Solucionado: Reglas actualizadas
+✅ Pedidos ahora se guardan correctamente
+🧪 ¿Agregar tests para prevenir esto?
+```
+
+### Ejemplo 3: Optimización
+
+```
+Tú: /jarvis
+Tú: La app está lenta
+
+Jarvis:
+🔍 Analizando performance...
+
+Problemas detectados:
+- Re-renders innecesarios
+- Queries sin paginación
+- Sin lazy loading
+
+📋 Aplicando optimizaciones:
+[Frontend] Memoization + virtualization
+[Backend] Paginación + índices
+
+✅ Optimizado!
+📈 Mejora esperada: -70% tiempo de carga
+```
+
+---
+
+## 🎯 Ventajas del Sistema
+
+### Con Jarvis (Agent Manager)
+
+✅ **Desarrollo en lenguaje natural**  
+✅ **Coordinación automática de agentes**  
+✅ **Planes de ejecución optimizados**  
+✅ **Menos esfuerzo, más resultados**  
+✅ **Sugerencias proactivas**  
+✅ **Detección temprana de problemas**
+
+### Con Agentes Especializados
+
+✅ **Código experto por especialidad**  
+✅ **shadcn/ui = Menos tokens**  
+✅ **Consistencia automática**  
+✅ **Production-ready desde inicio**  
+✅ **TypeScript estricto**  
+✅ **Accesibilidad integrada**
+
+---
+
+## 📊 Jerarquía de Comandos
+
+```
+/jarvis (🌟 RECOMENDADO)
+├── Analiza tu request
+├── Decide qué agentes usar
+├── Coordina ejecución
+└── Sugiere siguiente paso
+    │
+    ├── /design-ui (🎨 UI/UX Designer)
+    ├── /build-frontend (⚛️ Frontend Dev)
+    ├── /build-backend (🔥 Backend Dev)
+    │
+    ├── /new-component
+    ├── /new-service
+    ├── /new-store
+    ├── /new-page
+    │
+    ├── /review-context
+    └── /check-quality
+```
+
+---
+
+## 🎓 Guía Rápida
+
+### Nuevo en el Proyecto?
+
+1. **Lee el contexto**:
+
+   ```bash
+   /jarvis
+   "Dame un resumen del proyecto"
+   ```
+
+2. **Comienza a desarrollar**:
+
+   ```bash
+   /jarvis
+   "Necesito [describe tu feature]"
+   ```
+
+3. **Jarvis se encarga del resto** ✨
+
+### Tips Pro
+
+- 🎯 **Sé específico**: "Pantalla de pedidos para cocina con filtros"
+- 🗣️ **Lenguaje natural**: Habla como hablarías con un colega
+- 💡 **Confía en Jarvis**: Él conoce el proyecto completo
+- 📋 **Revisa sugerencias**: Jarvis propone próximos pasos útiles
+
+---
+
+## 📚 Archivos Clave
+
+### Para Agentes (lectura automática)
+
+1. `.claude/project_rules.md` - Reglas del proyecto
+2. `docs/CONTEXT.md` - Contexto del negocio
+3. `docs/TODO.md` - Tareas y progreso
+4. `lib/types/index.ts` - Tipos del sistema
+5. `lib/constants/index.ts` - Constantes
+
+### Para Ti (documentación)
+
+1. `CLAUDE_SETUP.md` - Guía completa de Claude Code
+2. `README.md` - Documentación del proyecto
+3. `NEXT_STEPS.md` - Próximos pasos
+
+---
 
 ## 🛠️ Stack Tecnológico
 
@@ -255,14 +369,22 @@ Claude: Voy a activar el UI/UX Designer para diseñar esta interfaz.
 - **Icons**: Lucide React
 - **Notifications**: Sonner
 
-## 📚 Referencias Rápidas
+---
 
-- [shadcn/ui](https://ui.shadcn.com) - Componentes UI
-- [Next.js 14](https://nextjs.org/docs) - Framework
-- [Firebase](https://firebase.google.com/docs) - Backend
-- [Tailwind CSS](https://tailwindcss.com) - Estilos
-- [Zustand](https://zustand-demo.pmnd.rs) - Estado
+## 🎯 Conclusión
+
+**Usa `/jarvis` como tu punto de entrada principal** 🤖
+
+Jarvis es tu copiloto de desarrollo que:
+
+- Entiende lo que necesitas
+- Coordina todos los recursos
+- Ejecuta con calidad
+- Te mantiene enfocado en lo importante
+
+**Solo describe, Jarvis hace el resto** ✨
 
 ---
 
-**Tip**: Los agentes están optimizados para proporcionar código de alta calidad usando menos tokens gracias a shadcn/ui y patrones establecidos.
+**Sistema optimizado para desarrollo eficiente con mínimo esfuerzo**  
+_Powered by Claude Code Agent System_
