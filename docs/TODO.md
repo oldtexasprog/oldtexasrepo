@@ -28,6 +28,20 @@
 
 ## 🏗️ FASE 1: SETUP DEL PROYECTO
 
+### Configuración de Claude Code
+
+- [x] Crear carpeta `.claude/` con configuraciones
+- [x] Crear `project_rules.md` con reglas del proyecto
+- [x] Crear comandos personalizados útiles
+  - [x] `/new-component` - Crear componentes
+  - [x] `/new-service` - Crear servicios Firebase
+  - [x] `/new-store` - Crear stores Zustand
+  - [x] `/new-page` - Crear páginas Next.js
+  - [x] `/review-context` - Revisar estado del proyecto
+  - [x] `/check-quality` - Verificar calidad de código
+- [x] Crear `.claudeignore` para optimizar contexto
+- [x] Documentar uso en `.claude/README.md`
+
 ### Configuración de Entorno
 
 - [x] Inicializar proyecto Next.js 14+ (App Router)

@@ -40,6 +40,7 @@
 ### 4. Configurar Reglas de Seguridad
 
 #### Firestore Rules (básicas para desarrollo):
+
 ```
 rules_version = '2';
 service cloud.firestore {
@@ -52,6 +53,7 @@ service cloud.firestore {
 ```
 
 #### Storage Rules (básicas):
+
 ```
 rules_version = '2';
 service firebase.storage {
