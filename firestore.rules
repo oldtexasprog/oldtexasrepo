@@ -1,0 +1,271 @@
+rules_version = '2';
+
+/**
+ * Firestore Security Rules - Old Texas BBQ CRM
+ *
+ * Reglas de seguridad por rol:
+ * - admin: Acceso total a todas las colecciones
+ * - encargado: Gestión completa de pedidos, productos, turnos, repartidores
+ * - cajera: Crear y leer pedidos, leer productos y personalizaciones
+ * - cocina: Leer pedidos y actualizar estados de preparación
+ * - repartidor: Leer pedidos asignados y actualizar estados de reparto
+ */
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * Función helper: Verificar si el usuario está autenticado
+     */
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    /**
+     * Función helper: Obtener datos del usuario actual
+     */
+    function getUserData() {
+      return get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data;
+    }
+
+    /**
+     * Función helper: Verificar rol del usuario
+     */
+    function hasRole(role) {
+      return isAuthenticated() && getUserData().rol == role;
+    }
+
+    /**
+     * Función helper: Verificar si el usuario tiene uno de los roles especificados
+     */
+    function hasAnyRole(roles) {
+      return isAuthenticated() && getUserData().rol in roles;
+    }
+
+    /**
+     * Función helper: Verificar si el usuario está activo
+     */
+    function isActive() {
+      return isAuthenticated() && getUserData().activo == true;
+    }
+
+    /**
+     * Función helper: Verificar si es admin
+     */
+    function isAdmin() {
+      return hasRole('admin');
+    }
+
+    /**
+     * Función helper: Verificar si es encargado o admin
+     */
+    function isManager() {
+      return hasAnyRole(['encargado', 'admin']);
+    }
+
+    /**
+     * Colección: usuarios
+     * - Admin: CRUD completo
+     * - Encargado: Crear y leer usuarios (excepto admin)
+     * - Otros roles: Solo leer su propio perfil
+     */
+    match /usuarios/{userId} {
+      // Leer
+      allow read: if isAuthenticated() && (
+        request.auth.uid == userId || // Usuario puede leer su propio perfil
+        isManager() // Managers pueden leer todos los usuarios
+      );
+
+      // Crear
+      allow create: if isManager() && isActive();
+
+      // Actualizar
+      allow update: if isActive() && (
+        (request.auth.uid == userId &&
+         !request.resource.data.diff(resource.data).affectedKeys().hasAny(['rol', 'activo'])) || // Usuario puede actualizar su perfil (excepto rol y activo)
+        isManager() // Managers pueden actualizar cualquier usuario
+      );
+
+      // Eliminar (solo admin puede desactivar, no eliminar)
+      allow delete: if isAdmin();
+    }
+
+    /**
+     * Colección: pedidos
+     * - Admin/Encargado: CRUD completo
+     * - Cajera: Crear y leer
+     * - Cocina: Leer y actualizar estado (solo a 'en_preparacion' y 'listo')
+     * - Repartidor: Leer pedidos asignados y actualizar estado de reparto
+     */
+    match /pedidos/{pedidoId} {
+      // Leer
+      allow read: if isAuthenticated() && isActive() && (
+        isManager() || // Managers ven todos
+        hasRole('cajera') || // Cajeras ven todos
+        hasRole('cocina') || // Cocina ve todos
+        (hasRole('repartidor') && resource.data.reparto.repartidor == request.auth.uid) // Repartidor ve solo los suyos
+      );
+
+      // Crear
+      allow create: if isActive() && (
+        isManager() ||
+        hasRole('cajera')
+      ) && request.resource.data.createdBy == request.auth.uid;
+
+      // Actualizar
+      allow update: if isActive() && (
+        // Managers pueden actualizar todo
+        isManager() ||
+
+        // Cocina puede actualizar solo el estado del pedido a 'en_preparacion' o 'listo'
+        (hasRole('cocina') &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['estado_pedido', 'updatedAt']) &&
+         request.resource.data.estado_pedido in ['en_preparacion', 'listo']) ||
+
+        // Repartidor puede actualizar solo su información de reparto
+        (hasRole('repartidor') &&
+         resource.data.reparto.repartidor == request.auth.uid &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reparto', 'estado_pedido', 'updatedAt']) &&
+         request.resource.data.estado_pedido in ['en_reparto', 'entregado'])
+      );
+
+      // Eliminar (solo admin puede eliminar)
+      allow delete: if isAdmin();
+    }
+
+    /**
+     * Colección: productos
+     * - Admin/Encargado: CRUD completo
+     * - Otros roles: Solo leer
+     */
+    match /productos/{productoId} {
+      allow read: if isAuthenticated() && isActive();
+      allow create: if isManager() && isActive();
+      allow update: if isManager() && isActive();
+      allow delete: if isAdmin();
+    }
+
+    /**
+     * Colección: personalizaciones
+     * - Admin/Encargado: CRUD completo
+     * - Otros roles: Solo leer
+     */
+    match /personalizaciones/{personalizacionId} {
+      allow read: if isAuthenticated() && isActive();
+      allow create: if isManager() && isActive();
+      allow update: if isManager() && isActive();
+      allow delete: if isAdmin();
+    }
+
+    /**
+     * Colección: repartidores
+     * - Admin/Encargado: CRUD completo
+     * - Repartidor: Leer solo su propio documento
+     * - Otros roles: Leer todos (para asignar pedidos)
+     */
+    match /repartidores/{repartidorId} {
+      allow read: if isAuthenticated() && isActive();
+      allow create: if isManager() && isActive();
+      allow update: if isActive() && (
+        isManager() ||
+        (hasRole('repartidor') && repartidorId == request.auth.uid)
+      );
+      allow delete: if isAdmin();
+    }
+
+    /**
+     * Colección: turnos
+     * - Admin/Encargado: CRUD completo
+     * - Cajera: Crear, leer y actualizar su propio turno
+     * - Otros roles: Solo leer
+     */
+    match /turnos/{turnoId} {
+      allow read: if isAuthenticated() && isActive();
+
+      allow create: if isActive() && (
+        isManager() ||
+        (hasRole('cajera') && request.resource.data.cajero == request.auth.uid)
+      );
+
+      allow update: if isActive() && (
+        isManager() ||
+        (hasRole('cajera') && resource.data.cajero == request.auth.uid && !resource.data.cerrado)
+      );
+
+      allow delete: if isAdmin();
+    }
+
+    /**
+     * Colección: configuracion
+     * - Admin: CRUD completo
+     * - Encargado: Leer y actualizar (no crear ni eliminar)
+     * - Otros roles: Solo leer
+     */
+    match /configuracion/{configId} {
+      allow read: if isAuthenticated() && isActive();
+      allow create: if isAdmin();
+      allow update: if isManager() && isActive();
+      allow delete: if isAdmin();
+    }
+
+    /**
+     * Colección: fcmTokens - DEPRECATED
+     * - Usuarios autenticados pueden crear/actualizar/eliminar sus propios tokens
+     * - NOTA: FCM requiere plan Blaze, usar notificaciones in-app en su lugar
+     */
+    match /fcmTokens/{tokenId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+    }
+
+    /**
+     * Colección: notificaciones (Sistema In-App)
+     * - Leer: Usuario debe pertenecer a rol_destino o ser destinatario especifico
+     * - Crear: Solo admin y encargado
+     * - Actualizar: Solo campos 'leida' y 'leida_por'
+     * - Eliminar: Solo admin
+     */
+    match /notificaciones/{notifId} {
+      // Leer si el usuario pertenece al rol destino o es destinatario especifico
+      allow read: if isAuthenticated() && isActive() && (
+        getUserData().rol in resource.data.rol_destino ||
+        resource.data.usuario_destino == request.auth.uid ||
+        isManager()
+      );
+
+      // Crear solo admin y encargado
+      allow create: if isManager() && isActive();
+
+      // Actualizar solo campos leida y leida_por
+      allow update: if isAuthenticated() && isActive() && (
+        (getUserData().rol in resource.data.rol_destino &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['leida', 'leida_por'])) ||
+        isManager()
+      );
+
+      // Eliminar solo admin
+      allow delete: if isAdmin();
+    }
+
+    /**
+     * Colección: notificacion_settings
+     * - Cada usuario puede leer/escribir solo su propia configuracion
+     */
+    match /notificacion_settings/{userId} {
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+      allow write: if isAuthenticated() && request.auth.uid == userId;
+    }
+
+    /**
+     * Regla por defecto: Denegar todo lo no especificado
+     */
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

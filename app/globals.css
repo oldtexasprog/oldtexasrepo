@@ -1,51 +1,97 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 @layer base {
+  /* Tema Light - Ambiente cálido de restaurante BBQ */
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 84.2% 60.2%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 84.2% 60.2%;
-    --radius: 0.5rem;
+    /* Fondo - Crema suave como papel craft */
+    --background: 30 20% 97%;
+    --foreground: 25 30% 15%;
+
+    /* Cards - Blanco cálido con toque beige */
+    --card: 30 15% 99%;
+    --card-foreground: 25 30% 15%;
+
+    /* Popovers */
+    --popover: 30 15% 99%;
+    --popover-foreground: 25 30% 15%;
+
+    /* Primario - Naranja BBQ vibrante */
+    --primary: 20 90% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secundario - Marrón cálido como madera ahumada */
+    --secondary: 25 25% 88%;
+    --secondary-foreground: 25 30% 20%;
+
+    /* Muted - Tonos tierra */
+    --muted: 25 20% 92%;
+    --muted-foreground: 25 15% 45%;
+
+    /* Accent - Rojo BBQ */
+    --accent: 8 85% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Destructive - Rojo intenso */
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Bordes - Marrón muy suave */
+    --border: 25 15% 88%;
+    --input: 25 15% 88%;
+    --ring: 20 90% 55%;
+    --radius: 0.75rem;
+
+    /* Colores custom para BBQ */
+    --smoke: 210 10% 50%;
+    --wood: 30 40% 45%;
+    --fire: 15 100% 50%;
+    --charcoal: 0 0% 20%;
   }
 
+  /* Tema Dark - Ambiente de asador nocturno */
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 84.2% 60.2%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 84.2% 60.2%;
+    /* Fondo - Negro carbón con toque cálido */
+    --background: 25 15% 8%;
+    --foreground: 30 10% 95%;
+
+    /* Cards - Gris oscuro cálido como piedra del asador */
+    --card: 25 12% 12%;
+    --card-foreground: 30 10% 95%;
+
+    /* Popovers */
+    --popover: 25 12% 10%;
+    --popover-foreground: 30 10% 95%;
+
+    /* Primario - Naranja fuego brillante */
+    --primary: 20 95% 58%;
+    --primary-foreground: 25 15% 8%;
+
+    /* Secundario - Marrón oscuro ahumado */
+    --secondary: 25 15% 18%;
+    --secondary-foreground: 30 10% 90%;
+
+    /* Muted - Gris carbón */
+    --muted: 25 10% 20%;
+    --muted-foreground: 30 8% 60%;
+
+    /* Accent - Rojo brasa */
+    --accent: 8 90% 58%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Destructive */
+    --destructive: 0 80% 58%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Bordes - Gris humo */
+    --border: 25 10% 22%;
+    --input: 25 10% 22%;
+    --ring: 20 95% 58%;
+
+    /* Colores custom para BBQ modo dark */
+    --smoke: 210 15% 45%;
+    --wood: 30 35% 35%;
+    --fire: 15 100% 55%;
+    --charcoal: 0 0% 15%;
   }
 }
 
@@ -53,15 +99,101 @@
   * {
     border-color: hsl(var(--border));
   }
+
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Estilos para textura de fondo sutil */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.015;
+    z-index: -1;
+    background-image:
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        hsl(var(--foreground)) 10px,
+        hsl(var(--foreground)) 11px
+      );
+    pointer-events: none;
+  }
+
+  /* Headings con mejor peso para restaurante */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  /* Mejores scrollbars */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+    border-radius: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary) / 0.3);
+    border-radius: 5px;
+    transition: background 0.2s;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.5);
   }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* Gradientes temáticos BBQ */
+  .bg-bbq-gradient {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+  }
+
+  .bg-fire-gradient {
+    background: linear-gradient(to top, hsl(15 100% 45%), hsl(20 100% 55%), hsl(35 100% 50%));
+  }
+
+  .bg-smoke-overlay {
+    background: linear-gradient(to bottom, transparent, hsl(var(--smoke) / 0.1));
+  }
+
+  /* Efectos de brillo cálido */
+  .glow-warm {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+  }
+
+  .glow-fire {
+    box-shadow: 0 0 30px hsl(15 100% 50% / 0.4);
+  }
+
+  /* Textos con estilo BBQ */
+  .text-smoky {
+    color: hsl(var(--smoke));
+    text-shadow: 0 1px 2px hsl(var(--charcoal) / 0.2);
+  }
+
+  .text-fire {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }

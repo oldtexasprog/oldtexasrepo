@@ -1,0 +1,150 @@
+rules_version = '2';
+
+/**
+ * Firebase Storage Security Rules - Old Texas BBQ CRM
+ *
+ * Estructura de carpetas:
+ * - productos/{productoId}/*     - Fotos de productos
+ * - comprobantes/{pedidoId}/*    - Comprobantes de pago
+ * - usuarios/{userId}/*          - Fotos de perfil
+ *
+ * Reglas generales:
+ * - Solo usuarios autenticados pueden subir archivos
+ * - Tamaño máximo: 5MB
+ * - Formatos permitidos: Imágenes (jpg, png, webp) y PDF
+ * - Admin/Encargado: Acceso completo
+ * - Cajera: Subir comprobantes
+ * - Otros roles: Solo leer
+ */
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    /**
+     * Función helper: Verificar si el usuario está autenticado
+     */
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    /**
+     * Función helper: Obtener datos del usuario desde Firestore
+     */
+    function getUserData() {
+      return firestore.get(/databases/(default)/documents/usuarios/$(request.auth.uid)).data;
+    }
+
+    /**
+     * Función helper: Verificar rol del usuario
+     */
+    function hasRole(role) {
+      return isAuthenticated() && getUserData().rol == role;
+    }
+
+    /**
+     * Función helper: Verificar si el usuario tiene uno de los roles especificados
+     */
+    function hasAnyRole(roles) {
+      return isAuthenticated() && getUserData().rol in roles;
+    }
+
+    /**
+     * Función helper: Verificar si es admin
+     */
+    function isAdmin() {
+      return hasRole('admin');
+    }
+
+    /**
+     * Función helper: Verificar si es encargado o admin
+     */
+    function isManager() {
+      return hasAnyRole(['encargado', 'admin']);
+    }
+
+    /**
+     * Función helper: Validar tipo de archivo (imágenes)
+     */
+    function isImage() {
+      return request.resource.contentType.matches('image/(jpeg|jpg|png|webp)');
+    }
+
+    /**
+     * Función helper: Validar tipo de archivo (PDF)
+     */
+    function isPDF() {
+      return request.resource.contentType == 'application/pdf';
+    }
+
+    /**
+     * Función helper: Validar tamaño de archivo (máximo 5MB)
+     */
+    function isValidSize() {
+      return request.resource.size < 5 * 1024 * 1024;
+    }
+
+    /**
+     * Función helper: Validar que el archivo es imagen o PDF de tamaño válido
+     */
+    function isValidFile() {
+      return (isImage() || isPDF()) && isValidSize();
+    }
+
+    /**
+     * Carpeta: productos/{productoId}/*
+     * - Admin/Encargado: Subir, leer, actualizar, eliminar
+     * - Otros roles: Solo leer
+     */
+    match /productos/{productoId}/{filename} {
+      // Leer: Todos los usuarios autenticados
+      allow read: if isAuthenticated();
+
+      // Escribir (crear/actualizar): Solo managers y debe ser imagen válida
+      allow write: if isManager() && isImage() && isValidSize();
+
+      // Eliminar: Solo managers
+      allow delete: if isManager();
+    }
+
+    /**
+     * Carpeta: comprobantes/{pedidoId}/*
+     * - Admin/Encargado: Subir, leer, actualizar, eliminar
+     * - Cajera: Subir y leer sus propios comprobantes
+     * - Otros roles: Leer (para verificar pagos)
+     */
+    match /comprobantes/{pedidoId}/{filename} {
+      // Leer: Todos los usuarios autenticados
+      allow read: if isAuthenticated();
+
+      // Escribir: Managers o cajera (solo archivos válidos)
+      allow write: if (isManager() || hasRole('cajera')) && isValidFile();
+
+      // Eliminar: Solo managers
+      allow delete: if isManager();
+    }
+
+    /**
+     * Carpeta: usuarios/{userId}/*
+     * - Usuario: Subir/actualizar su propia foto de perfil
+     * - Admin/Encargado: Subir/actualizar/eliminar cualquier foto
+     * - Otros roles: Solo leer
+     */
+    match /usuarios/{userId}/{filename} {
+      // Leer: Todos los usuarios autenticados
+      allow read: if isAuthenticated();
+
+      // Escribir: Propio usuario o managers (solo imágenes)
+      allow write: if (request.auth.uid == userId || isManager()) && isImage() && isValidSize();
+
+      // Eliminar: Propio usuario o managers
+      allow delete: if request.auth.uid == userId || isManager();
+    }
+
+    /**
+     * Regla por defecto: Denegar todo lo no especificado
+     */
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

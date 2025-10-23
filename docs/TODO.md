@@ -55,16 +55,32 @@
 
 ### Firebase Setup
 
-- [ ] Crear proyecto en Firebase Console
-- [ ] Habilitar Firestore Database
-- [ ] Habilitar Firebase Authentication
-- [ ] Habilitar Firebase Storage
-- [ ] Habilitar Firebase Hosting
-- [ ] Habilitar Firebase Cloud Messaging (FCM)
-- [ ] Configurar reglas de seguridad de Firestore (básicas)
-- [ ] Configurar reglas de Storage
-- [ ] Conectar Firebase al proyecto Next.js
-- [ ] Crear archivo de configuración de Firebase (`lib/firebase/config.ts`)
+- [x] Crear proyecto en Firebase Console
+- [x] Habilitar Firestore Database
+- [x] Habilitar Firebase Authentication
+- [x] ~~Habilitar Firebase Storage~~ → **Usando Cloudinary (plan gratuito)**
+- [x] ~~Habilitar Firebase Hosting~~ → **Usando Vercel (gratis)**
+- [x] ~~Habilitar Firebase Cloud Messaging (FCM)~~ → **Sistema de notificaciones in-app con Firestore**
+- [x] Configurar reglas de seguridad de Firestore (básicas + notificaciones)
+- [x] ~~Configurar reglas de Storage~~ → **No necesario (usando Cloudinary)**
+- [x] Conectar Firebase al proyecto Next.js
+- [x] Crear archivo de configuración de Firebase (`lib/firebase/config.ts`)
+
+### Alternativas Gratuitas Implementadas ✨
+
+- [x] **Cloudinary Setup** - Alternativa a Firebase Storage
+  - [x] Crear `lib/cloudinary/config.ts`
+  - [x] Crear `lib/cloudinary/upload.ts`
+  - [x] Crear `lib/cloudinary/utils.ts`
+  - [x] Crear `lib/cloudinary/types.ts`
+  - [x] Documentación en `docs/cloudinary/`
+  - [x] Instalar dependencias (`cloudinary`, `next-cloudinary`)
+- [x] **Sistema de Notificaciones In-App** - Alternativa a FCM
+  - [x] Crear `lib/notifications/in-app.ts`
+  - [x] Crear `lib/notifications/useNotifications.ts`
+  - [x] Crear `lib/notifications/types.ts`
+  - [x] Documentación en `docs/notifications/`
+  - [x] Actualizar `firestore.rules` con colección `notificaciones`
 
 ### Dependencias Base
 
