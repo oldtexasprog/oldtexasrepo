@@ -83,6 +83,7 @@ Crea la carpeta `public/sounds/` y agrega archivos de sonido:
 - `notification-urgent.mp3` (sonido urgente)
 
 **Puedes usar sonidos de:**
+
 - [Freesound](https://freesound.org/)
 - [Zapsplat](https://www.zapsplat.com/)
 - Crear los tuyos propios
@@ -412,16 +413,16 @@ export function NotificationCenter({ userId, roles }: { userId: string; roles: s
 
 ## Comparacion con FCM
 
-| Caracteristica | FCM (Firebase Cloud Messaging) | Sistema In-App |
-|----------------|--------------------------------|----------------|
-| Costo | Requiere plan Blaze (pago) | 100% GRATUITO |
-| Push notifications (app cerrada) | Si | No |
-| Notificaciones en tiempo real (app abierta) | Si | Si |
-| Persistencia | Limitada | Total (Firestore) |
-| Historial | No | Si |
-| Contador de no leidas | Manual | Integrado |
-| Filtrado por rol | Manual | Integrado |
-| Setup | Complejo | Simple |
+| Caracteristica                              | FCM (Firebase Cloud Messaging) | Sistema In-App    |
+| ------------------------------------------- | ------------------------------ | ----------------- |
+| Costo                                       | Requiere plan Blaze (pago)     | 100% GRATUITO     |
+| Push notifications (app cerrada)            | Si                             | No                |
+| Notificaciones en tiempo real (app abierta) | Si                             | Si                |
+| Persistencia                                | Limitada                       | Total (Firestore) |
+| Historial                                   | No                             | Si                |
+| Contador de no leidas                       | Manual                         | Integrado         |
+| Filtrado por rol                            | Manual                         | Integrado         |
+| Setup                                       | Complejo                       | Simple            |
 
 ## Limitaciones
 
@@ -432,12 +433,14 @@ export function NotificationCenter({ userId, roles }: { userId: string; roles: s
 ## Mejores Practicas
 
 1. **Limpia notificaciones antiguas regularmente:**
+
    ```typescript
    // Ejecutar semanalmente
    await cleanOldNotifications(30);
    ```
 
 2. **Expira notificaciones temporales:**
+
    ```typescript
    await createNotification({
      // ...
@@ -446,6 +449,7 @@ export function NotificationCenter({ userId, roles }: { userId: string; roles: s
    ```
 
 3. **Filtra notificaciones por rol correctamente:**
+
    ```typescript
    rol_destino: ['cocina', 'encargado'], // Solo estos roles
    ```
@@ -464,6 +468,7 @@ export function NotificationCenter({ userId, roles }: { userId: string; roles: s
 ## Soporte
 
 Para dudas o problemas:
+
 - Revisa la documentacion de Firestore
 - Consulta los ejemplos en `lib/notifications/`
 - Lee la guia de migracion: [MIGRATION_FROM_FIREBASE.md](../MIGRATION_FROM_FIREBASE.md)

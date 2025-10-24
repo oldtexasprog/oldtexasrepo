@@ -65,9 +65,7 @@ export const useNotifications = (
   // Calcular contador de no leidas
   const unreadCount =
     stats?.noLeidas ||
-    notifications.filter(
-      (n) => !n.leida_por?.includes(options.userId)
-    ).length;
+    notifications.filter((n) => !n.leida_por?.includes(options.userId)).length;
 
   /**
    * Manejar nueva notificacion
@@ -83,10 +81,7 @@ export const useNotifications = (
       }
 
       // Reproducir sonido si esta habilitado
-      if (
-        options.autoPlay !== false &&
-        settings?.sound?.enabled !== false
-      ) {
+      if (options.autoPlay !== false && settings?.sound?.enabled !== false) {
         const volume = settings?.sound?.volume ?? 0.5;
         playNotificationSound(notification.prioridad, volume);
       }
@@ -286,10 +281,7 @@ export const useNotifications = (
 /**
  * Hook simplificado para solo obtener el contador de no leidas
  */
-export const useUnreadCount = (
-  userId: string,
-  roles: UserRole[]
-): number => {
+export const useUnreadCount = (userId: string, roles: UserRole[]): number => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {

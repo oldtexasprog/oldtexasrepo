@@ -79,9 +79,7 @@ export default function DevLayout({ children }: { children: React.ReactNode }) {
                 <h1 className="text-lg font-bold text-white">
                   Dev Environment
                 </h1>
-                <p className="text-xs text-slate-400">
-                  Old Texas BBQ - CRM
-                </p>
+                <p className="text-xs text-slate-400">Old Texas BBQ - CRM</p>
               </div>
             </div>
 
@@ -119,9 +117,10 @@ export default function DevLayout({ children }: { children: React.ReactNode }) {
                   href={item.href}
                   className={`
                     flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all
-                    ${isActive
-                      ? 'bg-orange-500/10 text-orange-400 border border-orange-500/20'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+                    ${
+                      isActive
+                        ? 'bg-orange-500/10 text-orange-400 border border-orange-500/20'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
                     }
                   `}
                 >
@@ -135,20 +134,14 @@ export default function DevLayout({ children }: { children: React.ReactNode }) {
       </header>
 
       {/* Content */}
-      <main className="container mx-auto px-4 py-8">
-        {children}
-      </main>
+      <main className="container mx-auto px-4 py-8">{children}</main>
 
       {/* Footer */}
       <footer className="border-t border-slate-800 bg-slate-900/30 mt-auto">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between text-sm text-slate-500">
-            <p>
-              Ambiente de desarrollo protegido
-            </p>
-            <p>
-              Old Texas BBQ - CRM © {new Date().getFullYear()}
-            </p>
+            <p>Ambiente de desarrollo protegido</p>
+            <p>Old Texas BBQ - CRM © {new Date().getFullYear()}</p>
           </div>
         </div>
       </footer>

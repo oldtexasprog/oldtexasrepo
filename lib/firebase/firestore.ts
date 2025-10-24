@@ -197,9 +197,9 @@ export const getPaginatedDocuments = async <T>(
     q = query(q, limit(pageSize + 1));
 
     const querySnapshot = await getDocs(q);
-    const documents = querySnapshot.docs.slice(0, pageSize).map(
-      (doc) => ({ id: doc.id, ...doc.data() }) as T
-    );
+    const documents = querySnapshot.docs
+      .slice(0, pageSize)
+      .map((doc) => ({ id: doc.id, ...doc.data() }) as T);
 
     const hasMore = querySnapshot.docs.length > pageSize;
     const lastVisible = querySnapshot.docs[pageSize - 1] || null;
@@ -580,7 +580,9 @@ export const getDocumentsWhereIn = async <T>(
   try {
     // Firestore limita "in" a 10 valores
     if (values.length > 10) {
-      console.warn('whereIn limitado a 10 valores. Dividiendo en múltiples queries...');
+      console.warn(
+        'whereIn limitado a 10 valores. Dividiendo en múltiples queries...'
+      );
 
       const chunks: any[][] = [];
       for (let i = 0; i < values.length; i += 10) {

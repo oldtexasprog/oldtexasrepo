@@ -43,6 +43,7 @@ Los upload presets permiten subir archivos desde el frontend sin exponer tu API 
 Configura el preset con los siguientes valores:
 
 **Configuracion Basica:**
+
 - **Preset name**: `old-texas-bbq-unsigned` (o el nombre que prefieras)
 - **Signing Mode**: Selecciona **Unsigned** (IMPORTANTE)
 - **Folder**: `old-texas-bbq` (carpeta raiz donde se guardaran los archivos)
@@ -50,9 +51,11 @@ Configura el preset con los siguientes valores:
 **Configuracion Avanzada (opcional pero recomendada):**
 
 En la seccion **Media analysis and AI**:
+
 - Activa **Media analysis**: Para deteccion automatica de contenido
 
 En la seccion **Upload controls**:
+
 - **Allowed formats**: `jpg, png, webp, pdf` (formatos permitidos)
 - **Maximum file size**: `10485760` (10 MB en bytes)
 - **Image transformations**:
@@ -62,6 +65,7 @@ En la seccion **Upload controls**:
   Esto limita el tamano maximo a 2000px y optimiza automaticamente
 
 En la seccion **Access control**:
+
 - **Access mode**: `public` (para que las URLs sean accesibles)
 
 ### 3.3. Guardar el Preset
@@ -82,6 +86,7 @@ NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=old-texas-bbq-unsigned
 ```
 
 **IMPORTANTE:**
+
 - Reemplaza `tu-cloud-name`, `tu-api-key`, `tu-api-secret` con tus valores reales
 - El `CLOUDINARY_API_SECRET` NO debe exponerse en el frontend
 - El `UPLOAD_PRESET` debe ser el nombre que creaste en el paso 3.2
@@ -107,9 +112,13 @@ import { uploadProductImage } from '@/lib/cloudinary';
 
 // Ejemplo de uso
 const handleUpload = async (file: File) => {
-  const result = await uploadProductImage(file, 'producto-id-123', (progress) => {
-    console.log(`Progreso: ${progress}%`);
-  });
+  const result = await uploadProductImage(
+    file,
+    'producto-id-123',
+    (progress) => {
+      console.log(`Progreso: ${progress}%`);
+    }
+  );
 
   if (result.success) {
     console.log('URL de la imagen:', result.secureUrl);
@@ -125,6 +134,7 @@ const handleUpload = async (file: File) => {
 El `CLOUDINARY_API_SECRET` NUNCA debe exponerse en el cliente. Solo usalo en:
 
 1. **API Routes de Next.js** (server-side):
+
    ```typescript
    // app/api/cloudinary/delete/route.ts
    import { v2 as cloudinary } from 'cloudinary';
@@ -149,10 +159,12 @@ El plan gratuito de Cloudinary incluye:
 - **Uploads**: Ilimitados
 
 Si superas estos limites:
+
 - El servicio se detiene hasta el proximo mes
 - Puedes upgradear a un plan de pago
 
 **Recomendaciones:**
+
 - Optimiza imagenes antes de subir
 - Elimina imagenes no utilizadas regularmente
 - Usa transformaciones para servir imagenes del tamano exacto necesario
@@ -172,6 +184,7 @@ Para ver tu uso actual:
 ### Error: "Upload preset not found"
 
 Verifica que:
+
 1. El nombre del preset en `.env.local` coincide exactamente con el creado
 2. El preset esta configurado como **Unsigned**
 3. Recargaste la aplicacion despues de cambiar `.env.local`
@@ -179,6 +192,7 @@ Verifica que:
 ### Error: "Unsigned upload restricted"
 
 El preset debe estar configurado como **Unsigned** en Cloudinary:
+
 1. Ve a Settings > Upload > Upload presets
 2. Edita tu preset
 3. Cambia **Signing Mode** a **Unsigned**
@@ -187,6 +201,7 @@ El preset debe estar configurado como **Unsigned** en Cloudinary:
 ### Error: "Invalid API key"
 
 Verifica que:
+
 1. El `NEXT_PUBLIC_CLOUDINARY_API_KEY` esta correcto
 2. No hay espacios extra en `.env.local`
 3. Reiniciaste el servidor de desarrollo

@@ -1,4 +1,5 @@
 import { queryClient } from './client';
+import type { EstadoPedido } from '@/lib/types';
 
 /**
  * Utilidades para manejar cache de TanStack Query
@@ -8,8 +9,9 @@ import { queryClient } from './client';
  * Prefetch de datos para mejor UX
  */
 export async function prefetchOrders(filters?: {
-  estado?: string;
+  estado?: EstadoPedido;
   fecha?: Date;
+  repartidor?: string;
 }) {
   const { orderKeys } = await import('@/lib/hooks/useOrders');
   const { orderService } = await import('@/lib/services/orderService');

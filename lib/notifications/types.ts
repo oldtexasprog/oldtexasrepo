@@ -25,7 +25,12 @@ export type NotificationType =
 /**
  * Roles de usuario
  */
-export type UserRole = 'cajera' | 'cocina' | 'repartidor' | 'encargado' | 'admin';
+export type UserRole =
+  | 'cajera'
+  | 'cocina'
+  | 'repartidor'
+  | 'encargado'
+  | 'admin';
 
 /**
  * Prioridad de notificacion

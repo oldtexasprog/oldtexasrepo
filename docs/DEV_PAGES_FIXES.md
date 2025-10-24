@@ -13,12 +13,17 @@ Este documento detalla las correcciones aplicadas al sistema de páginas de desa
 **Ubicación:** `app/dev/playground/page.tsx` línea 200
 
 **Problema:**
+
 ```typescript
-const ComponentFunction = new Function('React', componentCode + '\nreturn default;');
+const ComponentFunction = new Function(
+  'React',
+  componentCode + '\nreturn default;'
+);
 const DynamicComponent = ComponentFunction(require('react'));
 ```
 
 **Error generado:**
+
 - `require` no está disponible en componentes cliente de Next.js
 - El navegador no puede ejecutar `require('react')`
 - Causaba error en tiempo de ejecución
@@ -55,6 +60,7 @@ return (
 ```
 
 **Beneficios:**
+
 - ✅ Sin errores de runtime
 - ✅ Más simple y seguro
 - ✅ Funciona en todos los navegadores
@@ -67,11 +73,13 @@ return (
 **Ubicación:** `app/dev/playground/page.tsx`
 
 **Problema:**
+
 - La variable `previewKey` se definía pero no se usaba correctamente
 - Causaba warnings de ESLint
 - Estado innecesario que consumía memoria
 
 **Archivos modificados:**
+
 ```typescript
 // Eliminado:
 const [previewKey, setPreviewKey] = useState(0);
@@ -85,6 +93,7 @@ setPreviewKey((prev) => prev + 1); // Varias instancias
 ```
 
 **Beneficios:**
+
 - ✅ Código más limpio
 - ✅ Sin warnings
 - ✅ Menos estado innecesario
@@ -96,17 +105,20 @@ setPreviewKey((prev) => prev + 1); // Varias instancias
 **Ubicación:** `app/dev/playground/page.tsx`
 
 **Problema:**
+
 - Botón "Actualizar Preview" que no hacía nada útil
 - La función solo incrementaba `previewKey`
 - Confundía al usuario
 
 **Solución:**
 Eliminé completamente:
+
 - La función `refreshPreview()`
 - El botón "Actualizar Preview" del UI
 - Cambié el texto del botón "Guardar" a "Guardar Componente"
 
 **Antes:**
+
 ```typescript
 <Button onClick={refreshPreview} ...>
   <Eye className="w-4 h-4 mr-2" />
@@ -119,6 +131,7 @@ Eliminé completamente:
 ```
 
 **Después:**
+
 ```typescript
 <Button onClick={saveComponent} className="...w-full">
   <Download className="w-4 h-4 mr-2" />
@@ -127,6 +140,7 @@ Eliminé completamente:
 ```
 
 **Beneficios:**
+
 - ✅ UI más simple
 - ✅ Menos confusión
 - ✅ Botón de guardar más prominente
@@ -138,6 +152,7 @@ Eliminé completamente:
 **Ubicación:** `lib/dev-auth.ts`
 
 **Problema:**
+
 - La función se llamaba `useDevAccess()` pero NO era un hook de React
 - Los hooks deben usar `useState`, `useEffect`, etc.
 - Causaba confusión y posibles errores
@@ -146,6 +161,7 @@ Eliminé completamente:
 Renombré la función y mejoré la documentación:
 
 **Antes:**
+
 ```typescript
 /**
  * Hook para verificar acceso en páginas de desarrollo
@@ -157,12 +173,16 @@ export function useDevAccess() {
 ```
 
 **Después:**
+
 ```typescript
 /**
  * Verifica acceso y redirige si es necesario
  * Usar solo en componentes cliente (use client)
  */
-export function checkAndRedirectDevAccess(): { hasAccess: boolean; isChecking: boolean } {
+export function checkAndRedirectDevAccess(): {
+  hasAccess: boolean;
+  isChecking: boolean;
+} {
   if (typeof window === 'undefined') {
     return { hasAccess: false, isChecking: true };
   }
@@ -179,6 +199,7 @@ export function checkAndRedirectDevAccess(): { hasAccess: boolean; isChecking: b
 ```
 
 **Beneficios:**
+
 - ✅ Nombre claro y descriptivo
 - ✅ No confunde con hooks de React
 - ✅ Mejor documentación
@@ -191,6 +212,7 @@ export function checkAndRedirectDevAccess(): { hasAccess: boolean; isChecking: b
 **Cambios aplicados:**
 
 #### Cambio de Título
+
 ```typescript
 // Antes:
 <CardTitle>Preview en Vivo</CardTitle>
@@ -202,6 +224,7 @@ export function checkAndRedirectDevAccess(): { hasAccess: boolean; isChecking: b
 ```
 
 #### Cambio de Contenedor
+
 ```typescript
 // Antes: Fondo blanco para renderizado
 <div className="bg-white dark:bg-slate-950 ...">
@@ -211,6 +234,7 @@ export function checkAndRedirectDevAccess(): { hasAccess: boolean; isChecking: b
 ```
 
 **Beneficios:**
+
 - ✅ Expectativas claras para el usuario
 - ✅ Mejor contraste para lectura de código
 - ✅ Consistente con el tema dark
@@ -220,7 +244,9 @@ export function checkAndRedirectDevAccess(): { hasAccess: boolean; isChecking: b
 ## Archivos Modificados
 
 ### 1. `app/dev/playground/page.tsx`
+
 **Cambios:**
+
 - ✅ Reemplazado preview dinámico por preview estático
 - ✅ Eliminada variable `previewKey`
 - ✅ Eliminada función `refreshPreview()`
@@ -233,7 +259,9 @@ export function checkAndRedirectDevAccess(): { hasAccess: boolean; isChecking: b
 **Líneas modificadas:** ~30 líneas
 
 ### 2. `lib/dev-auth.ts`
+
 **Cambios:**
+
 - ✅ Renombrado `useDevAccess()` → `checkAndRedirectDevAccess()`
 - ✅ Mejorada documentación JSDoc
 - ✅ Agregado return type explícito
@@ -252,6 +280,7 @@ export function checkAndRedirectDevAccess(): { hasAccess: boolean; isChecking: b
 ```
 
 **Warnings:**
+
 - ⚠️ Warning sobre workspace root (no crítico)
 - ⚠️ Puerto 3000 en uso, usando 3001 (normal)
 
@@ -262,16 +291,19 @@ export function checkAndRedirectDevAccess(): { hasAccess: boolean; isChecking: b
 ## Testing Manual Realizado
 
 ### 1. Compilación
+
 - ✅ `npm run dev` ejecuta sin errores
 - ✅ No hay errores de TypeScript
 - ✅ No hay warnings de ESLint críticos
 
 ### 2. Páginas Accesibles
+
 - ✅ `/dev/access` - Página de login funcional
 - ✅ `/dev/tests` - Editor de pruebas funcional
 - ✅ `/dev/playground` - Playground de componentes funcional
 
 ### 3. Funcionalidades
+
 - ✅ Sistema de autenticación con cookie
 - ✅ Templates predefinidos cargan correctamente
 - ✅ Guardar componentes funciona
@@ -286,6 +318,7 @@ export function checkAndRedirectDevAccess(): { hasAccess: boolean; isChecking: b
 Si en el futuro quieres agregar preview dinámico real, considera:
 
 ### Opción 1: Iframe Sandbox
+
 ```typescript
 <iframe
   srcDoc={`
@@ -311,16 +344,19 @@ Si en el futuro quieres agregar preview dinámico real, considera:
 ```
 
 **Ventajas:**
+
 - Aislado del DOM principal
 - Seguro (sandbox)
 - React cargado desde CDN
 
 **Desventajas:**
+
 - Más complejo
 - Dependencias externas
 - Puede ser lento
 
 ### Opción 2: Monaco Editor + Preview
+
 Usar Monaco Editor (el editor de VS Code) con preview side-by-side:
 
 ```bash
@@ -328,6 +364,7 @@ npm install @monaco-editor/react
 ```
 
 **Ventajas:**
+
 - Syntax highlighting profesional
 - Autocompletado
 - Error checking en tiempo real

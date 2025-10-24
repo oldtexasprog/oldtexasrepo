@@ -10,42 +10,42 @@ Se ha completado exitosamente la configuración de Firebase para el proyecto **O
 
 ### Utilidades de Firebase (`/lib/firebase/`)
 
-| Archivo | Descripción | Funcionalidades |
-|---------|-------------|-----------------|
-| `config.ts` | Configuración e inicialización de Firebase | Inicializa app, auth, db, storage, messaging, analytics |
-| `auth.ts` | Utilidades de autenticación | Login, logout, registro, reset password, gestión de roles |
-| `firestore.ts` | Utilidades de Firestore | CRUD, queries, paginación, listeners en tiempo real, transactions |
-| `storage.ts` | Utilidades de Storage | Upload/download de archivos, gestión de imágenes, validaciones |
-| `messaging.ts` | Utilidades de FCM | Notificaciones push, permisos, tokens, foreground/background messages |
-| `types.ts` | Tipos TypeScript | Interfaces y tipos para todos los servicios Firebase |
-| `index.ts` | Barrel exports | Exporta todas las utilidades desde un solo punto |
+| Archivo        | Descripción                                | Funcionalidades                                                       |
+| -------------- | ------------------------------------------ | --------------------------------------------------------------------- |
+| `config.ts`    | Configuración e inicialización de Firebase | Inicializa app, auth, db, storage, messaging, analytics               |
+| `auth.ts`      | Utilidades de autenticación                | Login, logout, registro, reset password, gestión de roles             |
+| `firestore.ts` | Utilidades de Firestore                    | CRUD, queries, paginación, listeners en tiempo real, transactions     |
+| `storage.ts`   | Utilidades de Storage                      | Upload/download de archivos, gestión de imágenes, validaciones        |
+| `messaging.ts` | Utilidades de FCM                          | Notificaciones push, permisos, tokens, foreground/background messages |
+| `types.ts`     | Tipos TypeScript                           | Interfaces y tipos para todos los servicios Firebase                  |
+| `index.ts`     | Barrel exports                             | Exporta todas las utilidades desde un solo punto                      |
 
 ### Reglas de Seguridad
 
-| Archivo | Descripción |
-|---------|-------------|
+| Archivo           | Descripción                                                                             |
+| ----------------- | --------------------------------------------------------------------------------------- |
 | `firestore.rules` | Reglas de seguridad de Firestore por rol (admin, encargado, cajera, cocina, repartidor) |
-| `storage.rules` | Reglas de seguridad de Storage con validación de tipos y tamaños |
+| `storage.rules`   | Reglas de seguridad de Storage con validación de tipos y tamaños                        |
 
 ### Service Worker
 
-| Archivo | Descripción |
-|---------|-------------|
+| Archivo                           | Descripción                                           |
+| --------------------------------- | ----------------------------------------------------- |
 | `public/firebase-messaging-sw.js` | Service Worker para notificaciones push en background |
 
 ### Documentación (`/docs/firebase/`)
 
-| Archivo | Descripción |
-|---------|-------------|
-| `FIREBASE_SETUP_GUIDE.md` | Guía completa paso a paso para configurar Firebase Console |
-| `README.md` | Documentación principal con arquitectura, ejemplos y troubleshooting |
-| `DEPLOY_RULES.md` | Guía para desplegar reglas de seguridad |
-| `RESUMEN_FIREBASE_SETUP.md` | Este documento - Resumen ejecutivo |
+| Archivo                     | Descripción                                                          |
+| --------------------------- | -------------------------------------------------------------------- |
+| `FIREBASE_SETUP_GUIDE.md`   | Guía completa paso a paso para configurar Firebase Console           |
+| `README.md`                 | Documentación principal con arquitectura, ejemplos y troubleshooting |
+| `DEPLOY_RULES.md`           | Guía para desplegar reglas de seguridad                              |
+| `RESUMEN_FIREBASE_SETUP.md` | Este documento - Resumen ejecutivo                                   |
 
 ### Configuración
 
-| Archivo | Descripción |
-|---------|-------------|
+| Archivo        | Descripción                                                         |
+| -------------- | ------------------------------------------------------------------- |
 | `.env.example` | Template actualizado con todas las variables de Firebase necesarias |
 
 ---
@@ -83,13 +83,13 @@ Firebase Project
 
 ### Permisos por Rol
 
-| Rol | Acceso |
-|-----|--------|
-| **Admin** | CRUD completo en todas las colecciones |
-| **Encargado** | CRUD en pedidos, productos, turnos, repartidores; RU en configuración |
-| **Cajera** | CR en pedidos, CRU en turnos propios, R en productos/personalizaciones |
-| **Cocina** | R en pedidos, U estados (en_preparacion, listo), R en productos |
-| **Repartidor** | R en pedidos asignados, U estados de reparto, RU en perfil propio |
+| Rol            | Acceso                                                                 |
+| -------------- | ---------------------------------------------------------------------- |
+| **Admin**      | CRUD completo en todas las colecciones                                 |
+| **Encargado**  | CRUD en pedidos, productos, turnos, repartidores; RU en configuración  |
+| **Cajera**     | CR en pedidos, CRU en turnos propios, R en productos/personalizaciones |
+| **Cocina**     | R en pedidos, U estados (en_preparacion, listo), R en productos        |
+| **Repartidor** | R en pedidos asignados, U estados de reparto, RU en perfil propio      |
 
 ---
 
@@ -100,6 +100,7 @@ Firebase Project
 Sigue la guía en: `docs/firebase/FIREBASE_SETUP_GUIDE.md`
 
 **Tareas**:
+
 - [ ] Crear proyecto en Firebase Console
 - [ ] Habilitar Authentication (Email/Password)
 - [ ] Habilitar Firestore Database
@@ -119,6 +120,7 @@ nano .env.local
 ```
 
 **Variables requeridas**:
+
 ```bash
 NEXT_PUBLIC_FIREBASE_API_KEY=
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
@@ -136,13 +138,13 @@ Editar `public/firebase-messaging-sw.js` y reemplazar la configuración:
 
 ```javascript
 const firebaseConfig = {
-  apiKey: "TU_API_KEY",  // Reemplazar con valores reales
-  authDomain: "TU_AUTH_DOMAIN",
-  projectId: "TU_PROJECT_ID",
-  storageBucket: "TU_STORAGE_BUCKET",
-  messagingSenderId: "TU_MESSAGING_SENDER_ID",
-  appId: "TU_APP_ID",
-  measurementId: "TU_MEASUREMENT_ID"
+  apiKey: 'TU_API_KEY', // Reemplazar con valores reales
+  authDomain: 'TU_AUTH_DOMAIN',
+  projectId: 'TU_PROJECT_ID',
+  storageBucket: 'TU_STORAGE_BUCKET',
+  messagingSenderId: 'TU_MESSAGING_SENDER_ID',
+  appId: 'TU_APP_ID',
+  measurementId: 'TU_MEASUREMENT_ID',
 };
 ```
 
@@ -151,10 +153,12 @@ const firebaseConfig = {
 Sigue la guía en: `docs/firebase/DEPLOY_RULES.md`
 
 **Opción 1 - Firebase Console** (Recomendado para empezar):
+
 1. Firestore Database > Rules > Copiar/Pegar `firestore.rules` > Publish
 2. Storage > Rules > Copiar/Pegar `storage.rules` > Publish
 
 **Opción 2 - Firebase CLI** (Recomendado para producción):
+
 ```bash
 npm install -g firebase-tools
 firebase login
@@ -165,6 +169,7 @@ firebase deploy --only firestore:rules,storage:rules
 ### 5. Crear Usuario Admin (2 minutos)
 
 **Desde Firebase Console**:
+
 1. Authentication > Users > Add user
 2. Email: `admin@oldtexasbbq.com` (o tu email)
 3. Password: (contraseña segura)
@@ -191,6 +196,7 @@ npm run dev
 ```
 
 **Pruebas**:
+
 - [ ] Login con usuario admin
 - [ ] Crear un pedido de prueba
 - [ ] Subir una imagen de producto
@@ -289,6 +295,7 @@ old-texas-bbq-crm/
 ## Características Implementadas
 
 ### Autenticación
+
 - ✅ Login con email/password
 - ✅ Logout
 - ✅ Reset password
@@ -297,6 +304,7 @@ old-texas-bbq-crm/
 - ✅ Tokens de autenticación
 
 ### Firestore
+
 - ✅ CRUD operations genéricas
 - ✅ Queries con filtros
 - ✅ Paginación
@@ -306,6 +314,7 @@ old-texas-bbq-crm/
 - ✅ Validación de permisos
 
 ### Storage
+
 - ✅ Upload con progreso
 - ✅ Validación de tipos y tamaños
 - ✅ Gestión de imágenes
@@ -314,6 +323,7 @@ old-texas-bbq-crm/
 - ✅ Metadata
 
 ### Notificaciones (FCM)
+
 - ✅ Solicitud de permisos
 - ✅ Gestión de tokens
 - ✅ Foreground messages
@@ -322,6 +332,7 @@ old-texas-bbq-crm/
 - ✅ Notificaciones locales
 
 ### Seguridad
+
 - ✅ Reglas por rol
 - ✅ Validación de autenticación
 - ✅ Restricciones de operaciones
@@ -329,6 +340,7 @@ old-texas-bbq-crm/
 - ✅ Límites de tamaño
 
 ### TypeScript
+
 - ✅ Tipos completos
 - ✅ Interfaces bien definidas
 - ✅ Type safety
@@ -338,16 +350,16 @@ old-texas-bbq-crm/
 
 ## Métricas de Implementación
 
-| Métrica | Valor |
-|---------|-------|
-| Archivos creados | 14 |
-| Líneas de código | ~3,500 |
-| Funciones de utilidad | 60+ |
-| Tipos TypeScript | 20+ |
-| Colecciones Firestore | 8 |
-| Reglas de seguridad | Completas por rol |
-| Documentación | 4 guías completas |
-| Tiempo estimado de setup | 25-30 minutos |
+| Métrica                  | Valor             |
+| ------------------------ | ----------------- |
+| Archivos creados         | 14                |
+| Líneas de código         | ~3,500            |
+| Funciones de utilidad    | 60+               |
+| Tipos TypeScript         | 20+               |
+| Colecciones Firestore    | 8                 |
+| Reglas de seguridad      | Completas por rol |
+| Documentación            | 4 guías completas |
+| Tiempo estimado de setup | 25-30 minutos     |
 
 ---
 
@@ -355,24 +367,24 @@ old-texas-bbq-crm/
 
 ### Límites del Plan Gratuito
 
-| Servicio | Límite Diario | Límite Mensual |
-|----------|---------------|----------------|
-| Firestore Reads | 50,000 | 1,500,000 |
-| Firestore Writes | 20,000 | 600,000 |
-| Firestore Deletes | 20,000 | 600,000 |
-| Storage | - | 1 GB almacenamiento |
-| Storage Transfer | - | 10 GB/mes |
-| Authentication | Ilimitado | Ilimitado |
+| Servicio          | Límite Diario | Límite Mensual      |
+| ----------------- | ------------- | ------------------- |
+| Firestore Reads   | 50,000        | 1,500,000           |
+| Firestore Writes  | 20,000        | 600,000             |
+| Firestore Deletes | 20,000        | 600,000             |
+| Storage           | -             | 1 GB almacenamiento |
+| Storage Transfer  | -             | 10 GB/mes           |
+| Authentication    | Ilimitado     | Ilimitado           |
 
 ### Estimación para Old Texas BBQ CRM
 
 **Escenario**: 100 pedidos/día, 20 productos
 
-| Operación | Cantidad/Día | Uso Mensual |
-|-----------|--------------|-------------|
-| Reads | ~500 | ~15,000 (1% del límite) |
-| Writes | ~150 | ~4,500 (0.75% del límite) |
-| Storage | ~50 MB | ~50 MB (5% del límite) |
+| Operación | Cantidad/Día | Uso Mensual               |
+| --------- | ------------ | ------------------------- |
+| Reads     | ~500         | ~15,000 (1% del límite)   |
+| Writes    | ~150         | ~4,500 (0.75% del límite) |
+| Storage   | ~50 MB       | ~50 MB (5% del límite)    |
 
 **Conclusión**: El plan gratuito es más que suficiente para empezar.
 
@@ -381,6 +393,7 @@ old-texas-bbq-crm/
 ## Checklist de Finalización
 
 ### Completadas ✅
+
 - [x] Crear utilidades de Firebase
 - [x] Crear tipos TypeScript
 - [x] Crear reglas de seguridad
@@ -391,6 +404,7 @@ old-texas-bbq-crm/
 - [x] Crear ejemplos de uso
 
 ### Pendientes (Tu responsabilidad)
+
 - [ ] Crear proyecto en Firebase Console
 - [ ] Configurar servicios en Firebase
 - [ ] Obtener credenciales
@@ -405,16 +419,19 @@ old-texas-bbq-crm/
 ## Soporte y Recursos
 
 ### Documentación
+
 - **Setup inicial**: `docs/firebase/FIREBASE_SETUP_GUIDE.md`
 - **Uso de utilidades**: `docs/firebase/README.md`
 - **Despliegue de reglas**: `docs/firebase/DEPLOY_RULES.md`
 
 ### Links Útiles
+
 - [Firebase Console](https://console.firebase.google.com/)
 - [Documentación Firebase](https://firebase.google.com/docs)
 - [Firebase con Next.js](https://firebase.google.com/docs/web/setup)
 
 ### Troubleshooting
+
 - Consulta la sección "Troubleshooting" en `docs/firebase/FIREBASE_SETUP_GUIDE.md`
 - Revisa logs en Firebase Console
 - Verifica reglas de seguridad desplegadas

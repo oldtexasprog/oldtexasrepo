@@ -1,7 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -65,7 +71,9 @@ export default function DevPlaygroundPage() {
         </div>
         <div className="flex-1">
           <p className="font-bold">¡Pedido Urgente!</p>
-          <p className="text-sm text-white/90">Mesa #5 solicita atención inmediata</p>
+          <p className="text-sm text-white/90">
+            Mesa #5 solicita atención inmediata
+          </p>
         </div>
         <button
           onClick={() => toast.dismiss(t)}
@@ -107,166 +115,194 @@ export default function DevPlaygroundPage() {
 
   // Notificaciones específicas del CRM
   const showNewOrderNotification = () => {
-    toast.custom((t) => (
-      <Card className="border-orange-500/30 bg-slate-900/95 backdrop-blur-xl shadow-2xl min-w-[350px] animate-in slide-in-from-right">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-orange-500/20 rounded-full flex items-center justify-center">
-                <ShoppingCart className="w-5 h-5 text-orange-400" />
+    toast.custom(
+      (t) => (
+        <Card className="border-orange-500/30 bg-slate-900/95 backdrop-blur-xl shadow-2xl min-w-[350px] animate-in slide-in-from-right">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-orange-500/20 rounded-full flex items-center justify-center">
+                  <ShoppingCart className="w-5 h-5 text-orange-400" />
+                </div>
+                <div>
+                  <CardTitle className="text-base text-white">
+                    Nuevo Pedido
+                  </CardTitle>
+                  <CardDescription className="text-xs">
+                    Hace 1 minuto
+                  </CardDescription>
+                </div>
               </div>
-              <div>
-                <CardTitle className="text-base text-white">Nuevo Pedido</CardTitle>
-                <CardDescription className="text-xs">Hace 1 minuto</CardDescription>
-              </div>
+              <button
+                onClick={() => toast.dismiss(t)}
+                className="text-slate-400 hover:text-white transition-colors"
+              >
+                ✕
+              </button>
             </div>
-            <button
-              onClick={() => toast.dismiss(t)}
-              className="text-slate-400 hover:text-white transition-colors"
-            >
-              ✕
-            </button>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="text-sm text-slate-300">
-            <p className="font-medium">Cliente: Juan Pérez</p>
-            <p className="text-slate-400">2x Costillas BBQ • 1x Alitas</p>
-          </div>
-          <div className="flex items-center justify-between pt-2 border-t border-slate-700/50">
-            <Badge className="bg-yellow-500/10 text-yellow-400 border-yellow-500/30">
-              Pendiente
-            </Badge>
-            <span className="text-lg font-bold text-orange-500">$45.00</span>
-          </div>
-          <div className="flex gap-2 pt-2">
-            <Button
-              size="sm"
-              className="flex-1 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700"
-              onClick={() => {
-                toast.success('Pedido aceptado');
-                toast.dismiss(t);
-              }}
-            >
-              <CheckCircle2 className="w-4 h-4 mr-1" />
-              Aceptar
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              className="border-red-700 text-red-400 hover:bg-red-950/20"
-              onClick={() => {
-                toast.error('Pedido rechazado');
-                toast.dismiss(t);
-              }}
-            >
-              <XCircle className="w-4 h-4 mr-1" />
-              Rechazar
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    ), {
-      duration: Infinity,
-    });
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="text-sm text-slate-300">
+              <p className="font-medium">Cliente: Juan Pérez</p>
+              <p className="text-slate-400">2x Costillas BBQ • 1x Alitas</p>
+            </div>
+            <div className="flex items-center justify-between pt-2 border-t border-slate-700/50">
+              <Badge className="bg-yellow-500/10 text-yellow-400 border-yellow-500/30">
+                Pendiente
+              </Badge>
+              <span className="text-lg font-bold text-orange-500">$45.00</span>
+            </div>
+            <div className="flex gap-2 pt-2">
+              <Button
+                size="sm"
+                className="flex-1 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700"
+                onClick={() => {
+                  toast.success('Pedido aceptado');
+                  toast.dismiss(t);
+                }}
+              >
+                <CheckCircle2 className="w-4 h-4 mr-1" />
+                Aceptar
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                className="border-red-700 text-red-400 hover:bg-red-950/20"
+                onClick={() => {
+                  toast.error('Pedido rechazado');
+                  toast.dismiss(t);
+                }}
+              >
+                <XCircle className="w-4 h-4 mr-1" />
+                Rechazar
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      ),
+      {
+        duration: Infinity,
+      }
+    );
     setNotificationCount((prev) => prev + 1);
   };
 
   const showKitchenNotification = () => {
-    toast.custom((t) => (
-      <Card className="border-green-500/30 bg-slate-900/95 backdrop-blur-xl shadow-2xl min-w-[350px]">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
-                <ChefHat className="w-5 h-5 text-green-400" />
+    toast.custom(
+      (t) => (
+        <Card className="border-green-500/30 bg-slate-900/95 backdrop-blur-xl shadow-2xl min-w-[350px]">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
+                  <ChefHat className="w-5 h-5 text-green-400" />
+                </div>
+                <div>
+                  <CardTitle className="text-base text-white">
+                    Pedido Listo
+                  </CardTitle>
+                  <CardDescription className="text-xs">
+                    Pedido #456
+                  </CardDescription>
+                </div>
               </div>
-              <div>
-                <CardTitle className="text-base text-white">Pedido Listo</CardTitle>
-                <CardDescription className="text-xs">Pedido #456</CardDescription>
-              </div>
+              <button
+                onClick={() => toast.dismiss(t)}
+                className="text-slate-400 hover:text-white transition-colors"
+              >
+                ✕
+              </button>
             </div>
-            <button
-              onClick={() => toast.dismiss(t)}
-              className="text-slate-400 hover:text-white transition-colors"
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="text-sm text-slate-300">
+              <p className="font-medium">Cliente: María González</p>
+              <p className="text-slate-400">La orden está lista para entrega</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-green-400" />
+              <span className="text-sm text-green-400">
+                Preparado en 15 minutos
+              </span>
+            </div>
+            <Button
+              size="sm"
+              className="w-full bg-green-600 hover:bg-green-700"
+              onClick={() => {
+                toast.success('Pedido marcado para entrega');
+                toast.dismiss(t);
+              }}
             >
-              ✕
-            </button>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="text-sm text-slate-300">
-            <p className="font-medium">Cliente: María González</p>
-            <p className="text-slate-400">La orden está lista para entrega</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-green-400" />
-            <span className="text-sm text-green-400">Preparado en 15 minutos</span>
-          </div>
-          <Button
-            size="sm"
-            className="w-full bg-green-600 hover:bg-green-700"
-            onClick={() => {
-              toast.success('Pedido marcado para entrega');
-              toast.dismiss(t);
-            }}
-          >
-            <Package className="w-4 h-4 mr-2" />
-            Marcar para Entrega
-          </Button>
-        </CardContent>
-      </Card>
-    ), {
-      duration: Infinity,
-    });
+              <Package className="w-4 h-4 mr-2" />
+              Marcar para Entrega
+            </Button>
+          </CardContent>
+        </Card>
+      ),
+      {
+        duration: Infinity,
+      }
+    );
     setNotificationCount((prev) => prev + 1);
   };
 
   const showDeliveryNotification = () => {
-    toast.custom((t) => (
-      <Card className="border-blue-500/30 bg-slate-900/95 backdrop-blur-xl shadow-2xl min-w-[350px]">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center">
-                <Bike className="w-5 h-5 text-blue-400" />
+    toast.custom(
+      (t) => (
+        <Card className="border-blue-500/30 bg-slate-900/95 backdrop-blur-xl shadow-2xl min-w-[350px]">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center">
+                  <Bike className="w-5 h-5 text-blue-400" />
+                </div>
+                <div>
+                  <CardTitle className="text-base text-white">
+                    Pedido en Camino
+                  </CardTitle>
+                  <CardDescription className="text-xs">
+                    Pedido #789
+                  </CardDescription>
+                </div>
               </div>
-              <div>
-                <CardTitle className="text-base text-white">Pedido en Camino</CardTitle>
-                <CardDescription className="text-xs">Pedido #789</CardDescription>
+              <button
+                onClick={() => toast.dismiss(t)}
+                className="text-slate-400 hover:text-white transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="text-sm text-slate-300">
+              <p className="font-medium">Repartidor: José Luis</p>
+              <p className="text-slate-400">Destino: Calle Principal #123</p>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs text-slate-400">
+                <span>Progreso</span>
+                <span>65%</span>
+              </div>
+              <div className="w-full bg-slate-800 rounded-full h-2">
+                <div
+                  className="bg-blue-500 h-2 rounded-full"
+                  style={{ width: '65%' }}
+                ></div>
               </div>
             </div>
-            <button
-              onClick={() => toast.dismiss(t)}
-              className="text-slate-400 hover:text-white transition-colors"
-            >
-              ✕
-            </button>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="text-sm text-slate-300">
-            <p className="font-medium">Repartidor: José Luis</p>
-            <p className="text-slate-400">Destino: Calle Principal #123</p>
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-xs text-slate-400">
-              <span>Progreso</span>
-              <span>65%</span>
+            <div className="flex items-center gap-2">
+              <Bike className="w-4 h-4 text-blue-400" />
+              <span className="text-sm text-blue-400">
+                Tiempo estimado: 8 minutos
+              </span>
             </div>
-            <div className="w-full bg-slate-800 rounded-full h-2">
-              <div className="bg-blue-500 h-2 rounded-full" style={{ width: '65%' }}></div>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Bike className="w-4 h-4 text-blue-400" />
-            <span className="text-sm text-blue-400">Tiempo estimado: 8 minutos</span>
-          </div>
-        </CardContent>
-      </Card>
-    ), {
-      duration: Infinity,
-    });
+          </CardContent>
+        </Card>
+      ),
+      {
+        duration: Infinity,
+      }
+    );
     setNotificationCount((prev) => prev + 1);
   };
 
@@ -289,8 +325,12 @@ export default function DevPlaygroundPage() {
             </p>
           </div>
           <div className="text-right">
-            <div className="text-3xl font-bold text-orange-500">{notificationCount}</div>
-            <div className="text-xs text-slate-400">Notificaciones enviadas</div>
+            <div className="text-3xl font-bold text-orange-500">
+              {notificationCount}
+            </div>
+            <div className="text-xs text-slate-400">
+              Notificaciones enviadas
+            </div>
           </div>
         </div>
       </div>
@@ -367,15 +407,22 @@ export default function DevPlaygroundPage() {
         {/* Notificaciones CRM */}
         <TabsContent value="crm" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card className="border-orange-800/50 bg-gradient-to-br from-orange-950/30 to-orange-900/10 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-shadow cursor-pointer" onClick={showNewOrderNotification}>
+            <Card
+              className="border-orange-800/50 bg-gradient-to-br from-orange-950/30 to-orange-900/10 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-shadow cursor-pointer"
+              onClick={showNewOrderNotification}
+            >
               <CardHeader>
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-orange-500/20 rounded-xl flex items-center justify-center">
                     <ShoppingCart className="w-6 h-6 text-orange-400" />
                   </div>
                   <div>
-                    <CardTitle className="text-white text-base">Nuevo Pedido</CardTitle>
-                    <CardDescription className="text-xs">Click para probar</CardDescription>
+                    <CardTitle className="text-white text-base">
+                      Nuevo Pedido
+                    </CardTitle>
+                    <CardDescription className="text-xs">
+                      Click para probar
+                    </CardDescription>
                   </div>
                 </div>
               </CardHeader>
@@ -386,15 +433,22 @@ export default function DevPlaygroundPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-green-800/50 bg-gradient-to-br from-green-950/30 to-green-900/10 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-shadow cursor-pointer" onClick={showKitchenNotification}>
+            <Card
+              className="border-green-800/50 bg-gradient-to-br from-green-950/30 to-green-900/10 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-shadow cursor-pointer"
+              onClick={showKitchenNotification}
+            >
               <CardHeader>
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center">
                     <ChefHat className="w-6 h-6 text-green-400" />
                   </div>
                   <div>
-                    <CardTitle className="text-white text-base">Pedido Listo</CardTitle>
-                    <CardDescription className="text-xs">Click para probar</CardDescription>
+                    <CardTitle className="text-white text-base">
+                      Pedido Listo
+                    </CardTitle>
+                    <CardDescription className="text-xs">
+                      Click para probar
+                    </CardDescription>
                   </div>
                 </div>
               </CardHeader>
@@ -405,15 +459,22 @@ export default function DevPlaygroundPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-blue-800/50 bg-gradient-to-br from-blue-950/30 to-blue-900/10 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-shadow cursor-pointer" onClick={showDeliveryNotification}>
+            <Card
+              className="border-blue-800/50 bg-gradient-to-br from-blue-950/30 to-blue-900/10 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-shadow cursor-pointer"
+              onClick={showDeliveryNotification}
+            >
               <CardHeader>
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center">
                     <Bike className="w-6 h-6 text-blue-400" />
                   </div>
                   <div>
-                    <CardTitle className="text-white text-base">En Camino</CardTitle>
-                    <CardDescription className="text-xs">Click para probar</CardDescription>
+                    <CardTitle className="text-white text-base">
+                      En Camino
+                    </CardTitle>
+                    <CardDescription className="text-xs">
+                      Click para probar
+                    </CardDescription>
                   </div>
                 </div>
               </CardHeader>

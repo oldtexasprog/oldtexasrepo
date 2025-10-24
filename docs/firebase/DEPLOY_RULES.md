@@ -78,10 +78,12 @@ firebase init
 ```
 
 Selecciona:
+
 - **Firestore**: Setup Firestore security rules
 - **Storage**: Setup Storage security rules
 
 Cuando pregunte por los archivos:
+
 - Firestore rules file: `firestore.rules` (ya existe)
 - Storage rules file: `storage.rules` (ya existe)
 
@@ -96,6 +98,7 @@ firebase use [PROJECT_ID]
 ```
 
 Por ejemplo:
+
 ```bash
 firebase use old-texas-bbq-crm
 ```
@@ -109,16 +112,19 @@ firebase use
 ### Paso 5: Desplegar Reglas
 
 **Desplegar solo Firestore:**
+
 ```bash
 firebase deploy --only firestore:rules
 ```
 
 **Desplegar solo Storage:**
+
 ```bash
 firebase deploy --only storage:rules
 ```
 
 **Desplegar ambas:**
+
 ```bash
 firebase deploy --only firestore:rules,storage:rules
 ```
@@ -132,11 +138,13 @@ firebase deploy --only firestore:rules,storage:rules
 ### Verificar en Firebase Console
 
 #### Firestore:
+
 1. Ve a **Firestore Database > Rules**
 2. Verifica que las reglas estén actualizadas
 3. En la parte superior verás la fecha/hora de la última publicación
 
 #### Storage:
+
 1. Ve a **Storage > Rules**
 2. Verifica que las reglas estén actualizadas
 3. En la parte superior verás la fecha/hora de la última publicación
@@ -168,6 +176,7 @@ firebase emulators:start
 ```
 
 Esto iniciará:
+
 - Firestore Emulator en `localhost:8080`
 - Storage Emulator en `localhost:9199`
 - UI del Emulator en `localhost:4000`
@@ -307,14 +316,17 @@ firebase open
 ### Error: "No project active"
 
 **Solución**:
+
 ```bash
 firebase use --add
 ```
+
 Selecciona tu proyecto de la lista.
 
 ### Error: "Permission denied" al desplegar
 
 **Solución**:
+
 ```bash
 firebase login --reauth
 ```

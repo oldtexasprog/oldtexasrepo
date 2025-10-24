@@ -42,11 +42,20 @@ function question(query: string): Promise<string> {
 }
 
 async function main() {
-  log('\n╔════════════════════════════════════════════════════════════╗', 'cyan');
+  log(
+    '\n╔════════════════════════════════════════════════════════════╗',
+    'cyan'
+  );
   log('║   🔧 Cloudinary Upload Preset - Configuración Automática  ║', 'cyan');
-  log('╚════════════════════════════════════════════════════════════╝\n', 'cyan');
+  log(
+    '╚════════════════════════════════════════════════════════════╝\n',
+    'cyan'
+  );
 
-  log('Este script creará un Upload Preset en tu cuenta de Cloudinary con:', 'bright');
+  log(
+    'Este script creará un Upload Preset en tu cuenta de Cloudinary con:',
+    'bright'
+  );
   log('  ✓ Modo "Unsigned" para uploads desde el frontend', 'green');
   log('  ✓ Formatos permitidos: jpg, png, webp, pdf', 'green');
   log('  ✓ Tamaño máximo: 10 MB', 'green');
@@ -62,9 +71,13 @@ async function main() {
   log('Puedes encontrar estas credenciales en:', 'yellow');
   log('👉 https://cloudinary.com/console\n', 'cyan');
 
-  const cloudName = await question(`${colors.bright}Cloud Name:${colors.reset} `);
+  const cloudName = await question(
+    `${colors.bright}Cloud Name:${colors.reset} `
+  );
   const apiKey = await question(`${colors.bright}API Key:${colors.reset} `);
-  const apiSecret = await question(`${colors.bright}API Secret:${colors.reset} `);
+  const apiSecret = await question(
+    `${colors.bright}API Secret:${colors.reset} `
+  );
 
   if (!cloudName || !apiKey || !apiSecret) {
     log('\n❌ Error: Todas las credenciales son requeridas', 'red');
@@ -78,9 +91,10 @@ async function main() {
   log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n', 'blue');
 
   const defaultPresetName = 'old-texas-bbq-unsigned';
-  const presetName = await question(
-    `${colors.bright}Nombre del preset${colors.reset} (default: ${defaultPresetName}): `
-  ) || defaultPresetName;
+  const presetName =
+    (await question(
+      `${colors.bright}Nombre del preset${colors.reset} (default: ${defaultPresetName}): `
+    )) || defaultPresetName;
 
   // Paso 3: Crear el preset
   log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'blue');
@@ -137,14 +151,24 @@ async function main() {
     const result = await response.json();
 
     log('\n✅ ¡Upload Preset creado exitosamente!', 'green');
-    log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'green');
+    log(
+      '\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+      'green'
+    );
     log('📄 CONFIGURACIÓN CREADA', 'green');
-    log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n', 'green');
+    log(
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n',
+      'green'
+    );
 
     log(`Preset Name:       ${colors.bright}${result.name}${colors.reset}`);
     log(`Signing Mode:      ${colors.bright}Unsigned${colors.reset}`);
-    log(`Folder:            ${colors.bright}${result.settings?.folder || 'old-texas-bbq'}${colors.reset}`);
-    log(`Formatos:          ${colors.bright}jpg, png, webp, pdf${colors.reset}`);
+    log(
+      `Folder:            ${colors.bright}${result.settings?.folder || 'old-texas-bbq'}${colors.reset}`
+    );
+    log(
+      `Formatos:          ${colors.bright}jpg, png, webp, pdf${colors.reset}`
+    );
     log(`Tamaño máximo:     ${colors.bright}10 MB${colors.reset}`);
     log(`Access Mode:       ${colors.bright}public${colors.reset}`);
 
@@ -175,14 +199,23 @@ NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=${result.name}`;
     log('2. Reinicia tu servidor de desarrollo (npm run dev)', 'bright');
     log('3. Prueba subir una imagen usando:', 'bright');
     log('\n   import { uploadProductImage } from "@/lib/cloudinary";', 'cyan');
-    log('   const result = await uploadProductImage(file, "test-123");', 'cyan');
+    log(
+      '   const result = await uploadProductImage(file, "test-123");',
+      'cyan'
+    );
     log('\n4. Verifica en tu dashboard de Cloudinary:', 'bright');
-    log(`   👉 https://cloudinary.com/console/c-${cloudName.substring(0, 10)}/media_library\n`, 'cyan');
+    log(
+      `   👉 https://cloudinary.com/console/c-${cloudName.substring(0, 10)}/media_library\n`,
+      'cyan'
+    );
 
     // Resumen final
     log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'green');
     log('🎉 ¡CONFIGURACIÓN COMPLETADA!', 'green');
-    log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n', 'green');
+    log(
+      '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n',
+      'green'
+    );
 
     log('✓ Upload Preset creado', 'green');
     log('✓ Configuración avanzada aplicada', 'green');
@@ -193,23 +226,34 @@ NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=${result.name}`;
     log('  • Guía de setup: docs/cloudinary/SETUP.md', 'bright');
     log('  • Ejemplos de uso: docs/cloudinary/USAGE.md', 'bright');
     log('  • API Reference: https://cloudinary.com/documentation\n', 'bright');
-
   } catch (error) {
     log('\n❌ Error al crear el Upload Preset:', 'red');
 
     if (error instanceof Error) {
       log(`\n${error.message}\n`, 'red');
 
-      if (error.message.includes('401') || error.message.includes('Unauthorized')) {
+      if (
+        error.message.includes('401') ||
+        error.message.includes('Unauthorized')
+      ) {
         log('Posibles causas:', 'yellow');
-        log('  • Verifica que tu API Key y API Secret sean correctos', 'bright');
-        log('  • Asegúrate de no tener espacios extra en las credenciales', 'bright');
+        log(
+          '  • Verifica que tu API Key y API Secret sean correctos',
+          'bright'
+        );
+        log(
+          '  • Asegúrate de no tener espacios extra en las credenciales',
+          'bright'
+        );
         log('  • Confirma que tu cuenta de Cloudinary esté activa\n', 'bright');
       } else if (error.message.includes('already exists')) {
         log('El preset ya existe. Opciones:', 'yellow');
         log('  1. Usa un nombre diferente', 'bright');
         log('  2. Elimina el preset existente desde:', 'bright');
-        log(`     https://cloudinary.com/console/lui/settings/upload\n`, 'cyan');
+        log(
+          `     https://cloudinary.com/console/lui/settings/upload\n`,
+          'cyan'
+        );
       }
     }
   } finally {

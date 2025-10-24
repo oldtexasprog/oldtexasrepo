@@ -194,6 +194,7 @@ Para verificar que todo funciona:
 **Causa:** Credenciales incorrectas
 
 **Solución:**
+
 1. Verifica que copiaste correctamente el API Key y API Secret
 2. Asegúrate de no tener espacios extra
 3. Confirma que tu cuenta esté activa en https://cloudinary.com/console
@@ -203,6 +204,7 @@ Para verificar que todo funciona:
 **Causa:** Ya existe un preset con ese nombre
 
 **Solución:**
+
 - Opción 1: Usa un nombre diferente cuando el script lo pida
 - Opción 2: Elimina el preset existente desde:
   https://cloudinary.com/console/settings/upload
@@ -222,13 +224,13 @@ Si prefieres configurar manualmente, sigue la guía completa:
 
 ## Ventajas del Script Automático
 
-| Aspecto | Manual | Automático |
-|---------|--------|------------|
-| Tiempo | 10-15 min | 2 min |
-| Errores | Posibles | Cero |
-| Configuración avanzada | Manual | Incluida |
-| Variables de entorno | Copiar manualmente | Generadas |
-| Verificación | Manual | Automática |
+| Aspecto                | Manual             | Automático |
+| ---------------------- | ------------------ | ---------- |
+| Tiempo                 | 10-15 min          | 2 min      |
+| Errores                | Posibles           | Cero       |
+| Configuración avanzada | Manual             | Incluida   |
+| Variables de entorno   | Copiar manualmente | Generadas  |
+| Verificación           | Manual             | Automática |
 
 ## Qué Crea el Script Exactamente
 

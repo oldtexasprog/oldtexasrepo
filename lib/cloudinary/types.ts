@@ -22,7 +22,8 @@ export const CLOUDINARY_FOLDERS = {
   USUARIOS: 'old-texas-bbq/usuarios',
 } as const;
 
-export type CloudinaryFolder = (typeof CLOUDINARY_FOLDERS)[keyof typeof CLOUDINARY_FOLDERS];
+export type CloudinaryFolder =
+  (typeof CLOUDINARY_FOLDERS)[keyof typeof CLOUDINARY_FOLDERS];
 
 /**
  * Tipos de transformacion de imagenes

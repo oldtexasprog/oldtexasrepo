@@ -3,7 +3,11 @@
  * Funciones de utilidad para transformaciones, eliminacion y gestion de URLs
  */
 
-import { getCloudinaryInstance, getCloudinaryBaseUrl, getCloudinaryApiUrl } from './config';
+import {
+  getCloudinaryInstance,
+  getCloudinaryBaseUrl,
+  getCloudinaryApiUrl,
+} from './config';
 import type {
   CloudinaryTransformation,
   CloudinaryUrlOptions,
@@ -238,7 +242,9 @@ export const extractPublicIdFromUrl = (url: string): string | null => {
 /**
  * Obtener metadata de imagen desde URL
  */
-export const getImageMetadataFromUrl = (url: string): CloudinaryMetadata | null => {
+export const getImageMetadataFromUrl = (
+  url: string
+): CloudinaryMetadata | null => {
   try {
     const publicId = extractPublicIdFromUrl(url);
     if (!publicId) return null;
@@ -310,14 +316,12 @@ export const CloudinaryPresets = {
   /**
    * Imagen para mobile
    */
-  mobile: (publicId: string) =>
-    getOptimizedImageUrl(publicId, { width: 768 }),
+  mobile: (publicId: string) => getOptimizedImageUrl(publicId, { width: 768 }),
 
   /**
    * Imagen para tablet
    */
-  tablet: (publicId: string) =>
-    getOptimizedImageUrl(publicId, { width: 1024 }),
+  tablet: (publicId: string) => getOptimizedImageUrl(publicId, { width: 1024 }),
 
   /**
    * Imagen para desktop

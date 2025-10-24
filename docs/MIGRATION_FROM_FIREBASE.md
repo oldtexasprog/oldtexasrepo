@@ -4,18 +4,19 @@
 
 Este proyecto ha migrado de servicios de Firebase que requieren plan Blaze (pago) a alternativas 100% gratuitas:
 
-| Servicio Original | Servicio Nuevo | Razon |
-|-------------------|----------------|-------|
-| Firebase Storage | Cloudinary | Storage requiere plan Blaze |
-| Firebase Cloud Messaging (FCM) | Sistema In-App | FCM requiere plan Blaze |
-| Firebase Firestore | Firebase Firestore | Sin cambios (plan Spark gratuito) |
-| Firebase Authentication | Firebase Authentication | Sin cambios (plan Spark gratuito) |
+| Servicio Original              | Servicio Nuevo          | Razon                             |
+| ------------------------------ | ----------------------- | --------------------------------- |
+| Firebase Storage               | Cloudinary              | Storage requiere plan Blaze       |
+| Firebase Cloud Messaging (FCM) | Sistema In-App          | FCM requiere plan Blaze           |
+| Firebase Firestore             | Firebase Firestore      | Sin cambios (plan Spark gratuito) |
+| Firebase Authentication        | Firebase Authentication | Sin cambios (plan Spark gratuito) |
 
 ## Que Cambio
 
 ### 1. Almacenamiento de Archivos
 
 **ANTES (Firebase Storage):**
+
 ```typescript
 import { uploadProductImage } from '@/lib/firebase';
 
@@ -23,6 +24,7 @@ const result = await uploadProductImage(file, productId);
 ```
 
 **AHORA (Cloudinary):**
+
 ```typescript
 import { uploadProductImage } from '@/lib/cloudinary';
 
@@ -30,6 +32,7 @@ const result = await uploadProductImage(file, productId);
 ```
 
 **Cambios clave:**
+
 - Misma API/interfaz
 - `result.url` ahora es `result.secureUrl`
 - Guarda `result.publicId` para eliminacion posterior
@@ -38,6 +41,7 @@ const result = await uploadProductImage(file, productId);
 ### 2. Notificaciones
 
 **ANTES (FCM):**
+
 ```typescript
 import { initializeFCM, notifyNewOrder } from '@/lib/firebase';
 
@@ -46,6 +50,7 @@ await notifyNewOrder(orderId, orderNumber);
 ```
 
 **AHORA (Sistema In-App):**
+
 ```typescript
 import { useNotifications, notifyNewOrder } from '@/lib/notifications';
 
@@ -60,6 +65,7 @@ await notifyNewOrder(orderId, orderNumber);
 ```
 
 **Cambios clave:**
+
 - No hay push notifications cuando la app esta cerrada
 - Notificaciones en tiempo real cuando la app esta abierta
 - Mejor historial y persistencia
@@ -109,6 +115,7 @@ import { notifyNewOrder, useNotifications } from '@/lib/notifications';
 ### Paso 4: Actualizar Componentes de Upload
 
 **ANTES:**
+
 ```typescript
 const handleUpload = async (file: File) => {
   const result = await uploadProductImage(file, productId);
@@ -123,6 +130,7 @@ const handleUpload = async (file: File) => {
 ```
 
 **DESPUES:**
+
 ```typescript
 const handleUpload = async (file: File) => {
   const result = await uploadProductImage(file, productId);
@@ -212,6 +220,7 @@ match /notificaciones/{notifId} {
 #### 6.2. Actualizar Componentes
 
 **ANTES:**
+
 ```typescript
 useEffect(() => {
   initializeFCM(userId);
@@ -219,6 +228,7 @@ useEffect(() => {
 ```
 
 **DESPUES:**
+
 ```typescript
 const { notifications, unreadCount } = useNotifications({
   userId,
@@ -237,6 +247,7 @@ Si tienes imagenes en Firebase Storage, puedes migrarlas:
 3. Actualiza URLs en Firestore
 
 **Script de migracion (ejemplo):**
+
 ```typescript
 import { getFileURL } from '@/lib/firebase/storage'; // Old
 import { uploadToCloudinary } from '@/lib/cloudinary'; // New
@@ -315,23 +326,23 @@ Si necesitas volver atras:
 
 ### Cloudinary vs Firebase Storage
 
-| Caracteristica | Firebase Storage | Cloudinary |
-|----------------|------------------|------------|
-| Plan Gratuito | No (requiere Blaze) | Si (25GB) |
-| Transformaciones | No | Si (ilimitadas) |
-| CDN | Si | Si |
-| Optimizacion automatica | No | Si |
-| API | SDK Firebase | REST API |
+| Caracteristica          | Firebase Storage    | Cloudinary      |
+| ----------------------- | ------------------- | --------------- |
+| Plan Gratuito           | No (requiere Blaze) | Si (25GB)       |
+| Transformaciones        | No                  | Si (ilimitadas) |
+| CDN                     | Si                  | Si              |
+| Optimizacion automatica | No                  | Si              |
+| API                     | SDK Firebase        | REST API        |
 
 ### Sistema In-App vs FCM
 
-| Caracteristica | FCM | Sistema In-App |
-|----------------|-----|----------------|
-| Plan Gratuito | No (requiere Blaze) | Si |
-| Push (app cerrada) | Si | No |
-| Tiempo real (app abierta) | Si | Si |
-| Historial | Limitado | Completo |
-| Setup | Complejo | Simple |
+| Caracteristica            | FCM                 | Sistema In-App |
+| ------------------------- | ------------------- | -------------- |
+| Plan Gratuito             | No (requiere Blaze) | Si             |
+| Push (app cerrada)        | Si                  | No             |
+| Tiempo real (app abierta) | Si                  | Si             |
+| Historial                 | Limitado            | Completo       |
+| Setup                     | Complejo            | Simple         |
 
 ## Recursos
 

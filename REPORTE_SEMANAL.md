@@ -12,6 +12,7 @@
 ### 🔥 **2. Integración Completa de Firebase (60%)**
 
 #### **Servicios Implementados:**
+
 - ✅ **Firebase Authentication** - Sistema de autenticación seguro
   - Login con email/password
   - Integración con Google SSO
@@ -36,6 +37,7 @@
   - Notificaciones push listas para implementar
 
 #### **Documentación Creada:**
+
 - ✅ Guía completa de setup de Firebase
 - ✅ Manual de despliegue de reglas de seguridad
 - ✅ Guía de inicio rápido
@@ -45,12 +47,14 @@
 ### 🎨 **3. Sistema de Diseño Temático BBQ (100%)**
 
 #### **Identidad Visual:**
+
 - ✅ **Paleta de Colores Personalizada**
   - Modo Light: Tonos cálidos (crema, madera, fuego)
   - Modo Dark: Ambiente nocturno (carbón, brasa, humo)
   - Colores que evocan el asador y BBQ
 
 #### **Componentes UI (shadcn/ui):**
+
 - ✅ Buttons (8 variantes)
 - ✅ Cards (3 estilos)
 - ✅ Badges (15+ estados)

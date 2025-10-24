@@ -47,7 +47,10 @@ function testApp() {
 function testAuth() {
   console.log('\n3. Authentication');
   console.log('   Auth Domain:', auth.config.authDomain || '❌ Missing');
-  console.log('   Current User:', auth.currentUser ? auth.currentUser.email : 'None (not logged in)');
+  console.log(
+    '   Current User:',
+    auth.currentUser ? auth.currentUser.email : 'None (not logged in)'
+  );
   console.log('   ✅ Auth service available');
   return true;
 }
@@ -71,7 +74,9 @@ async function testFirestore() {
     console.log('   Error:', error.message);
 
     if (error.code === 'permission-denied') {
-      console.log('   💡 Tip: This is normal if you haven\'t deployed security rules yet.');
+      console.log(
+        "   💡 Tip: This is normal if you haven't deployed security rules yet."
+      );
       console.log('   💡 Deploy rules: firebase deploy --only firestore:rules');
       return true; // Connection works, just permission issue
     }
@@ -90,7 +95,10 @@ async function testStorage() {
     const storageRef = ref(storage, '/');
     await listAll(storageRef);
 
-    console.log('   Bucket:', storage.app.options.storageBucket || '❌ Missing');
+    console.log(
+      '   Bucket:',
+      storage.app.options.storageBucket || '❌ Missing'
+    );
     console.log('   ✅ Storage connection successful');
     return true;
   } catch (error: any) {
@@ -98,7 +106,9 @@ async function testStorage() {
     console.log('   Error:', error.message);
 
     if (error.code === 'storage/unauthorized') {
-      console.log('   💡 Tip: This is normal if you haven\'t deployed security rules yet.');
+      console.log(
+        "   💡 Tip: This is normal if you haven't deployed security rules yet."
+      );
       console.log('   💡 Deploy rules: firebase deploy --only storage:rules');
       return true; // Connection works, just permission issue
     }
@@ -195,8 +205,12 @@ async function runTests() {
       console.log('🎉 All tests passed! Firebase is ready to use.');
       console.log('');
       console.log('Next steps:');
-      console.log('1. Deploy security rules (see docs/firebase/DEPLOY_RULES.md)');
-      console.log('2. Create first admin user (see docs/firebase/QUICK_START.md)');
+      console.log(
+        '1. Deploy security rules (see docs/firebase/DEPLOY_RULES.md)'
+      );
+      console.log(
+        '2. Create first admin user (see docs/firebase/QUICK_START.md)'
+      );
       console.log('3. Start building your app!');
     } else {
       console.log('⚠️  Some tests failed. Please check the errors above.');

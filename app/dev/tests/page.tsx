@@ -1,7 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -86,13 +92,18 @@ export default function DevTestsPage() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-3">
-                <h3 className="text-sm font-semibold text-slate-300">Botones Primarios</h3>
+                <h3 className="text-sm font-semibold text-slate-300">
+                  Botones Primarios
+                </h3>
                 <div className="flex flex-wrap gap-3">
                   <Button className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700">
                     <Flame className="w-4 h-4 mr-2" />
                     Nuevo Pedido
                   </Button>
-                  <Button disabled className="bg-gradient-to-r from-orange-500 to-red-600">
+                  <Button
+                    disabled
+                    className="bg-gradient-to-r from-orange-500 to-red-600"
+                  >
                     <Flame className="w-4 h-4 mr-2" />
                     Deshabilitado
                   </Button>
@@ -117,13 +128,21 @@ export default function DevTestsPage() {
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-sm font-semibold text-slate-300">Botones Secundarios</h3>
+                <h3 className="text-sm font-semibold text-slate-300">
+                  Botones Secundarios
+                </h3>
                 <div className="flex flex-wrap gap-3">
-                  <Button variant="outline" className="border-slate-700 text-slate-300 hover:bg-slate-800">
+                  <Button
+                    variant="outline"
+                    className="border-slate-700 text-slate-300 hover:bg-slate-800"
+                  >
                     <Users className="w-4 h-4 mr-2" />
                     Ver Clientes
                   </Button>
-                  <Button variant="ghost" className="text-slate-300 hover:bg-slate-800">
+                  <Button
+                    variant="ghost"
+                    className="text-slate-300 hover:bg-slate-800"
+                  >
                     <Package className="w-4 h-4 mr-2" />
                     Productos
                   </Button>
@@ -131,17 +150,31 @@ export default function DevTestsPage() {
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-sm font-semibold text-slate-300">Botones de Acción</h3>
+                <h3 className="text-sm font-semibold text-slate-300">
+                  Botones de Acción
+                </h3>
                 <div className="flex flex-wrap gap-3">
-                  <Button size="sm" variant="outline" className="border-green-700 text-green-400 hover:bg-green-950/20">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="border-green-700 text-green-400 hover:bg-green-950/20"
+                  >
                     <CheckCircle2 className="w-4 h-4 mr-2" />
                     Aprobar
                   </Button>
-                  <Button size="sm" variant="outline" className="border-red-700 text-red-400 hover:bg-red-950/20">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="border-red-700 text-red-400 hover:bg-red-950/20"
+                  >
                     <XCircle className="w-4 h-4 mr-2" />
                     Rechazar
                   </Button>
-                  <Button size="sm" variant="outline" className="border-blue-700 text-blue-400 hover:bg-blue-950/20">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="border-blue-700 text-blue-400 hover:bg-blue-950/20"
+                  >
                     <Bell className="w-4 h-4 mr-2" />
                     Notificar
                   </Button>
@@ -163,8 +196,12 @@ export default function DevTestsPage() {
                       <ShoppingCart className="w-5 h-5 text-orange-400" />
                     </div>
                     <div>
-                      <CardTitle className="text-base text-white">Pedido #123</CardTitle>
-                      <CardDescription className="text-xs">Hace 5 minutos</CardDescription>
+                      <CardTitle className="text-base text-white">
+                        Pedido #123
+                      </CardTitle>
+                      <CardDescription className="text-xs">
+                        Hace 5 minutos
+                      </CardDescription>
                     </div>
                   </div>
                   <Badge className="bg-yellow-500/10 text-yellow-400 border-yellow-500/30">
@@ -180,7 +217,9 @@ export default function DevTestsPage() {
                 </div>
                 <div className="flex items-center justify-between pt-3 border-t border-slate-700/50">
                   <span className="text-sm text-slate-400">Total</span>
-                  <span className="text-xl font-bold text-orange-500">$45.00</span>
+                  <span className="text-xl font-bold text-orange-500">
+                    $45.00
+                  </span>
                 </div>
               </CardContent>
             </Card>
@@ -194,8 +233,12 @@ export default function DevTestsPage() {
                       <ChefHat className="w-5 h-5 text-green-400" />
                     </div>
                     <div>
-                      <CardTitle className="text-base text-white">En Cocina</CardTitle>
-                      <CardDescription className="text-xs">Pedido #456</CardDescription>
+                      <CardTitle className="text-base text-white">
+                        En Cocina
+                      </CardTitle>
+                      <CardDescription className="text-xs">
+                        Pedido #456
+                      </CardDescription>
                     </div>
                   </div>
                   <Badge className="bg-green-500/10 text-green-400 border-green-500/30">
@@ -211,8 +254,12 @@ export default function DevTestsPage() {
                   <p className="text-slate-400">1x Ensalada</p>
                 </div>
                 <div className="flex items-center justify-between pt-3 border-t border-green-700/30">
-                  <span className="text-sm text-slate-400">Tiempo restante</span>
-                  <span className="text-sm font-bold text-green-400">~15 min</span>
+                  <span className="text-sm text-slate-400">
+                    Tiempo restante
+                  </span>
+                  <span className="text-sm font-bold text-green-400">
+                    ~15 min
+                  </span>
                 </div>
               </CardContent>
             </Card>
@@ -226,8 +273,12 @@ export default function DevTestsPage() {
                       <Bike className="w-5 h-5 text-blue-400" />
                     </div>
                     <div>
-                      <CardTitle className="text-base text-white">En Camino</CardTitle>
-                      <CardDescription className="text-xs">Pedido #789</CardDescription>
+                      <CardTitle className="text-base text-white">
+                        En Camino
+                      </CardTitle>
+                      <CardDescription className="text-xs">
+                        Pedido #789
+                      </CardDescription>
                     </div>
                   </div>
                   <Badge className="bg-blue-500/10 text-blue-400 border-blue-500/30">
@@ -244,7 +295,9 @@ export default function DevTestsPage() {
                 </div>
                 <div className="flex items-center justify-between pt-3 border-t border-blue-700/30">
                   <span className="text-sm text-slate-400">Distancia</span>
-                  <span className="text-sm font-bold text-blue-400">2.3 km</span>
+                  <span className="text-sm font-bold text-blue-400">
+                    2.3 km
+                  </span>
                 </div>
               </CardContent>
             </Card>
@@ -262,7 +315,9 @@ export default function DevTestsPage() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-3">
-                <h3 className="text-sm font-semibold text-slate-300">Estados de Pedidos</h3>
+                <h3 className="text-sm font-semibold text-slate-300">
+                  Estados de Pedidos
+                </h3>
                 <div className="flex flex-wrap gap-3">
                   <Badge className="bg-yellow-500/10 text-yellow-400 border-yellow-500/30">
                     <Clock className="w-3 h-3 mr-1" />
@@ -292,18 +347,32 @@ export default function DevTestsPage() {
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-sm font-semibold text-slate-300">Prioridades</h3>
+                <h3 className="text-sm font-semibold text-slate-300">
+                  Prioridades
+                </h3>
                 <div className="flex flex-wrap gap-3">
-                  <Badge variant="outline" className="border-slate-600 text-slate-400">
+                  <Badge
+                    variant="outline"
+                    className="border-slate-600 text-slate-400"
+                  >
                     Baja
                   </Badge>
-                  <Badge variant="outline" className="border-blue-600 text-blue-400">
+                  <Badge
+                    variant="outline"
+                    className="border-blue-600 text-blue-400"
+                  >
                     Media
                   </Badge>
-                  <Badge variant="outline" className="border-orange-600 text-orange-400">
+                  <Badge
+                    variant="outline"
+                    className="border-orange-600 text-orange-400"
+                  >
                     Alta
                   </Badge>
-                  <Badge variant="outline" className="border-red-600 text-red-400">
+                  <Badge
+                    variant="outline"
+                    className="border-red-600 text-red-400"
+                  >
                     <AlertCircle className="w-3 h-3 mr-1" />
                     Urgente
                   </Badge>
@@ -311,7 +380,9 @@ export default function DevTestsPage() {
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-sm font-semibold text-slate-300">Tipos de Pago</h3>
+                <h3 className="text-sm font-semibold text-slate-300">
+                  Tipos de Pago
+                </h3>
                 <div className="flex flex-wrap gap-3">
                   <Badge className="bg-green-500/10 text-green-400 border-green-500/30">
                     <CreditCard className="w-3 h-3 mr-1" />
@@ -335,7 +406,9 @@ export default function DevTestsPage() {
         <TabsContent value="forms" className="space-y-4">
           <Card className="border-slate-800/50 bg-gradient-to-br from-slate-900/50 to-slate-800/30 backdrop-blur-sm shadow-xl">
             <CardHeader>
-              <CardTitle className="text-white">Componentes de Formulario</CardTitle>
+              <CardTitle className="text-white">
+                Componentes de Formulario
+              </CardTitle>
               <CardDescription className="text-slate-400">
                 Inputs, selects y otros elementos de formulario
               </CardDescription>
@@ -378,7 +451,10 @@ export default function DevTestsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="address" className="text-slate-300 font-medium">
+                  <Label
+                    htmlFor="address"
+                    className="text-slate-300 font-medium"
+                  >
                     Dirección
                   </Label>
                   <Input
@@ -394,7 +470,10 @@ export default function DevTestsPage() {
                   <CheckCircle2 className="w-4 h-4 mr-2" />
                   Guardar
                 </Button>
-                <Button variant="outline" className="border-slate-700 text-slate-300 hover:bg-slate-800">
+                <Button
+                  variant="outline"
+                  className="border-slate-700 text-slate-300 hover:bg-slate-800"
+                >
                   Cancelar
                 </Button>
               </div>

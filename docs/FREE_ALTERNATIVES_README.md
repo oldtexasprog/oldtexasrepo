@@ -4,10 +4,10 @@
 
 Este proyecto utiliza alternativas completamente gratuitas a servicios de Firebase que requieren plan Blaze (pago):
 
-| Servicio Firebase | Alternativa Gratuita | Beneficio |
-|-------------------|---------------------|-----------|
-| **Firebase Storage** | **Cloudinary** | 25GB storage + 25GB bandwidth/mes |
-| **Firebase Cloud Messaging (FCM)** | **Sistema In-App** | Notificaciones en tiempo real via Firestore |
+| Servicio Firebase                  | Alternativa Gratuita | Beneficio                                   |
+| ---------------------------------- | -------------------- | ------------------------------------------- |
+| **Firebase Storage**               | **Cloudinary**       | 25GB storage + 25GB bandwidth/mes           |
+| **Firebase Cloud Messaging (FCM)** | **Sistema In-App**   | Notificaciones en tiempo real via Firestore |
 
 ## 1. Cloudinary (Reemplazo de Firebase Storage)
 
@@ -37,6 +37,7 @@ lib/cloudinary/
    - https://cloudinary.com/users/register/free
 
 2. **Configurar variables de entorno:**
+
    ```env
    NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=tu-cloud-name
    NEXT_PUBLIC_CLOUDINARY_API_KEY=tu-api-key
@@ -45,6 +46,7 @@ lib/cloudinary/
    ```
 
 3. **Usar en tu codigo:**
+
    ```typescript
    import { uploadProductImage } from '@/lib/cloudinary';
 
@@ -91,6 +93,7 @@ lib/notifications/
    Las reglas ya estan agregadas en `firestore.rules`
 
 2. **Agregar archivos de sonido:**
+
    ```
    public/sounds/
    ├── notification-low.mp3
@@ -100,6 +103,7 @@ lib/notifications/
    ```
 
 3. **Usar en tu componente:**
+
    ```typescript
    import { useNotifications } from '@/lib/notifications';
 
@@ -112,6 +116,7 @@ lib/notifications/
    ```
 
 4. **Crear notificaciones:**
+
    ```typescript
    import { notifyNewOrder } from '@/lib/notifications';
 
@@ -164,19 +169,19 @@ Si ya tienes codigo usando Firebase Storage o FCM, consulta:
 
 ### Firebase (Plan Blaze)
 
-| Servicio | Costo Base | Costo Adicional |
-|----------|------------|-----------------|
-| Storage | $0.026/GB/mes | $0.12/GB transferencia |
-| Cloud Messaging | Gratis | Requiere Blaze ($25/mes minimo) |
-| **TOTAL MINIMO** | **$25/mes** | - |
+| Servicio         | Costo Base    | Costo Adicional                 |
+| ---------------- | ------------- | ------------------------------- |
+| Storage          | $0.026/GB/mes | $0.12/GB transferencia          |
+| Cloud Messaging  | Gratis        | Requiere Blaze ($25/mes minimo) |
+| **TOTAL MINIMO** | **$25/mes**   | -                               |
 
 ### Alternativas Gratuitas
 
-| Servicio | Costo | Limites Gratuitos |
-|----------|-------|-------------------|
-| Cloudinary | **$0** | 25GB storage + 25GB bandwidth/mes |
-| Notificaciones In-App | **$0** | Ilimitado (usa Firestore Spark) |
-| **TOTAL** | **$0** | - |
+| Servicio              | Costo  | Limites Gratuitos                 |
+| --------------------- | ------ | --------------------------------- |
+| Cloudinary            | **$0** | 25GB storage + 25GB bandwidth/mes |
+| Notificaciones In-App | **$0** | Ilimitado (usa Firestore Spark)   |
+| **TOTAL**             | **$0** | -                                 |
 
 **AHORRO: $25/mes = $300/ano**
 

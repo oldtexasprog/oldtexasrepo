@@ -39,9 +39,9 @@ export const STORAGE_PATHS = {
  * Tipos de archivo permitidos
  */
 export const ALLOWED_FILE_TYPES = {
-  IMAGES: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
-  DOCUMENTS: ['application/pdf'],
-} as const;
+  IMAGES: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'] as string[],
+  DOCUMENTS: ['application/pdf'] as string[],
+};
 
 /**
  * Tamaño máximo de archivo (5MB)
@@ -61,7 +61,10 @@ export const validateFileType = (
 /**
  * Validar tamaño de archivo
  */
-export const validateFileSize = (file: File, maxSize: number = MAX_FILE_SIZE): boolean => {
+export const validateFileSize = (
+  file: File,
+  maxSize: number = MAX_FILE_SIZE
+): boolean => {
   return file.size <= maxSize;
 };
 
@@ -455,12 +458,17 @@ export const uploadProductImage = (
   });
 };
 
-export const deleteProductImage = (productId: string, filename: string): Promise<UploadResult> => {
+export const deleteProductImage = (
+  productId: string,
+  filename: string
+): Promise<UploadResult> => {
   const path = buildStoragePath(STORAGE_PATHS.PRODUCTOS, productId, filename);
   return deleteFile(path);
 };
 
-export const deleteAllProductImages = (productId: string): Promise<UploadResult> => {
+export const deleteAllProductImages = (
+  productId: string
+): Promise<UploadResult> => {
   return deleteFolder(STORAGE_PATHS.PRODUCTOS, productId);
 };
 
@@ -479,7 +487,10 @@ export const uploadComprobante = (
   });
 };
 
-export const deleteComprobante = (pedidoId: string, filename: string): Promise<UploadResult> => {
+export const deleteComprobante = (
+  pedidoId: string,
+  filename: string
+): Promise<UploadResult> => {
   const path = buildStoragePath(STORAGE_PATHS.COMPROBANTES, pedidoId, filename);
   return deleteFile(path);
 };

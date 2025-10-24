@@ -5,7 +5,13 @@ import { useRouter } from 'next/navigation';
 import { validateDevKey, grantDevAccess, hasDevAccess } from '@/lib/dev-auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Code2, Lock, Terminal } from 'lucide-react';
 
@@ -81,7 +87,10 @@ export default function DevAccessPage() {
             </div>
 
             {error && (
-              <Alert variant="destructive" className="bg-red-950/30 border-red-900/50 text-red-200 animate-shake">
+              <Alert
+                variant="destructive"
+                className="bg-red-950/30 border-red-900/50 text-red-200 animate-shake"
+              >
                 <AlertDescription className="text-sm">{error}</AlertDescription>
               </Alert>
             )}
@@ -107,16 +116,24 @@ export default function DevAccessPage() {
               <div className="flex items-start gap-3 p-3 rounded-lg bg-slate-800/30 hover:bg-slate-800/50 transition-colors">
                 <Terminal className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-semibold text-slate-200">Páginas de Desarrollo</p>
-                  <p className="text-xs text-slate-400 mt-0.5">Pruebas de código y playground de componentes</p>
+                  <p className="font-semibold text-slate-200">
+                    Páginas de Desarrollo
+                  </p>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    Pruebas de código y playground de componentes
+                  </p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3 p-3 rounded-lg bg-slate-800/30 hover:bg-slate-800/50 transition-colors">
                 <Code2 className="w-5 h-5 text-orange-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="font-semibold text-slate-200">Ambiente Protegido</p>
-                  <p className="text-xs text-slate-400 mt-0.5">Acceso restringido solo para desarrollo</p>
+                  <p className="font-semibold text-slate-200">
+                    Ambiente Protegido
+                  </p>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    Acceso restringido solo para desarrollo
+                  </p>
                 </div>
               </div>
             </div>

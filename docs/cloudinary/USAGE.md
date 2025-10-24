@@ -140,10 +140,13 @@ const handleGenericUpload = async (file: File) => {
 import { getOptimizedImageUrl } from '@/lib/cloudinary';
 
 // Imagen optimizada con tamano maximo
-const imageUrl = getOptimizedImageUrl('old-texas-bbq/productos/prod-123/image', {
-  width: 800,
-  quality: 'auto',
-});
+const imageUrl = getOptimizedImageUrl(
+  'old-texas-bbq/productos/prod-123/image',
+  {
+    width: 800,
+    quality: 'auto',
+  }
+);
 
 // <img src={imageUrl} alt="Producto" />
 ```
@@ -492,6 +495,7 @@ export const ImageGallery = ({ images }: ImageGalleryProps) => {
 ## Best Practices
 
 1. **Siempre valida archivos antes de subir:**
+
    ```typescript
    const validation = await prepareImageForUpload(file, allowedTypes);
    if (!validation.valid) {
@@ -505,6 +509,7 @@ export const ImageGallery = ({ images }: ImageGalleryProps) => {
    - Limita el tamano maximo con `width` y `height`
 
 3. **Guarda el public_id en Firestore:**
+
    ```typescript
    await updateDocument('productos', productId, {
      imagen_url: result.secureUrl,
@@ -513,6 +518,7 @@ export const ImageGallery = ({ images }: ImageGalleryProps) => {
    ```
 
 4. **Elimina imagenes no utilizadas:**
+
    ```typescript
    // Al eliminar un producto
    if (producto.imagen_public_id) {

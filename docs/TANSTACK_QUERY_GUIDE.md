@@ -354,6 +354,7 @@ En desarrollo, los DevTools están activos automáticamente.
    ```
 
 4. **Optimistic Updates para mejor UX**
+
    ```typescript
    // Ver ejemplo en useUpdateOrder
    onMutate: async ({ id, data }) => {

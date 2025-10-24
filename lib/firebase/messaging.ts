@@ -132,23 +132,24 @@ export const getFCMToken = async (): Promise<string | null> => {
 /**
  * Registrar service worker para notificaciones
  */
-export const registerServiceWorker = async (): Promise<ServiceWorkerRegistration | null> => {
-  if (!('serviceWorker' in navigator)) {
-    return null;
-  }
+export const registerServiceWorker =
+  async (): Promise<ServiceWorkerRegistration | null> => {
+    if (!('serviceWorker' in navigator)) {
+      return null;
+    }
 
-  try {
-    const registration = await navigator.serviceWorker.register(
-      '/firebase-messaging-sw.js'
-    );
+    try {
+      const registration = await navigator.serviceWorker.register(
+        '/firebase-messaging-sw.js'
+      );
 
-    console.log('Service Worker registrado:', registration);
-    return registration;
-  } catch (error) {
-    console.error('Error al registrar Service Worker:', error);
-    return null;
-  }
-};
+      console.log('Service Worker registrado:', registration);
+      return registration;
+    } catch (error) {
+      console.error('Error al registrar Service Worker:', error);
+      return null;
+    }
+  };
 
 /**
  * Guardar token FCM en Firestore
@@ -270,11 +271,10 @@ export const showNotification = async (
       body: notification.body,
       icon: notification.icon || '/icon-192x192.png',
       badge: notification.badge || '/badge-72x72.png',
-      image: notification.image,
+      ...(notification.image && { image: notification.image }),
       data: notification.data,
       tag: notification.tag || 'default',
       requireInteraction: notification.requireInteraction || false,
-      vibrate: [200, 100, 200],
     });
   } catch (error) {
     console.error('Error al mostrar notificación:', error);
@@ -381,7 +381,5 @@ export const disableNotifications = async (
  * Verificar si las notificaciones están habilitadas
  */
 export const areNotificationsEnabled = (): boolean => {
-  return (
-    isNotificationSupported() && getNotificationPermission() === 'granted'
-  );
+  return isNotificationSupported() && getNotificationPermission() === 'granted';
 };

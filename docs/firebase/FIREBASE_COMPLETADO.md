@@ -12,59 +12,59 @@ Se ha completado **exitosamente** la configuración completa de Firebase para el
 
 ✅ **7 archivos creados** con ~3,500 líneas de código
 
-| Archivo | Líneas | Descripción |
-|---------|--------|-------------|
-| `config.ts` | ~200 | Configuración e inicialización de Firebase |
-| `auth.ts` | ~450 | Utilidades de autenticación (login, logout, roles) |
-| `firestore.ts` | ~500 | Utilidades de Firestore (CRUD, queries, listeners) |
-| `storage.ts` | ~420 | Utilidades de Storage (upload, download, validación) |
-| `messaging.ts` | ~340 | Utilidades de FCM (notificaciones push) |
-| `types.ts` | ~140 | Tipos TypeScript completos |
-| `index.ts` | ~80 | Barrel exports |
+| Archivo        | Líneas | Descripción                                          |
+| -------------- | ------ | ---------------------------------------------------- |
+| `config.ts`    | ~200   | Configuración e inicialización de Firebase           |
+| `auth.ts`      | ~450   | Utilidades de autenticación (login, logout, roles)   |
+| `firestore.ts` | ~500   | Utilidades de Firestore (CRUD, queries, listeners)   |
+| `storage.ts`   | ~420   | Utilidades de Storage (upload, download, validación) |
+| `messaging.ts` | ~340   | Utilidades de FCM (notificaciones push)              |
+| `types.ts`     | ~140   | Tipos TypeScript completos                           |
+| `index.ts`     | ~80    | Barrel exports                                       |
 
 ### 2. Reglas de Seguridad
 
 ✅ **2 archivos creados** con reglas completas por rol
 
-| Archivo | Líneas | Descripción |
-|---------|--------|-------------|
-| `firestore.rules` | ~250 | Reglas de seguridad de Firestore |
-| `storage.rules` | ~140 | Reglas de seguridad de Storage |
+| Archivo           | Líneas | Descripción                      |
+| ----------------- | ------ | -------------------------------- |
+| `firestore.rules` | ~250   | Reglas de seguridad de Firestore |
+| `storage.rules`   | ~140   | Reglas de seguridad de Storage   |
 
 ### 3. Service Worker
 
 ✅ **1 archivo creado** para notificaciones push
 
-| Archivo | Líneas | Descripción |
-|---------|--------|-------------|
-| `public/firebase-messaging-sw.js` | ~140 | Service Worker para FCM |
+| Archivo                           | Líneas | Descripción             |
+| --------------------------------- | ------ | ----------------------- |
+| `public/firebase-messaging-sw.js` | ~140   | Service Worker para FCM |
 
 ### 4. Documentación (`/docs/firebase/`)
 
 ✅ **5 documentos completos** con guías detalladas
 
-| Archivo | Páginas | Descripción |
-|---------|---------|-------------|
-| `FIREBASE_SETUP_GUIDE.md` | ~400 líneas | Guía completa paso a paso para configurar Firebase Console |
-| `README.md` | ~450 líneas | Documentación principal con arquitectura y ejemplos |
-| `DEPLOY_RULES.md` | ~300 líneas | Guía para desplegar reglas de seguridad |
-| `RESUMEN_FIREBASE_SETUP.md` | ~450 líneas | Resumen ejecutivo con métricas y checklist |
-| `QUICK_START.md` | ~150 líneas | Guía rápida de 5 pasos (25 minutos) |
+| Archivo                     | Páginas     | Descripción                                                |
+| --------------------------- | ----------- | ---------------------------------------------------------- |
+| `FIREBASE_SETUP_GUIDE.md`   | ~400 líneas | Guía completa paso a paso para configurar Firebase Console |
+| `README.md`                 | ~450 líneas | Documentación principal con arquitectura y ejemplos        |
+| `DEPLOY_RULES.md`           | ~300 líneas | Guía para desplegar reglas de seguridad                    |
+| `RESUMEN_FIREBASE_SETUP.md` | ~450 líneas | Resumen ejecutivo con métricas y checklist                 |
+| `QUICK_START.md`            | ~150 líneas | Guía rápida de 5 pasos (25 minutos)                        |
 
 ### 5. Scripts de Utilidad
 
 ✅ **1 script de prueba** para verificar configuración
 
-| Archivo | Líneas | Descripción |
-|---------|--------|-------------|
-| `scripts/test-firebase-connection.ts` | ~250 | Script para probar conexión a Firebase |
+| Archivo                               | Líneas | Descripción                            |
+| ------------------------------------- | ------ | -------------------------------------- |
+| `scripts/test-firebase-connection.ts` | ~250   | Script para probar conexión a Firebase |
 
 ### 6. Configuración
 
 ✅ **1 archivo actualizado**
 
-| Archivo | Descripción |
-|---------|-------------|
+| Archivo        | Descripción                                          |
+| -------------- | ---------------------------------------------------- |
 | `.env.example` | Template completo con todas las variables necesarias |
 
 ---
@@ -112,6 +112,7 @@ old-texas-bbq-crm/
 ## Funcionalidades Implementadas
 
 ### Authentication (auth.ts)
+
 - ✅ Login con email/password
 - ✅ Logout
 - ✅ Reset password
@@ -127,6 +128,7 @@ old-texas-bbq-crm/
 **Total**: 15+ funciones
 
 ### Firestore (firestore.ts)
+
 - ✅ CRUD operations genéricas (getDocument, createDocument, updateDocument, deleteDocument)
 - ✅ Queries con filtros (where, orderBy, limit)
 - ✅ Paginación (getPaginatedDocuments)
@@ -141,6 +143,7 @@ old-texas-bbq-crm/
 **Total**: 20+ funciones
 
 ### Storage (storage.ts)
+
 - ✅ Upload de archivos con progreso
 - ✅ Upload de imágenes optimizado
 - ✅ Validación de tipos (imágenes, PDF)
@@ -158,6 +161,7 @@ old-texas-bbq-crm/
 **Total**: 20+ funciones
 
 ### Cloud Messaging (messaging.ts)
+
 - ✅ Verificar soporte de notificaciones
 - ✅ Solicitar permisos
 - ✅ Obtener token FCM
@@ -174,11 +178,13 @@ old-texas-bbq-crm/
 **Total**: 15+ funciones
 
 ### Types (types.ts)
+
 - ✅ 20+ interfaces y tipos TypeScript
 - ✅ Type safety completo
 - ✅ Autocompletado en IDE
 
 ### Total de Funciones
+
 - **70+ funciones** de utilidad
 - **20+ tipos** TypeScript
 - **100% documentado** con JSDoc
@@ -190,6 +196,7 @@ old-texas-bbq-crm/
 ### Firestore (firestore.rules)
 
 **Colecciones**: 8
+
 - usuarios
 - pedidos
 - productos
@@ -200,6 +207,7 @@ old-texas-bbq-crm/
 - fcmTokens
 
 **Roles soportados**: 5
+
 - admin (acceso total)
 - encargado (gestión completa)
 - cajera (crear pedidos, gestionar turnos)
@@ -207,6 +215,7 @@ old-texas-bbq-crm/
 - repartidor (actualizar reparto)
 
 **Funciones helper**: 8
+
 - isAuthenticated()
 - getUserData()
 - hasRole()
@@ -218,11 +227,13 @@ old-texas-bbq-crm/
 ### Storage (storage.rules)
 
 **Carpetas**: 3
-- productos/{productoId}/*
-- comprobantes/{pedidoId}/*
-- usuarios/{userId}/*
+
+- productos/{productoId}/\*
+- comprobantes/{pedidoId}/\*
+- usuarios/{userId}/\*
 
 **Validaciones**:
+
 - ✅ Tipos permitidos (jpg, png, webp, pdf)
 - ✅ Tamaño máximo (5MB)
 - ✅ Autenticación requerida
@@ -233,9 +244,11 @@ old-texas-bbq-crm/
 ## Documentación Completa
 
 ### 1. FIREBASE_SETUP_GUIDE.md
+
 Guía completa para configurar Firebase Console (15-20 minutos)
 
 **Contenido**:
+
 - Crear proyecto en Firebase Console
 - Habilitar Authentication (Email/Password)
 - Habilitar Firestore Database
@@ -250,9 +263,11 @@ Guía completa para configurar Firebase Console (15-20 minutos)
 - Troubleshooting completo
 
 ### 2. README.md
+
 Documentación principal con arquitectura y ejemplos
 
 **Contenido**:
+
 - Arquitectura de Firebase
 - Estructura de archivos
 - Colecciones de Firestore (con schemas)
@@ -267,9 +282,11 @@ Documentación principal con arquitectura y ejemplos
 - Recursos adicionales
 
 ### 3. DEPLOY_RULES.md
+
 Guía para desplegar reglas de seguridad
 
 **Contenido**:
+
 - Método 1: Desde Firebase Console (paso a paso)
 - Método 2: Usando Firebase CLI (con comandos)
 - Verificar reglas desplegadas
@@ -280,9 +297,11 @@ Guía para desplegar reglas de seguridad
 - Checklist de despliegue
 
 ### 4. RESUMEN_FIREBASE_SETUP.md
+
 Resumen ejecutivo con métricas
 
 **Contenido**:
+
 - Archivos creados (tabla completa)
 - Arquitectura implementada
 - Próximos pasos (checklist)
@@ -295,9 +314,11 @@ Resumen ejecutivo con métricas
 - Soporte y recursos
 
 ### 5. QUICK_START.md
+
 Guía rápida de 5 pasos (25 minutos)
 
 **Contenido**:
+
 - Paso 1: Crear proyecto (5 min)
 - Paso 2: Habilitar servicios (10 min)
 - Paso 3: Registrar app (3 min)
@@ -422,6 +443,7 @@ npx tsx scripts/test-firebase-connection.ts
 ```
 
 El script verificará:
+
 - ✅ Configuración de Firebase
 - ✅ Inicialización de App
 - ✅ Servicio de Authentication
@@ -467,24 +489,25 @@ Utilidades:
 
 ## Métricas Finales
 
-| Métrica | Valor |
-|---------|-------|
-| **Archivos creados** | 17 |
-| **Líneas de código** | ~4,860 |
-| **Funciones de utilidad** | 70+ |
-| **Tipos TypeScript** | 20+ |
-| **Colecciones Firestore** | 8 |
-| **Roles soportados** | 5 |
-| **Documentos de guías** | 5 |
+| Métrica                      | Valor     |
+| ---------------------------- | --------- |
+| **Archivos creados**         | 17        |
+| **Líneas de código**         | ~4,860    |
+| **Funciones de utilidad**    | 70+       |
+| **Tipos TypeScript**         | 20+       |
+| **Colecciones Firestore**    | 8         |
+| **Roles soportados**         | 5         |
+| **Documentos de guías**      | 5         |
 | **Tiempo de setup estimado** | 25-30 min |
-| **Cobertura de código** | 100% |
-| **Documentación** | 100% |
+| **Cobertura de código**      | 100%      |
+| **Documentación**            | 100%      |
 
 ---
 
 ## Soporte y Recursos
 
 ### Documentación Local
+
 - **Quick Start**: `docs/firebase/QUICK_START.md`
 - **Setup Completo**: `docs/firebase/FIREBASE_SETUP_GUIDE.md`
 - **Documentación**: `docs/firebase/README.md`
@@ -492,6 +515,7 @@ Utilidades:
 - **Resumen**: `docs/firebase/RESUMEN_FIREBASE_SETUP.md`
 
 ### Links Externos
+
 - [Firebase Console](https://console.firebase.google.com/)
 - [Documentación Firebase](https://firebase.google.com/docs)
 - [Firebase con Next.js](https://firebase.google.com/docs/web/setup)
@@ -516,6 +540,7 @@ firebase deploy --only firestore:rules,storage:rules
 El setup de Firebase para **Old Texas BBQ CRM** está **100% completado** y listo para usar.
 
 ### Lo que se ha creado:
+
 - ✅ 17 archivos con ~4,860 líneas de código
 - ✅ 70+ funciones de utilidad completamente tipadas
 - ✅ Reglas de seguridad completas por rol
@@ -524,6 +549,7 @@ El setup de Firebase para **Old Texas BBQ CRM** está **100% completado** y list
 - ✅ Service Worker para notificaciones push
 
 ### Lo que debes hacer:
+
 1. Configurar Firebase Console (25-30 min)
 2. Copiar credenciales a `.env.local`
 3. Actualizar Service Worker
@@ -532,6 +558,7 @@ El setup de Firebase para **Old Texas BBQ CRM** está **100% completado** y list
 6. Probar con el script de verificación
 
 ### Siguiente paso:
+
 Lee `docs/firebase/QUICK_START.md` y sigue los 5 pasos.
 
 ---

@@ -15,6 +15,7 @@ Este proyecto incluye un ambiente de desarrollo protegido con páginas especiale
 **Función:** Validar acceso a las páginas de desarrollo
 
 **Características:**
+
 - Input seguro de clave de acceso
 - Cookie de sesión (válida por 7 días)
 - Redirección automática si ya tiene acceso
@@ -33,18 +34,21 @@ Este proyecto incluye un ambiente de desarrollo protegido con páginas especiale
 **Características:**
 
 #### Editor de Código
+
 - Textarea con syntax highlighting
 - Soporte para async/await
 - Imports dinámicos
 - Console.log capture
 
 #### Templates Predefinidos
+
 - **Firebase**: Test de conexión y queries a Firestore
 - **Cloudinary**: Test de upload de imágenes
 - **Notificaciones**: Test del sistema de notificaciones in-app
 - **Zustand**: Test de stores y estado global
 
 #### Resultados
+
 - Historial de ejecuciones
 - Output capturado
 - Errores detallados
@@ -52,6 +56,7 @@ Este proyecto incluye un ambiente de desarrollo protegido con páginas especiale
 - Color coding (verde=éxito, rojo=error)
 
 #### Funcionalidades
+
 - Ejecutar código con un click
 - Ver output en tiempo real
 - Limpiar editor
@@ -59,6 +64,7 @@ Este proyecto incluye un ambiente de desarrollo protegido con páginas especiale
 - Tabs para organización (Editor/Resultados)
 
 **Ejemplo de uso:**
+
 ```typescript
 // Test Firebase
 import { db } from '@/lib/firebase';
@@ -79,12 +85,14 @@ console.log('Total usuarios:', usuarios.size);
 **Características:**
 
 #### Editor de Componentes
+
 - Editor JSX/TSX
 - Preview en vivo
 - Hot reload del preview
 - Soporte para Tailwind CSS
 
 #### Templates Predefinidos
+
 - **Button**: Botón con gradientes
 - **Card**: Tarjeta de pedido
 - **Badge**: Badge de estado
@@ -92,11 +100,13 @@ console.log('Total usuarios:', usuarios.size);
 - **Alert**: Alerta con iconos
 
 #### Información del Componente
+
 - Nombre del componente
 - Descripción
 - Metadata
 
 #### Gestión de Componentes
+
 - **Guardar**: Guardar componente para uso futuro
 - **Cargar**: Cargar componente guardado
 - **Copiar**: Copiar código al portapapeles
@@ -104,11 +114,13 @@ console.log('Total usuarios:', usuarios.size);
 - **Eliminar**: Borrar componente guardado
 
 #### Preview en Vivo
+
 - Visualización en tiempo real
 - Fondo claro/oscuro
 - Errores de sintaxis mostrados
 
 **Ejemplo de componente:**
+
 ```tsx
 export default function CustomButton() {
   return (
@@ -164,12 +176,14 @@ El sistema usa por defecto `271097` si no encuentra la variable de entorno.
 ### Navegación
 
 Una vez dentro, puedes navegar entre:
+
 - **Pruebas de Código** (`/dev/tests`)
 - **Playground** (`/dev/playground`)
 
 ### Cerrar Sesión
 
 Click en el botón "Salir" en el header para:
+
 - Eliminar la cookie de acceso
 - Regresar a la página principal
 
@@ -180,16 +194,19 @@ Click en el botón "Salir" en el header para:
 Todas las páginas `/dev/*` (excepto `/dev/access`) comparten un layout común:
 
 ### Header
+
 - Logo "Dev Environment"
 - Nombre del proyecto
 - Navegación entre páginas
 - Botones: "Volver al Inicio" y "Salir"
 
 ### Footer
+
 - Información del ambiente
 - Copyright
 
 ### Estilos
+
 - Dark theme (slate-950)
 - Gradientes naranja/rojo (Old Texas BBQ branding)
 - Efectos de hover
@@ -295,6 +312,7 @@ components/ui/
 ### Funciones Disponibles
 
 #### `hasDevAccess(): boolean`
+
 Verifica si el usuario tiene acceso.
 
 ```typescript
@@ -306,6 +324,7 @@ if (hasDevAccess()) {
 ```
 
 #### `validateDevKey(key: string): boolean`
+
 Valida una clave de acceso.
 
 ```typescript
@@ -317,6 +336,7 @@ if (validateDevKey('271097')) {
 ```
 
 #### `grantDevAccess(): void`
+
 Otorga acceso (crea cookie).
 
 ```typescript
@@ -327,6 +347,7 @@ grantDevAccess();
 ```
 
 #### `revokeDevAccess(): void`
+
 Revoca acceso (elimina cookie).
 
 ```typescript
@@ -337,6 +358,7 @@ revokeDevAccess();
 ```
 
 #### `useDevAccess()`
+
 Hook para usar en componentes.
 
 ```typescript
@@ -396,6 +418,7 @@ function MyComponent() {
 **Causa:** Clave incorrecta
 
 **Solución:**
+
 1. Verifica que `.env.local` tenga `DEV_ACCESS_KEY=271097`
 2. Reinicia el servidor de desarrollo
 3. Intenta de nuevo
@@ -405,6 +428,7 @@ function MyComponent() {
 **Causa:** Cookie no se creó correctamente
 
 **Solución:**
+
 1. Limpia las cookies del navegador
 2. Recarga la página
 3. Vuelve a ingresar la clave
@@ -414,6 +438,7 @@ function MyComponent() {
 **Causa:** Error en el código JSX
 
 **Solución:**
+
 1. Revisa la consola de errores
 2. Verifica sintaxis JSX
 3. Click en "Actualizar Preview"
@@ -423,6 +448,7 @@ function MyComponent() {
 **Causa:** Error de sintaxis o imports
 
 **Solución:**
+
 1. Verifica que los imports sean correctos
 2. Revisa el tab "Resultados" para ver el error
 3. Usa `console.log()` para debuggear

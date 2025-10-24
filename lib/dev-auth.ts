@@ -16,7 +16,7 @@ export function hasDevAccess(): boolean {
   }
 
   const cookies = document.cookie.split(';');
-  const devCookie = cookies.find(cookie =>
+  const devCookie = cookies.find((cookie) =>
     cookie.trim().startsWith(`${DEV_ACCESS_COOKIE}=`)
   );
 
@@ -60,7 +60,10 @@ export function revokeDevAccess(): void {
  * Verifica acceso y redirige si es necesario
  * Usar solo en componentes cliente (use client)
  */
-export function checkAndRedirectDevAccess(): { hasAccess: boolean; isChecking: boolean } {
+export function checkAndRedirectDevAccess(): {
+  hasAccess: boolean;
+  isChecking: boolean;
+} {
   if (typeof window === 'undefined') {
     return { hasAccess: false, isChecking: true };
   }

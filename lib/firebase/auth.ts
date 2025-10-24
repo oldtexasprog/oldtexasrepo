@@ -25,11 +25,7 @@ import {
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from './config';
-import type {
-  AuthResult,
-  LoginCredentials,
-  RegisterData,
-} from './types';
+import type { AuthResult, LoginCredentials, RegisterData } from './types';
 import type { Usuario, Role } from '@/lib/types';
 
 /**
@@ -46,9 +42,7 @@ export const login = async (
     );
 
     // Verificar que el usuario tenga un documento en Firestore
-    const userDoc = await getDoc(
-      doc(db, 'usuarios', userCredential.user.uid)
-    );
+    const userDoc = await getDoc(doc(db, 'usuarios', userCredential.user.uid));
 
     if (!userDoc.exists()) {
       await signOut(auth);
@@ -136,9 +130,7 @@ export const logout = async (): Promise<AuthResult> => {
  * NOTA: Esta función debe ser llamada desde un contexto con privilegios de admin
  * o usar Firebase Admin SDK en un API Route
  */
-export const registerUser = async (
-  data: RegisterData
-): Promise<AuthResult> => {
+export const registerUser = async (data: RegisterData): Promise<AuthResult> => {
   try {
     // NOTA: Esta función requiere Firebase Admin SDK para crear usuarios
     // desde el backend. Por ahora, retorna un error indicando que debe
@@ -483,9 +475,7 @@ export const isManager = async (): Promise<boolean> => {
  * Suscribirse a cambios en el estado de autenticación
  * Útil para React components
  */
-export const subscribeToAuthState = (
-  callback: (user: User | null) => void
-) => {
+export const subscribeToAuthState = (callback: (user: User | null) => void) => {
   return onAuthStateChanged(auth, callback);
 };
 

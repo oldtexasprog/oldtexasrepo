@@ -176,19 +176,20 @@ import { uploadImage, deleteFile } from '@/lib/firebase';
 
 ### Permisos por Rol
 
-| Colección           | Admin | Encargado | Cajera | Cocina | Repartidor |
-|---------------------|-------|-----------|--------|--------|------------|
-| usuarios            | CRUD  | CR        | R      | R      | R          |
-| pedidos             | CRUD  | CRUD      | CR     | RU*    | RU**       |
-| productos           | CRUD  | CRUD      | R      | R      | R          |
-| personalizaciones   | CRUD  | CRUD      | R      | R      | R          |
-| repartidores        | CRUD  | CRUD      | R      | R      | RU***      |
-| turnos              | CRUD  | CRUD      | CRU    | R      | R          |
-| configuracion       | CRUD  | RU        | R      | R      | R          |
+| Colección         | Admin | Encargado | Cajera | Cocina | Repartidor |
+| ----------------- | ----- | --------- | ------ | ------ | ---------- |
+| usuarios          | CRUD  | CR        | R      | R      | R          |
+| pedidos           | CRUD  | CRUD      | CR     | RU\*   | RU\*\*     |
+| productos         | CRUD  | CRUD      | R      | R      | R          |
+| personalizaciones | CRUD  | CRUD      | R      | R      | R          |
+| repartidores      | CRUD  | CRUD      | R      | R      | RU\*\*\*   |
+| turnos            | CRUD  | CRUD      | CRU    | R      | R          |
+| configuracion     | CRUD  | RU        | R      | R      | R          |
 
 **Leyenda**: C=Create, R=Read, U=Update, D=Delete
 
 **Restricciones**:
+
 - `*` Cocina solo puede actualizar `estado_pedido` a 'en_preparacion' o 'listo'
 - `**` Repartidor solo puede actualizar sus propios pedidos asignados
 - `***` Repartidor solo puede actualizar su propio documento
@@ -205,7 +206,7 @@ import { login, logout, getCurrentUser } from '@/lib/firebase';
 // Login
 const result = await login({
   email: 'usuario@ejemplo.com',
-  password: 'contraseña123'
+  password: 'contraseña123',
 });
 
 if (result.success) {
@@ -271,7 +272,7 @@ const result = await uploadImage(file, {
   id: productoId,
   onProgress: (progress) => {
     console.log(`Subiendo: ${progress}%`);
-  }
+  },
 });
 
 if (result.success) {
@@ -291,7 +292,7 @@ await deleteFile('productos/123/foto.jpg');
 import {
   initializeFCM,
   onForegroundMessage,
-  notifyNewOrder
+  notifyNewOrder,
 } from '@/lib/firebase';
 
 // Inicializar FCM para usuario
@@ -347,7 +348,7 @@ async function crearPedido(data: PedidoData) {
 import {
   updateDocument,
   getCurrentUserData,
-  COLLECTIONS
+  COLLECTIONS,
 } from '@/lib/firebase';
 
 async function actualizarEstadoPedido(
@@ -364,7 +365,7 @@ async function actualizarEstadoPedido(
   }
 
   const result = await updateDocument(COLLECTIONS.PEDIDOS, pedidoId, {
-    estado_pedido: nuevoEstado
+    estado_pedido: nuevoEstado,
   });
 
   if (result.success) {
@@ -441,10 +442,10 @@ function usePedidosEnTiempoReal() {
           {
             field: 'fecha_hora',
             operator: '>=',
-            value: startOfDay(new Date())
-          }
+            value: startOfDay(new Date()),
+          },
         ],
-        orderBy: { field: 'fecha_hora', direction: 'desc' }
+        orderBy: { field: 'fecha_hora', direction: 'desc' },
       },
       (data, error) => {
         if (error) {
@@ -472,6 +473,7 @@ function usePedidosEnTiempoReal() {
 **Causa**: Las reglas de Firestore están bloqueando la operación.
 
 **Solución**:
+
 1. Verifica que el usuario esté autenticado
 2. Verifica el rol del usuario
 3. Revisa las reglas en `firestore.rules`
@@ -482,6 +484,7 @@ function usePedidosEnTiempoReal() {
 **Causa**: Storage no está habilitado o la configuración es incorrecta.
 
 **Solución**:
+
 1. Habilita Storage en Firebase Console
 2. Verifica `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` en `.env.local`
 
@@ -490,6 +493,7 @@ function usePedidosEnTiempoReal() {
 **Causa**: Permisos no concedidos o VAPID key incorrecta.
 
 **Solución**:
+
 1. Verifica que `NEXT_PUBLIC_FIREBASE_VAPID_KEY` esté configurada
 2. Solicita permisos de notificación
 3. Verifica que el Service Worker esté registrado

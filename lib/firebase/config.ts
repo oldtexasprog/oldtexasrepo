@@ -27,7 +27,10 @@ import {
   isSupported as isMessagingSupported,
   type Messaging,
 } from 'firebase/messaging';
-import { getAnalytics, isSupported as isAnalyticsSupported } from 'firebase/analytics';
+import {
+  getAnalytics,
+  isSupported as isAnalyticsSupported,
+} from 'firebase/analytics';
 import type { FirebaseConfig } from './types';
 
 /**

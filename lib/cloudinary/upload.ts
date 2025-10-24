@@ -17,10 +17,7 @@ import type {
   FileValidationResult,
   CLOUDINARY_ALLOWED_TYPES,
 } from './types';
-import {
-  CLOUDINARY_MAX_FILE_SIZE,
-  CLOUDINARY_FOLDERS,
-} from './types';
+import { CLOUDINARY_MAX_FILE_SIZE, CLOUDINARY_FOLDERS } from './types';
 
 /**
  * Validar tipo de archivo
@@ -50,7 +47,9 @@ export const generateUniqueFilename = (originalName: string): string => {
   const randomString = Math.random().toString(36).substring(2, 9);
   const extension = originalName.split('.').pop();
   const nameWithoutExt = originalName.replace(/\.[^/.]+$/, '');
-  const sanitizedName = nameWithoutExt.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+  const sanitizedName = nameWithoutExt
+    .replace(/[^a-z0-9]/gi, '_')
+    .toLowerCase();
   return `${sanitizedName}_${timestamp}_${randomString}.${extension}`;
 };
 
@@ -191,7 +190,9 @@ export const uploadToCloudinary = async (
       xhr.addEventListener('load', () => {
         if (xhr.status === 200) {
           try {
-            const response: CloudinaryApiResponse = JSON.parse(xhr.responseText);
+            const response: CloudinaryApiResponse = JSON.parse(
+              xhr.responseText
+            );
             resolve({
               success: true,
               url: response.url,

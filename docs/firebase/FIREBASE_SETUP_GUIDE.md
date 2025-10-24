@@ -97,6 +97,7 @@ Más adelante necesitarás estos índices. Firebase te pedirá crearlos automát
 2. Haz clic en **"Add index"** o **"Agregar índice"**
 
 **Índice para Pedidos por Estado y Fecha**:
+
 - Collection ID: `pedidos`
 - Fields indexed:
   1. `estado_pedido` - Ascending
@@ -104,6 +105,7 @@ Más adelante necesitarás estos índices. Firebase te pedirá crearlos automát
 - Query scope: Collection
 
 **Índice para Pedidos por Usuario y Fecha**:
+
 - Collection ID: `pedidos`
 - Fields indexed:
   1. `createdBy` - Ascending
@@ -190,13 +192,13 @@ Después de registrar la app, Firebase te mostrará un código de configuración
 
 ```javascript
 const firebaseConfig = {
-  apiKey: "AIzaSyXxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-  authDomain: "old-texas-bbq-crm.firebaseapp.com",
-  projectId: "old-texas-bbq-crm",
-  storageBucket: "old-texas-bbq-crm.appspot.com",
-  messagingSenderId: "123456789012",
-  appId: "1:123456789012:web:xxxxxxxxxxxx",
-  measurementId: "G-XXXXXXXXXX"
+  apiKey: 'AIzaSyXxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+  authDomain: 'old-texas-bbq-crm.firebaseapp.com',
+  projectId: 'old-texas-bbq-crm',
+  storageBucket: 'old-texas-bbq-crm.appspot.com',
+  messagingSenderId: '123456789012',
+  appId: '1:123456789012:web:xxxxxxxxxxxx',
+  measurementId: 'G-XXXXXXXXXX',
 };
 ```
 
@@ -284,6 +286,7 @@ Las reglas de Firestore controlan quién puede leer/escribir en tu base de datos
 **Ver archivo**: `firestore.rules` en la raíz del proyecto
 
 **Reglas principales**:
+
 - Autenticación requerida para todas las operaciones
 - Cajeras: Crear y leer pedidos
 - Cocina: Leer pedidos y actualizar estado a 'en_preparacion' y 'listo'
@@ -300,6 +303,7 @@ Las reglas de Firestore controlan quién puede leer/escribir en tu base de datos
 **Ver archivo**: `storage.rules` en la raíz del proyecto
 
 **Reglas principales**:
+
 - Solo usuarios autenticados pueden subir archivos
 - Tamaño máximo: 5MB
 - Formatos permitidos: imágenes (jpg, png, webp)
@@ -340,6 +344,7 @@ testConnection();
 ```
 
 Ejecuta:
+
 ```bash
 npx tsx test-firebase.ts
 ```
@@ -381,26 +386,31 @@ Una vez completada la configuración:
 Si quieres usar Firebase CLI para desplegar reglas:
 
 ### Instalar Firebase CLI:
+
 ```bash
 npm install -g firebase-tools
 ```
 
 ### Iniciar sesión:
+
 ```bash
 firebase login
 ```
 
 ### Inicializar proyecto:
+
 ```bash
 firebase init
 ```
 
 Selecciona:
+
 - Firestore
 - Storage
 - Hosting (si lo usas)
 
 ### Desplegar reglas:
+
 ```bash
 firebase deploy --only firestore:rules
 firebase deploy --only storage:rules
@@ -417,6 +427,7 @@ firebase deploy --only storage:rules
 ### Error: "Permission denied" en Firestore
 
 **Solución**:
+
 1. Verifica que las reglas estén publicadas
 2. Verifica que el usuario esté autenticado
 3. Revisa el rol del usuario
@@ -428,11 +439,13 @@ firebase deploy --only storage:rules
 ### Error: "Quota exceeded" (Plan gratuito)
 
 **Límites del plan Spark (gratuito)**:
+
 - Firestore: 50K lecturas/día, 20K escrituras/día
 - Storage: 1GB almacenamiento, 10GB transferencia/mes
 - Authentication: Ilimitado
 
 **Solución**:
+
 - Optimiza queries (usa índices)
 - Implementa caché con TanStack Query
 - Considera actualizar al plan Blaze (pay-as-you-go)
@@ -451,6 +464,7 @@ firebase deploy --only storage:rules
 ## Contacto y Soporte
 
 Si encuentras problemas durante la configuración:
+
 1. Revisa la consola del navegador (F12)
 2. Revisa los logs de Firebase Console
 3. Consulta la documentación en `/docs`

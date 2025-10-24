@@ -7,19 +7,23 @@
  */
 
 // Importar Firebase scripts
-importScripts('https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js');
+importScripts(
+  'https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js'
+);
+importScripts(
+  'https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js'
+);
 
 // Configuración de Firebase (debe coincidir con la del cliente)
 // NOTA: Esta configuración es pública y no contiene información sensible
 const firebaseConfig = {
-  apiKey: "TU_API_KEY",
-  authDomain: "TU_AUTH_DOMAIN",
-  projectId: "TU_PROJECT_ID",
-  storageBucket: "TU_STORAGE_BUCKET",
-  messagingSenderId: "TU_MESSAGING_SENDER_ID",
-  appId: "TU_APP_ID",
-  measurementId: "TU_MEASUREMENT_ID"
+  apiKey: 'TU_API_KEY',
+  authDomain: 'TU_AUTH_DOMAIN',
+  projectId: 'TU_PROJECT_ID',
+  storageBucket: 'TU_STORAGE_BUCKET',
+  messagingSenderId: 'TU_MESSAGING_SENDER_ID',
+  appId: 'TU_APP_ID',
+  measurementId: 'TU_MEASUREMENT_ID',
 };
 
 // Inicializar Firebase
@@ -33,7 +37,10 @@ const messaging = firebase.messaging();
  * Se ejecuta cuando la app no está en foreground
  */
 messaging.onBackgroundMessage((payload) => {
-  console.log('[firebase-messaging-sw.js] Received background message:', payload);
+  console.log(
+    '[firebase-messaging-sw.js] Received background message:',
+    payload
+  );
 
   // Extraer datos de la notificación
   const notificationTitle = payload.notification?.title || 'Old Texas BBQ';
@@ -49,7 +56,10 @@ messaging.onBackgroundMessage((payload) => {
   };
 
   // Mostrar notificación
-  return self.registration.showNotification(notificationTitle, notificationOptions);
+  return self.registration.showNotification(
+    notificationTitle,
+    notificationOptions
+  );
 });
 
 /**
@@ -63,9 +73,7 @@ function getNotificationActions(type) {
         { action: 'dismiss', title: 'Descartar' },
       ];
     case 'order-status':
-      return [
-        { action: 'view', title: 'Ver Detalles' },
-      ];
+      return [{ action: 'view', title: 'Ver Detalles' }];
     default:
       return [];
   }
@@ -104,7 +112,8 @@ self.addEventListener('notificationclick', (event) => {
 
   // Abrir o enfocar ventana
   event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true })
+    clients
+      .matchAll({ type: 'window', includeUncontrolled: true })
       .then((clientList) => {
         // Buscar si ya hay una ventana abierta
         for (const client of clientList) {

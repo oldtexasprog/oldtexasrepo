@@ -17,22 +17,26 @@ Guía rápida de 5 pasos para configurar Firebase en 25 minutos.
 ## Paso 2: Habilitar Servicios (10 min)
 
 ### Authentication
+
 1. Menú > Authentication > Comenzar
 2. Email/Password > Habilitar > Guardar
 
 ### Firestore
+
 1. Menú > Firestore Database > Crear base de datos
 2. Modo: Producción
 3. Ubicación: `us-central1`
 4. Habilitar
 
 ### Storage
+
 1. Menú > Storage > Comenzar
 2. Modo: Producción
 3. Ubicación: `us-central1`
 4. Habilitar
 
 ### Cloud Messaging
+
 1. Menú > Configuración del proyecto (engranaje)
 2. Pestaña: Cloud Messaging
 3. Web Push certificates > Generate key pair
@@ -83,12 +87,14 @@ NEXT_PUBLIC_FIREBASE_VAPID_KEY=BNxxxx...
 ### Opción A: Desde Firebase Console (Más fácil)
 
 **Firestore:**
+
 1. Firestore Database > Rules
 2. Copiar contenido de `firestore.rules` del proyecto
 3. Pegar en el editor
 4. Publish
 
 **Storage:**
+
 1. Storage > Rules
 2. Copiar contenido de `storage.rules` del proyecto
 3. Pegar en el editor
@@ -125,6 +131,7 @@ npm run dev
 ```
 
 **En la consola deberías ver**:
+
 ```
 🔥 Firebase inicializado correctamente
 📦 Proyecto: old-texas-bbq-crm
@@ -165,7 +172,7 @@ import { login } from '@/lib/firebase';
 
 const result = await login({
   email: 'admin@oldtexasbbq.com',
-  password: 'tu_contraseña'
+  password: 'tu_contraseña',
 });
 
 if (result.success) {
@@ -178,6 +185,7 @@ if (result.success) {
 ## Siguiente: Poblar Datos Iniciales
 
 Ver `docs/firebase/SEED_DATA.md` para scripts de inicialización de:
+
 - Productos
 - Personalizaciones
 - Configuración
@@ -186,12 +194,12 @@ Ver `docs/firebase/SEED_DATA.md` para scripts de inicialización de:
 
 ## Troubleshooting Rápido
 
-| Error | Solución |
-|-------|----------|
-| "Firebase config is missing" | Verifica `.env.local` |
-| "Permission denied" | Despliega reglas de seguridad |
-| "Storage bucket not found" | Habilita Storage en Console |
-| "Module not found" | `npm install` |
+| Error                        | Solución                      |
+| ---------------------------- | ----------------------------- |
+| "Firebase config is missing" | Verifica `.env.local`         |
+| "Permission denied"          | Despliega reglas de seguridad |
+| "Storage bucket not found"   | Habilita Storage en Console   |
+| "Module not found"           | `npm install`                 |
 
 ---
 
