@@ -1,0 +1,601 @@
+/**
+ * Tipos TypeScript para el esquema de Firestore
+ * Old Texas BBQ - CRM
+ *
+ * Estos tipos reflejan la estructura de datos definida en docs/FIRESTORE_SCHEMA.md
+ */
+
+import { Timestamp } from 'firebase/firestore';
+
+// ============================================================================
+// ENUMS Y TIPOS BASE
+// ============================================================================
+
+export type Rol = 'admin' | 'encargado' | 'cajera' | 'cocina' | 'repartidor';
+
+export type CanalVenta =
+  | 'whatsapp'
+  | 'mostrador'
+  | 'uber'
+  | 'didi'
+  | 'llamada'
+  | 'web';
+
+export type EstadoPedido =
+  | 'pendiente'
+  | 'en_preparacion'
+  | 'listo'
+  | 'en_reparto'
+  | 'entregado'
+  | 'cancelado';
+
+export type MetodoPago =
+  | 'efectivo'
+  | 'tarjeta'
+  | 'transferencia'
+  | 'uber'
+  | 'didi';
+
+export type EstadoReparto =
+  | 'asignado'
+  | 'recogido'
+  | 'en_camino'
+  | 'entregado';
+
+export type TipoTurno = 'matutino' | 'vespertino';
+
+export type EstadoTurno = 'abierto' | 'cerrado';
+
+export type TipoNotificacion =
+  | 'nuevo_pedido'
+  | 'pedido_listo'
+  | 'pedido_entregado'
+  | 'pedido_cancelado'
+  | 'alerta'
+  | 'info';
+
+export type PrioridadNotificacion = 'baja' | 'normal' | 'alta' | 'urgente';
+
+export type TipoPersonalizacion =
+  | 'salsa'
+  | 'extra'
+  | 'presentacion'
+  | 'temperatura'
+  | 'modificador';
+
+export type TipoComision = 'fijo' | 'porcentaje';
+
+export type TipoTransaccion = 'venta' | 'gasto' | 'retiro' | 'ajuste';
+
+export type CategoriaConfig =
+  | 'general'
+  | 'pedidos'
+  | 'reparto'
+  | 'pagos'
+  | 'notificaciones';
+
+export type TipoConfig =
+  | 'string'
+  | 'number'
+  | 'boolean'
+  | 'array'
+  | 'object';
+
+export type AccionHistorial =
+  | 'creado'
+  | 'actualizado'
+  | 'cambio_estado'
+  | 'asignado'
+  | 'cancelado';
+
+// ============================================================================
+// COLECCIÓN: USUARIOS
+// ============================================================================
+
+export interface Usuario {
+  // Identificación
+  id: string;
+  email: string;
+  nombre: string;
+  apellido: string;
+  telefono: string;
+
+  // Rol y permisos
+  rol: Rol;
+  activo: boolean;
+
+  // Turnos (solo para cajeras)
+  turnoPreferido?: TipoTurno;
+
+  // Metadata
+  fechaCreacion: Timestamp;
+  fechaActualizacion: Timestamp;
+  creadoPor: string;
+  ultimaConexion: Timestamp;
+
+  // FCM para notificaciones
+  fcmTokens: string[];
+}
+
+// ============================================================================
+// COLECCIÓN: PEDIDOS
+// ============================================================================
+
+export interface ClientePedido {
+  nombre: string;
+  telefono: string;
+  direccion?: string;
+  colonia?: string;
+  referencia?: string;
+}
+
+export interface TotalesPedido {
+  subtotal: number;
+  envio: number;
+  descuento: number;
+  total: number;
+}
+
+export interface PagoPedido {
+  metodo: MetodoPago;
+  requiereCambio: boolean;
+  montoRecibido?: number;
+  cambio?: number;
+  pagoAdelantado: boolean;
+  comprobantePago?: string;
+}
+
+export interface RepartoPedido {
+  repartidorId: string;
+  repartidorNombre: string;
+  comisionRepartidor: number;
+  estadoReparto: EstadoReparto;
+  horaAsignacion: Timestamp;
+  horaRecogida?: Timestamp;
+  horaEntrega?: Timestamp;
+  liquidado: boolean;
+  fechaLiquidacion?: Timestamp;
+}
+
+export interface Pedido {
+  // Identificación
+  id: string;
+  numeroPedido: number;
+
+  // Origen del pedido
+  canal: CanalVenta;
+
+  // Cliente
+  cliente: ClientePedido;
+
+  // Estado del pedido
+  estado: EstadoPedido;
+
+  // Totales
+  totales: TotalesPedido;
+
+  // Pago
+  pago: PagoPedido;
+
+  // Reparto (opcional)
+  reparto?: RepartoPedido;
+
+  // Observaciones
+  observaciones?: string;
+  observacionesInternas?: string;
+
+  // Timestamps
+  fechaCreacion: Timestamp;
+  fechaActualizacion: Timestamp;
+  horaRecepcion: Timestamp;
+  horaInicioCocina?: Timestamp;
+  horaListo?: Timestamp;
+  horaEntrega?: Timestamp;
+
+  // Metadata
+  creadoPor: string;
+  turnoId: string;
+  cancelado: boolean;
+  motivoCancelacion?: string;
+}
+
+// ============================================================================
+// SUBCOLECCIÓN: ITEMS DE PEDIDO
+// ============================================================================
+
+export interface PersonalizacionesItem {
+  salsa?: string[];
+  presentacion?: string;
+  temperatura?: string;
+  extras?: string[];
+  sinIngredientes?: string[];
+}
+
+export interface ItemPedido {
+  id: string;
+  productoId: string;
+  productoNombre: string;
+  cantidad: number;
+  precioUnitario: number;
+  subtotal: number;
+  personalizaciones?: PersonalizacionesItem;
+  notas?: string;
+}
+
+// ============================================================================
+// SUBCOLECCIÓN: HISTORIAL DE PEDIDO
+// ============================================================================
+
+export interface HistorialPedido {
+  id: string;
+  timestamp: Timestamp;
+  accion: AccionHistorial;
+  estadoAnterior?: string;
+  estadoNuevo?: string;
+  usuarioId: string;
+  usuarioNombre: string;
+  detalles?: string;
+}
+
+// ============================================================================
+// COLECCIÓN: PRODUCTOS
+// ============================================================================
+
+export interface Producto {
+  // Identificación
+  id: string;
+  sku?: string;
+  nombre: string;
+  descripcion: string;
+
+  // Categorización
+  categoriaId: string;
+  categoriaNombre: string;
+  subcategoria?: string;
+
+  // Precio
+  precio: number;
+  precioPromocion?: number;
+  enPromocion: boolean;
+
+  // Disponibilidad
+  disponible: boolean;
+  stock?: number;
+  stockMinimo?: number;
+
+  // Multimedia
+  imagen?: string;
+  imagenes?: string[];
+
+  // Personalizaciones
+  permitePersonalizacion: boolean;
+
+  // Metadata
+  popularidad: number;
+  orden: number;
+  fechaCreacion: Timestamp;
+  fechaActualizacion: Timestamp;
+  creadoPor: string;
+
+  // SEO
+  etiquetas?: string[];
+  ingredientes?: string[];
+}
+
+// ============================================================================
+// SUBCOLECCIÓN: PERSONALIZACIONES DE PRODUCTO
+// ============================================================================
+
+export interface OpcionPersonalizacion {
+  valor: string;
+  precioAdicional: number;
+  disponible: boolean;
+}
+
+export interface PersonalizacionProducto {
+  id: string;
+  tipo: TipoPersonalizacion;
+  nombre: string;
+  opciones: OpcionPersonalizacion[];
+  obligatorio: boolean;
+  multipleSeleccion: boolean;
+  maximoSelecciones?: number;
+}
+
+// ============================================================================
+// COLECCIÓN: CATEGORÍAS
+// ============================================================================
+
+export interface Categoria {
+  id: string;
+  nombre: string;
+  descripcion?: string;
+  icono?: string;
+  color?: string;
+  orden: number;
+  activa: boolean;
+  fechaCreacion: Timestamp;
+  fechaActualizacion: Timestamp;
+}
+
+// ============================================================================
+// COLECCIÓN: REPARTIDORES
+// ============================================================================
+
+export interface Repartidor {
+  // Identificación
+  id: string;
+  usuarioId?: string;
+  nombre: string;
+  apellido: string;
+  telefono: string;
+
+  // Estado
+  activo: boolean;
+  disponible: boolean;
+
+  // Comisiones
+  comisionPorDefecto: number;
+  tipoComision: TipoComision;
+
+  // Estadísticas
+  pedidosCompletados: number;
+  pedidosCancelados: number;
+  calificacionPromedio?: number;
+
+  // Liquidación
+  saldoPendiente: number;
+  ultimaLiquidacion?: Timestamp;
+
+  // Metadata
+  fechaCreacion: Timestamp;
+  fechaActualizacion: Timestamp;
+  creadoPor: string;
+}
+
+// ============================================================================
+// COLECCIÓN: TURNOS
+// ============================================================================
+
+export interface ResumenTurno {
+  totalPedidos: number;
+  totalVentas: number;
+  efectivo: number;
+  tarjeta: number;
+  transferencia: number;
+  uber: number;
+  didi: number;
+  totalEnvios: number;
+  totalDescuentos: number;
+  totalComisionesRepartidores: number;
+}
+
+export interface CorteCaja {
+  efectivoEsperado: number;
+  efectivoReal: number;
+  diferencia: number;
+  observaciones?: string;
+  cerradoPor: string;
+  horaCierre: Timestamp;
+}
+
+export interface Turno {
+  // Identificación
+  id: string;
+  tipo: TipoTurno;
+  fecha: string; // "YYYY-MM-DD"
+
+  // Responsables
+  cajeroId: string;
+  cajeroNombre: string;
+  encargadoId?: string;
+  encargadoNombre?: string;
+
+  // Horarios
+  horaInicio: Timestamp;
+  horaFin?: Timestamp;
+
+  // Estado
+  estado: EstadoTurno;
+
+  // Fondos
+  fondoInicial: number;
+
+  // Resumen de ventas
+  resumen: ResumenTurno;
+
+  // Corte de caja
+  corte?: CorteCaja;
+
+  // Metadata
+  fechaCreacion: Timestamp;
+  fechaActualizacion: Timestamp;
+}
+
+// ============================================================================
+// SUBCOLECCIÓN: TRANSACCIONES DE TURNO
+// ============================================================================
+
+export interface TransaccionTurno {
+  id: string;
+  tipo: TipoTransaccion;
+  monto: number;
+  metodoPago?: string;
+  pedidoId?: string;
+  descripcion: string;
+  timestamp: Timestamp;
+  usuarioId: string;
+}
+
+// ============================================================================
+// COLECCIÓN: NOTIFICACIONES
+// ============================================================================
+
+export interface Notificacion {
+  // Identificación
+  id: string;
+
+  // Destinatario
+  usuarioId?: string;
+  rol?: Rol;
+
+  // Contenido
+  tipo: TipoNotificacion;
+  titulo: string;
+  mensaje: string;
+
+  // Referencia
+  pedidoId?: string;
+  turnoId?: string;
+
+  // Estado
+  leida: boolean;
+  fechaLeida?: Timestamp;
+
+  // Prioridad
+  prioridad: PrioridadNotificacion;
+
+  // Metadata
+  timestamp: Timestamp;
+  expiraEn?: Timestamp;
+}
+
+// ============================================================================
+// COLECCIÓN: CONFIGURACIÓN
+// ============================================================================
+
+export interface Configuracion<T = any> {
+  id: string;
+  categoria: CategoriaConfig;
+  valor: T;
+  descripcion: string;
+  tipo: TipoConfig;
+  editable: boolean;
+  fechaActualizacion: Timestamp;
+  actualizadoPor: string;
+}
+
+// ============================================================================
+// TIPOS AUXILIARES PARA FORMULARIOS Y UI
+// ============================================================================
+
+/**
+ * Tipo para crear un nuevo pedido (sin campos auto-generados)
+ */
+export type NuevoPedido = Omit<
+  Pedido,
+  'id' | 'numeroPedido' | 'fechaCreacion' | 'fechaActualizacion'
+>;
+
+/**
+ * Tipo para actualizar un pedido (todos los campos opcionales excepto id)
+ */
+export type ActualizarPedido = Partial<Omit<Pedido, 'id'>> & { id: string };
+
+/**
+ * Tipo para crear un nuevo producto
+ */
+export type NuevoProducto = Omit<
+  Producto,
+  'id' | 'fechaCreacion' | 'fechaActualizacion'
+>;
+
+/**
+ * Tipo para crear un nuevo usuario
+ */
+export type NuevoUsuario = Omit<
+  Usuario,
+  'id' | 'fechaCreacion' | 'fechaActualizacion' | 'ultimaConexion'
+>;
+
+/**
+ * Tipo para crear un nuevo repartidor
+ */
+export type NuevoRepartidor = Omit<
+  Repartidor,
+  'id' | 'fechaCreacion' | 'fechaActualizacion'
+>;
+
+/**
+ * Tipo para crear un nuevo turno
+ */
+export type NuevoTurno = Omit<Turno, 'id' | 'fechaCreacion' | 'fechaActualizacion'>;
+
+/**
+ * Tipo para datos de pedido en tiempo real (con datos calculados)
+ */
+export interface PedidoConDatos extends Pedido {
+  items: ItemPedido[];
+  tiempoEspera?: number; // En minutos
+  tiempoPreparacion?: number; // En minutos
+  tiempoEntrega?: number; // En minutos
+}
+
+/**
+ * Tipo para resumen de repartidor con estadísticas
+ */
+export interface RepartidorConEstadisticas extends Repartidor {
+  pedidosHoy: number;
+  pedidosSemana: number;
+  ingresosDia: number;
+  ingresosSemana: number;
+}
+
+/**
+ * Tipo para estadísticas del turno
+ */
+export interface EstadisticasTurno {
+  turno: Turno;
+  pedidosPorHora: { hora: string; cantidad: number }[];
+  productosMasVendidos: { producto: string; cantidad: number }[];
+  ventasPorCanal: { canal: CanalVenta; total: number }[];
+  tiempoPromedioEntrega: number;
+}
+
+// ============================================================================
+// CONSTANTES Y HELPERS
+// ============================================================================
+
+/**
+ * Estados que puede tener un pedido en cada fase
+ */
+export const ESTADOS_PEDIDO: Record<string, EstadoPedido[]> = {
+  caja: ['pendiente', 'cancelado'],
+  cocina: ['pendiente', 'en_preparacion', 'listo'],
+  reparto: ['listo', 'en_reparto', 'entregado'],
+};
+
+/**
+ * Colores por estado de pedido (para UI)
+ */
+export const COLORES_ESTADO: Record<EstadoPedido, string> = {
+  pendiente: '#F59E0B', // Amber
+  en_preparacion: '#3B82F6', // Blue
+  listo: '#10B981', // Green
+  en_reparto: '#8B5CF6', // Purple
+  entregado: '#059669', // Emerald
+  cancelado: '#EF4444', // Red
+};
+
+/**
+ * Iconos por canal de venta (nombres de lucide-react)
+ */
+export const ICONOS_CANAL: Record<CanalVenta, string> = {
+  whatsapp: 'MessageCircle',
+  mostrador: 'Store',
+  uber: 'Car',
+  didi: 'Bike',
+  llamada: 'Phone',
+  web: 'Globe',
+};
+
+/**
+ * Labels en español por rol
+ */
+export const LABELS_ROL: Record<Rol, string> = {
+  admin: 'Administrador',
+  encargado: 'Encargado',
+  cajera: 'Cajera',
+  cocina: 'Cocina',
+  repartidor: 'Repartidor',
+};

@@ -1,97 +1,130 @@
 @import 'tailwindcss';
 
 @layer base {
-  /* Tema Light - Ambiente cálido de restaurante BBQ */
+  /* ========================================================================
+     🍖 OLD TEXAS BBQ - DESIGN SYSTEM
+     Paleta de colores extraída del logo oficial
+     ======================================================================== */
+
+  /* --- LIGHT MODE - Ambiente limpio y profesional --- */
   :root {
-    /* Fondo - Crema suave como papel craft */
-    --background: 30 20% 97%;
-    --foreground: 25 30% 15%;
+    /* BRAND COLORS (del logo) */
+    --brand-navy: 217 91% 25%;           /* #002D72 - Azul navy del logo */
+    --brand-red: 356 85% 52%;            /* #ED1C24 - Rojo vibrante del logo */
+    --brand-cream: 43 74% 94%;           /* #FFF4E6 - Crema cálido */
+    --brand-gold: 38 92% 50%;            /* #F59E0B - Dorado BBQ */
 
-    /* Cards - Blanco cálido con toque beige */
-    --card: 30 15% 99%;
-    --card-foreground: 25 30% 15%;
+    /* BASE */
+    --background: 0 0% 100%;             /* #FFFFFF - Blanco limpio */
+    --foreground: 222 47% 11%;           /* #0F172A - Texto oscuro */
 
-    /* Popovers */
-    --popover: 30 15% 99%;
-    --popover-foreground: 25 30% 15%;
+    /* CARDS & SURFACES */
+    --card: 0 0% 100%;                   /* #FFFFFF */
+    --card-foreground: 222 47% 11%;      /* #0F172A */
+    --popover: 0 0% 100%;                /* #FFFFFF */
+    --popover-foreground: 222 47% 11%;   /* #0F172A */
 
-    /* Primario - Naranja BBQ vibrante */
-    --primary: 20 90% 55%;
-    --primary-foreground: 0 0% 100%;
+    /* PRIMARY (Navy del logo) */
+    --primary: 217 91% 25%;              /* #002D72 - Navy principal */
+    --primary-foreground: 0 0% 100%;     /* #FFFFFF */
 
-    /* Secundario - Marrón cálido como madera ahumada */
-    --secondary: 25 25% 88%;
-    --secondary-foreground: 25 30% 20%;
+    /* SECONDARY (Crema cálido) */
+    --secondary: 43 74% 94%;             /* #FFF4E6 - Crema */
+    --secondary-foreground: 217 91% 25%; /* #002D72 - Navy sobre crema */
 
-    /* Muted - Tonos tierra */
-    --muted: 25 20% 92%;
-    --muted-foreground: 25 15% 45%;
+    /* ACCENT (Rojo del logo) */
+    --accent: 356 85% 52%;               /* #ED1C24 - Rojo BBQ */
+    --accent-foreground: 0 0% 100%;      /* #FFFFFF */
 
-    /* Accent - Rojo BBQ */
-    --accent: 8 85% 60%;
-    --accent-foreground: 0 0% 100%;
+    /* MUTED */
+    --muted: 210 40% 96%;                /* #F1F5F9 - Gris muy claro */
+    --muted-foreground: 215 16% 47%;     /* #64748B - Gris medio */
 
-    /* Destructive - Rojo intenso */
-    --destructive: 0 75% 55%;
-    --destructive-foreground: 0 0% 100%;
+    /* STATES */
+    --destructive: 0 84% 60%;            /* #EF4444 - Rojo error */
+    --destructive-foreground: 0 0% 100%; /* #FFFFFF */
+    --success: 142 76% 36%;              /* #16A34A - Verde */
+    --success-foreground: 0 0% 100%;     /* #FFFFFF */
+    --warning: 38 92% 50%;               /* #F59E0B - Dorado */
+    --warning-foreground: 0 0% 100%;     /* #FFFFFF */
+    --info: 199 89% 48%;                 /* #0EA5E9 - Azul */
+    --info-foreground: 0 0% 100%;        /* #FFFFFF */
 
-    /* Bordes - Marrón muy suave */
-    --border: 25 15% 88%;
-    --input: 25 15% 88%;
-    --ring: 20 90% 55%;
-    --radius: 0.75rem;
+    /* BORDERS */
+    --border: 214 32% 91%;               /* #E2E8F0 */
+    --input: 214 32% 91%;                /* #E2E8F0 */
+    --ring: 217 91% 25%;                 /* #002D72 - Navy */
+    --radius: 0.5rem;                    /* 8px */
 
-    /* Colores custom para BBQ */
-    --smoke: 210 10% 50%;
-    --wood: 30 40% 45%;
-    --fire: 15 100% 50%;
-    --charcoal: 0 0% 20%;
+    /* CHARTS */
+    --chart-1: 217 91% 25%;              /* Navy */
+    --chart-2: 356 85% 52%;              /* Red */
+    --chart-3: 38 92% 50%;               /* Gold */
+    --chart-4: 142 76% 36%;              /* Green */
+    --chart-5: 199 89% 48%;              /* Blue */
+
+    /* BBQ EXTRAS */
+    --smoke: 210 10% 50%;                /* Gris humo */
+    --wood: 30 40% 45%;                  /* Marrón madera */
+    --fire: 356 85% 52%;                 /* Rojo fuego (mismo que logo) */
+    --charcoal: 222 47% 11%;             /* Negro carbón */
   }
 
-  /* Tema Dark - Ambiente de asador nocturno */
+  /* --- DARK MODE - Colores vibrantes, no tan oscuro --- */
   .dark {
-    /* Fondo - Negro carbón con toque cálido */
-    --background: 25 15% 8%;
-    --foreground: 30 10% 95%;
+    /* BASE (No tan oscuro - más gris azulado) */
+    --background: 222 47% 15%;           /* #1E293B - Gris azulado medio */
+    --foreground: 210 40% 98%;           /* #F8FAFC - Casi blanco */
 
-    /* Cards - Gris oscuro cálido como piedra del asador */
-    --card: 25 12% 12%;
-    --card-foreground: 30 10% 95%;
+    /* CARDS & SURFACES (Más claras que el fondo) */
+    --card: 217 33% 20%;                 /* #283548 - Gris azulado claro */
+    --card-foreground: 210 40% 98%;      /* #F8FAFC */
+    --popover: 217 33% 22%;              /* #2D3E52 */
+    --popover-foreground: 210 40% 98%;   /* #F8FAFC */
 
-    /* Popovers */
-    --popover: 25 12% 10%;
-    --popover-foreground: 30 10% 95%;
+    /* PRIMARY (Navy más brillante) */
+    --primary: 217 91% 45%;              /* #1E5CBF - Navy vibrante */
+    --primary-foreground: 0 0% 100%;     /* #FFFFFF */
 
-    /* Primario - Naranja fuego brillante */
-    --primary: 20 95% 58%;
-    --primary-foreground: 25 15% 8%;
+    /* SECONDARY */
+    --secondary: 217 33% 25%;            /* #303D52 - Gris azulado */
+    --secondary-foreground: 210 40% 98%; /* #F8FAFC */
 
-    /* Secundario - Marrón oscuro ahumado */
-    --secondary: 25 15% 18%;
-    --secondary-foreground: 30 10% 90%;
+    /* ACCENT (Rojo más brillante) */
+    --accent: 356 85% 58%;               /* #F03238 - Rojo vibrante */
+    --accent-foreground: 0 0% 100%;      /* #FFFFFF */
 
-    /* Muted - Gris carbón */
-    --muted: 25 10% 20%;
-    --muted-foreground: 30 8% 60%;
+    /* MUTED */
+    --muted: 217 33% 25%;                /* #303D52 */
+    --muted-foreground: 215 20% 65%;     /* #94A3B8 - Gris claro */
 
-    /* Accent - Rojo brasa */
-    --accent: 8 90% 58%;
-    --accent-foreground: 0 0% 100%;
+    /* STATES (Más brillantes) */
+    --destructive: 0 84% 65%;            /* #F87171 - Rojo claro */
+    --destructive-foreground: 0 0% 100%; /* #FFFFFF */
+    --success: 142 76% 45%;              /* #22C55E - Verde brillante */
+    --success-foreground: 0 0% 100%;     /* #FFFFFF */
+    --warning: 38 92% 55%;               /* #FABC3C - Dorado brillante */
+    --warning-foreground: 222 47% 11%;   /* #0F172A - Texto oscuro */
+    --info: 199 89% 55%;                 /* #38BDF8 - Azul brillante */
+    --info-foreground: 0 0% 100%;        /* #FFFFFF */
 
-    /* Destructive */
-    --destructive: 0 80% 58%;
-    --destructive-foreground: 0 0% 100%;
+    /* BORDERS (Visibles pero sutiles) */
+    --border: 217 33% 30%;               /* #3A4A5F */
+    --input: 217 33% 30%;                /* #3A4A5F */
+    --ring: 217 91% 50%;                 /* #2563EB - Navy brillante */
 
-    /* Bordes - Gris humo */
-    --border: 25 10% 22%;
-    --input: 25 10% 22%;
-    --ring: 20 95% 58%;
+    /* CHARTS (Más vibrantes) */
+    --chart-1: 217 91% 50%;              /* Navy brillante */
+    --chart-2: 356 85% 60%;              /* Red brillante */
+    --chart-3: 38 92% 55%;               /* Gold brillante */
+    --chart-4: 142 76% 50%;              /* Green brillante */
+    --chart-5: 199 89% 60%;              /* Blue brillante */
 
-    /* Colores custom para BBQ modo dark */
-    --smoke: 210 15% 45%;
-    --wood: 30 35% 35%;
-    --fire: 15 100% 55%;
-    --charcoal: 0 0% 15%;
+    /* BBQ EXTRAS (Dark mode) */
+    --smoke: 210 15% 55%;                /* Gris humo claro */
+    --wood: 30 35% 40%;                  /* Marrón medio */
+    --fire: 356 85% 58%;                 /* Rojo brillante */
+    --charcoal: 217 33% 20%;             /* Gris oscuro */
   }
 }
 
@@ -168,24 +201,38 @@
     text-wrap: balance;
   }
 
-  /* Gradientes temáticos BBQ */
-  .bg-bbq-gradient {
+  /* ========================================================================
+     🎨 GRADIENTES OLD TEXAS BBQ
+     ======================================================================== */
+
+  /* Gradiente Navy → Red (colores del logo) */
+  .bg-texas-gradient {
     background: linear-gradient(
       135deg,
-      hsl(var(--primary)),
-      hsl(var(--accent))
+      hsl(var(--brand-navy)),
+      hsl(var(--brand-red))
     );
   }
 
+  /* Gradiente Red → Gold (fuego BBQ) */
   .bg-fire-gradient {
     background: linear-gradient(
-      to top,
-      hsl(15 100% 45%),
-      hsl(20 100% 55%),
-      hsl(35 100% 50%)
+      135deg,
+      hsl(var(--brand-red)),
+      hsl(var(--brand-gold))
     );
   }
 
+  /* Gradiente Navy → Blue (profesional) */
+  .bg-navy-gradient {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--brand-navy)),
+      hsl(var(--info))
+    );
+  }
+
+  /* Overlay de humo */
   .bg-smoke-overlay {
     background: linear-gradient(
       to bottom,
@@ -194,29 +241,129 @@
     );
   }
 
-  /* Efectos de brillo cálido */
-  .glow-warm {
-    box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+  /* ========================================================================
+     ✨ EFECTOS DE TEXTO
+     ======================================================================== */
+
+  /* Texto con gradiente Texas */
+  .text-texas-gradient {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--brand-navy)),
+      hsl(var(--brand-red))
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
-  .glow-fire {
-    box-shadow: 0 0 30px hsl(15 100% 50% / 0.4);
+  /* Texto con gradiente Fire */
+  .text-fire-gradient {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--brand-red)),
+      hsl(var(--brand-gold))
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
-  /* Textos con estilo BBQ */
+  /* Texto ahumado */
   .text-smoky {
     color: hsl(var(--smoke));
     text-shadow: 0 1px 2px hsl(var(--charcoal) / 0.2);
   }
 
-  .text-fire {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--primary)),
-      hsl(var(--accent))
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  /* ========================================================================
+     💫 EFECTOS DE BRILLO (GLOW)
+     ======================================================================== */
+
+  /* Brillo Navy */
+  .glow-navy {
+    box-shadow: 0 0 20px hsl(var(--brand-navy) / 0.3);
+  }
+
+  /* Brillo Red */
+  .glow-red {
+    box-shadow: 0 0 25px hsl(var(--brand-red) / 0.4);
+  }
+
+  /* Brillo Gold */
+  .glow-gold {
+    box-shadow: 0 0 20px hsl(var(--brand-gold) / 0.3);
+  }
+
+  /* Sombra Texas (sutíl) */
+  .shadow-texas {
+    box-shadow: 0 4px 14px 0 hsl(var(--brand-navy) / 0.15);
+  }
+
+  /* ========================================================================
+     🎯 ESTADOS HOVER
+     ======================================================================== */
+
+  .hover-texas {
+    transition: background-color 200ms;
+  }
+
+  .hover-texas:hover {
+    background-color: hsl(var(--primary) / 0.1);
+  }
+
+  .hover-fire {
+    transition: background-color 200ms;
+  }
+
+  .hover-fire:hover {
+    background-color: hsl(var(--accent) / 0.1);
+  }
+
+  .hover-gold {
+    transition: background-color 200ms;
+  }
+
+  .hover-gold:hover {
+    background-color: hsl(var(--warning) / 0.1);
+  }
+
+  /* ========================================================================
+     🎨 COLORES DE MARCA DIRECTS
+     ======================================================================== */
+
+  .bg-brand-navy {
+    background-color: hsl(var(--brand-navy));
+  }
+
+  .bg-brand-red {
+    background-color: hsl(var(--brand-red));
+  }
+
+  .bg-brand-cream {
+    background-color: hsl(var(--brand-cream));
+  }
+
+  .bg-brand-gold {
+    background-color: hsl(var(--brand-gold));
+  }
+
+  .text-brand-navy {
+    color: hsl(var(--brand-navy));
+  }
+
+  .text-brand-red {
+    color: hsl(var(--brand-red));
+  }
+
+  .text-brand-gold {
+    color: hsl(var(--brand-gold));
+  }
+
+  .border-brand-navy {
+    border-color: hsl(var(--brand-navy));
+  }
+
+  .border-brand-red {
+    border-color: hsl(var(--brand-red));
   }
 }

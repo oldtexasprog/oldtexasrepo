@@ -98,30 +98,32 @@
 
 ### Modelo de Datos Firestore
 
-- [ ] Diseñar colección `usuarios`
-- [ ] Diseñar colección `pedidos`
-- [ ] Diseñar colección `productos`
-- [ ] Diseñar colección `personalizaciones`
-- [ ] Diseñar colección `repartidores`
-- [ ] Diseñar colección `turnos` (cortes de caja)
-- [ ] Diseñar colección `configuracion`
-- [ ] Crear documento de especificación del schema
-- [ ] Definir índices compuestos necesarios
-- [ ] Crear scripts de seed data para testing
+- [x] Diseñar colección `usuarios`
+- [x] Diseñar colección `pedidos`
+- [x] Diseñar colección `productos`
+- [x] Diseñar colección `personalizaciones`
+- [x] Diseñar colección `repartidores`
+- [x] Diseñar colección `turnos` (cortes de caja)
+- [x] Diseñar colección `configuracion`
+- [x] Crear documento de especificación del schema
+- [x] Definir índices compuestos necesarios
+- [x] Crear scripts de seed data para testing
 
 ### Servicios de Datos (CRUD)
 
-- [ ] Crear `pedidosService.ts` (CRUD pedidos)
-- [ ] Crear `productosService.ts` (CRUD productos)
-- [ ] Crear `usuariosService.ts` (CRUD usuarios)
-- [ ] Crear `repartidoresService.ts` (CRUD repartidores)
-- [ ] Crear `turnosService.ts` (cortes de caja)
-- [ ] Crear `notificacionesService.ts`
-- [ ] Implementar listeners en tiempo real (onSnapshot)
-- [ ] Crear helpers para queries complejas
-- [ ] Implementar manejo de errores consistente
-- [ ] Crear utilidades de validación de datos
+- [x] Crear `pedidosService.ts` (CRUD pedidos)
+- [x] Crear `productosService.ts` (CRUD productos)
+- [x] Crear `usuariosService.ts` (CRUD usuarios)
+- [x] Crear `repartidoresService.ts` (CRUD repartidores)
+- [x] Crear `turnosService.ts` (cortes de caja)
+- [x] Crear `notificacionesService.ts`
+- [x] Implementar listeners en tiempo real (onSnapshot)
+- [x] Crear helpers para queries complejas
+- [x] Implementar manejo de errores consistente
+- [x] Crear utilidades de validación de datos
 
+- [ ] crear un toggle para cambiar de tema 
+- [ ] quitar de la pagina de inicio la paleta de colores
 ---
 
 ## 🔐 FASE 3: AUTENTICACIÓN Y ROLES
