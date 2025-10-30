@@ -122,30 +122,30 @@
 - [x] Implementar manejo de errores consistente
 - [x] Crear utilidades de validación de datos
 
-- [ ] crear un toggle para cambiar de tema 
-- [ ] quitar de la pagina de inicio la paleta de colores
+- [x] crear un toggle para cambiar de tema
+- [x] quitar de la pagina de inicio la paleta de colores
 ---
 
 ## 🔐 FASE 3: AUTENTICACIÓN Y ROLES
 
 ### Sistema de Auth
 
-- [ ] Implementar login con email/password (Firebase Auth)
-- [ ] Crear página de login (`/login`)
-- [ ] Crear componente `ProtectedRoute`
+- [x] Implementar login con email/password (Firebase Auth)
+- [x] Crear página de login (`/login`)
+- [x] Crear componente `ProtectedRoute`
 - [ ] Implementar middleware de autenticación
-- [ ] Crear hook `useAuth`
-- [ ] Implementar logout
+- [x] Crear hook `useAuth`
+- [x] Implementar logout
 - [ ] Crear store de autenticación (Zustand)
-- [ ] Manejo de sesiones persistentes
+- [x] Manejo de sesiones persistentes
 - [ ] Implementar recuperación de contraseña
 - [ ] Crear flujo de cambio de contraseña
 
 ### Sistema de Roles
 
-- [ ] Definir enum de roles (`cajera`, `cocina`, `repartidor`, `encargado`, `admin`)
-- [ ] Implementar HOC `withRole` para protección por rol
-- [ ] Crear hook `useRole` para verificar permisos
+- [x] Definir enum de roles (`cajera`, `cocina`, `repartidor`, `encargado`, `admin`)
+- [x] Implementar HOC `withRole` para protección por rol
+- [x] Crear hook `useRole` para verificar permisos
 - [ ] Implementar matriz de permisos
 - [ ] Crear función `checkPermission(user, action)`
 - [ ] Implementar restricciones UI según rol

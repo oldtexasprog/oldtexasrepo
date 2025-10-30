@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { ReactQueryProvider } from '@/lib/react-query/provider';
+import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
   title: 'Old Texas BBQ - CRM',
@@ -16,6 +17,19 @@ export default function RootLayout({
     <html lang="es">
       <body>
         <ReactQueryProvider>{children}</ReactQueryProvider>
+        <Toaster
+          position="top-right"
+          richColors
+          closeButton
+          expand={false}
+          toastOptions={{
+            style: {
+              background: 'hsl(var(--background))',
+              color: 'hsl(var(--foreground))',
+              border: '1px solid hsl(var(--border))',
+            },
+          }}
+        />
       </body>
     </html>
   );

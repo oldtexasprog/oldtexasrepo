@@ -35,8 +35,14 @@ import type { FirebaseConfig } from './types';
 
 /**
  * Validar que todas las variables de entorno requeridas estén presentes
+ * Solo valida en el cliente (browser), no en el servidor
  */
-const validateConfig = (): void => {
+const validateConfig = (): boolean => {
+  // Skip validation en el servidor de Next.js
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
   const requiredEnvVars = [
     'NEXT_PUBLIC_FIREBASE_API_KEY',
     'NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN',
@@ -47,23 +53,29 @@ const validateConfig = (): void => {
   ];
 
   const missingVars = requiredEnvVars.filter(
-    (varName) => !process.env[varName]
+    (varName) => !process.env[varName] || process.env[varName]?.includes('your-')
   );
 
   if (missingVars.length > 0) {
-    throw new Error(
-      `Missing required Firebase environment variables: ${missingVars.join(', ')}\n` +
-        'Please check your .env.local file and ensure all required variables are set.\n' +
-        'See .env.example for reference.'
+    console.warn(
+      `⚠️ Firebase no está configurado. Variables faltantes: ${missingVars.join(', ')}\n` +
+        'Algunas funcionalidades no estarán disponibles.\n' +
+        'Para configurar Firebase, crea un archivo .env.local con las credenciales.\n' +
+        'Ver: docs/CONFIGURAR_FIREBASE.md'
     );
+    return false;
   }
+
+  return true;
 };
 
 /**
  * Configuración de Firebase desde variables de entorno
  */
-const getFirebaseConfig = (): FirebaseConfig => {
-  validateConfig();
+const getFirebaseConfig = (): FirebaseConfig | null => {
+  if (!validateConfig()) {
+    return null;
+  }
 
   return {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
@@ -80,37 +92,41 @@ const getFirebaseConfig = (): FirebaseConfig => {
  * Inicializar Firebase App
  * Solo se inicializa una vez, reutiliza la instancia existente si ya está inicializada
  */
-const initializeFirebaseApp = (): FirebaseApp => {
+const initializeFirebaseApp = (): FirebaseApp | null => {
   if (getApps().length > 0) {
     return getApps()[0];
   }
 
   const config = getFirebaseConfig();
+  if (!config) {
+    return null;
+  }
+
   return initializeApp(config);
 };
 
 /**
  * Instancia de Firebase App
  */
-export const app: FirebaseApp = initializeFirebaseApp();
+export const app: FirebaseApp | null = initializeFirebaseApp();
 
 /**
  * Firebase Authentication
  * Servicio para autenticación de usuarios
  */
-export const auth: Auth = getAuth(app);
+export const auth: Auth | null = app ? getAuth(app) : null;
 
 /**
  * Cloud Firestore
  * Base de datos NoSQL para almacenar datos estructurados
  */
-export const db: Firestore = getFirestore(app);
+export const db: Firestore | null = app ? getFirestore(app) : null;
 
 /**
  * Cloud Storage
  * Almacenamiento de archivos (imágenes, documentos, etc.)
  */
-export const storage: FirebaseStorage = getStorage(app);
+export const storage: FirebaseStorage | null = app ? getStorage(app) : null;
 
 /**
  * Firebase Cloud Messaging
@@ -167,7 +183,10 @@ export const initializeAnalytics = async () => {
  */
 if (
   process.env.NODE_ENV === 'development' &&
-  process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true'
+  process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true' &&
+  app &&
+  db &&
+  storage
 ) {
   try {
     // Conectar Firestore al emulador
@@ -195,10 +214,15 @@ export const firebaseInfo = {
  * Log de inicialización
  */
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-  console.log('🔥 Firebase inicializado correctamente');
-  console.log('📦 Proyecto:', firebaseInfo.projectId);
-  console.log('🌍 Entorno:', firebaseInfo.environment);
-  console.log('🧪 Emulador:', firebaseInfo.usingEmulator ? 'Sí' : 'No');
+  if (app) {
+    console.log('🔥 Firebase inicializado correctamente');
+    console.log('📦 Proyecto:', firebaseInfo.projectId);
+    console.log('🌍 Entorno:', firebaseInfo.environment);
+    console.log('🧪 Emulador:', firebaseInfo.usingEmulator ? 'Sí' : 'No');
+  } else {
+    console.log('⚠️ Firebase no está configurado - Modo demo activado');
+    console.log('💡 Para habilitar Firebase, configura las variables de entorno en .env.local');
+  }
 }
 
 /**
