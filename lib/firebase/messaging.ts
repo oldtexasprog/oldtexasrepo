@@ -158,6 +158,11 @@ export const saveFCMToken = async (
   userId: string,
   token: string
 ): Promise<boolean> => {
+  if (!db) {
+    console.warn('Firebase no está configurado');
+    return false;
+  }
+
   try {
     const device = getDeviceInfo();
 
@@ -184,6 +189,11 @@ export const saveFCMToken = async (
  * Eliminar token FCM de Firestore
  */
 export const deleteFCMToken = async (token: string): Promise<boolean> => {
+  if (!db) {
+    console.warn('Firebase no está configurado');
+    return false;
+  }
+
   try {
     await deleteDoc(doc(db, 'fcmTokens', token));
     console.log('Token FCM eliminado de Firestore');

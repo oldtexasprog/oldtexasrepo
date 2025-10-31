@@ -16,7 +16,14 @@ import { db } from '@/lib/firebase/config';
 import type { Pedido } from '@/lib/types';
 
 const COLLECTION_NAME = 'pedidos';
-const ordersRef = collection(db, COLLECTION_NAME);
+
+// Lazy initialization - solo se usa en el cliente
+const getOrdersRef = () => {
+  if (!db) {
+    throw new Error('Firebase no está configurado');
+  }
+  return collection(db, COLLECTION_NAME);
+};
 
 export const orderService = {
   /**
@@ -28,7 +35,7 @@ export const orderService = {
     limit?: number;
   }): Promise<Pedido[]> {
     try {
-      let q = query(ordersRef);
+      let q = query(getOrdersRef());
 
       // Filtros
       if (options?.estado) {
@@ -60,11 +67,14 @@ export const orderService = {
       const orders: Pedido[] = [];
 
       snapshot.forEach((doc) => {
-        orders.push({
-          id: doc.id,
-          ...doc.data(),
-          fecha_hora: doc.data().fecha_hora.toDate(),
-        } as Pedido);
+        const data = doc.data();
+        if (data) {
+          orders.push({
+            id: doc.id,
+            ...data,
+            fecha_hora: data.fecha_hora?.toDate(),
+          } as Pedido);
+        }
       });
 
       return orders;
@@ -79,17 +89,18 @@ export const orderService = {
    */
   async getById(id: string): Promise<Pedido | null> {
     try {
-      const docRef = doc(db, COLLECTION_NAME, id);
+      const docRef = doc(db!, COLLECTION_NAME, id);
       const docSnap = await getDoc(docRef);
 
       if (!docSnap.exists()) {
         return null;
       }
 
+      const data = docSnap.data();
       return {
         id: docSnap.id,
-        ...docSnap.data(),
-        fecha_hora: docSnap.data().fecha_hora.toDate(),
+        ...data,
+        fecha_hora: data.fecha_hora?.toDate(),
       } as Pedido;
     } catch (error) {
       console.error('Error getting order:', error);
@@ -111,7 +122,7 @@ export const orderService = {
         updatedAt: serverTimestamp(),
       };
 
-      const docRef = await addDoc(ordersRef, orderData);
+      const docRef = await addDoc(getOrdersRef(), orderData);
 
       console.log('Order created:', docRef.id);
       return docRef.id;
@@ -129,7 +140,7 @@ export const orderService = {
     data: Partial<Omit<Pedido, 'id' | 'createdAt'>>
   ): Promise<void> {
     try {
-      const docRef = doc(db, COLLECTION_NAME, id);
+      const docRef = doc(db!, COLLECTION_NAME, id);
 
       const updateData = {
         ...data,
@@ -189,7 +200,7 @@ export const orderService = {
   async getByRepartidor(repartidorId: string): Promise<Pedido[]> {
     try {
       const q = query(
-        ordersRef,
+        getOrdersRef(),
         where('reparto.repartidor', '==', repartidorId),
         where('estado_pedido', 'in', ['en_reparto', 'listo']),
         orderBy('fecha_hora', 'desc')
@@ -199,11 +210,14 @@ export const orderService = {
       const orders: Pedido[] = [];
 
       snapshot.forEach((doc) => {
-        orders.push({
-          id: doc.id,
-          ...doc.data(),
-          fecha_hora: doc.data().fecha_hora.toDate(),
-        } as Pedido);
+        const data = doc.data();
+        if (data) {
+          orders.push({
+            id: doc.id,
+            ...data,
+            fecha_hora: data.fecha_hora?.toDate(),
+          } as Pedido);
+        }
       });
 
       return orders;

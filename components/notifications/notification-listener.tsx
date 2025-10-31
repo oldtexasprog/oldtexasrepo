@@ -7,8 +7,6 @@ import { toast } from 'sonner';
 import {
   Bell,
   ShoppingCart,
-  Package,
-  Truck,
   CheckCircle,
   AlertCircle,
   Info,
@@ -32,7 +30,7 @@ export function NotificationListener() {
     console.log('🔔 NotificationListener montado');
 
     // Listener para notificaciones en tiempo real
-    const unsubscribe = notificacionesService.listenToRealtime(
+    const unsubscribe = notificacionesService.onCollectionChange(
       (notificaciones: Notificacion[]) => {
         console.log(
           `📨 Notificaciones recibidas: ${notificaciones.length}`,
@@ -71,8 +69,9 @@ export function NotificationListener() {
           });
       },
       {
-        limit: 50,
-        orderBy: { field: 'fechaCreacion', direction: 'desc' },
+        limitCount: 50,
+        orderByField: 'fechaCreacion',
+        orderDirection: 'desc',
       }
     );
 

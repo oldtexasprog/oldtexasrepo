@@ -53,11 +53,29 @@ const COLLECTIONS = {
 } as const;
 
 /**
+ * Asegura que Firebase esté configurado
+ */
+const ensureFirebase = () => {
+  if (!db) {
+    throw new Error('Firebase no está configurado');
+  }
+  return db;
+};
+
+/**
  * Crear notificacion
  */
 export const createNotification = async (
   options: CreateNotificationOptions
 ): Promise<NotificationResult> => {
+  if (!db) {
+    return {
+      success: false,
+      error: new Error('Firebase no está configurado'),
+      message: 'Firebase no está configurado',
+    };
+  }
+
   try {
     // Validar que tenga al menos un destinatario
     if (!options.rol_destino && !options.usuario_destino) {
@@ -98,7 +116,7 @@ export const createNotification = async (
 
     // Guardar en Firestore
     const docRef = await addDoc(
-      collection(db, COLLECTIONS.NOTIFICATIONS),
+      collection(ensureFirebase(), COLLECTIONS.NOTIFICATIONS),
       notification
     );
 
@@ -129,7 +147,7 @@ export const markAsRead = async (
   userId: string
 ): Promise<NotificationResult> => {
   try {
-    const notificationRef = doc(db, COLLECTIONS.NOTIFICATIONS, notificationId);
+    const notificationRef = doc(ensureFirebase(), COLLECTIONS.NOTIFICATIONS, notificationId);
 
     // Obtener notificacion actual
     const notificationSnap = await getDoc(notificationRef);
@@ -182,7 +200,7 @@ export const markAllAsRead = async (
   try {
     // Obtener notificaciones no leidas del usuario
     const q = query(
-      collection(db, COLLECTIONS.NOTIFICATIONS),
+      collection(ensureFirebase(), COLLECTIONS.NOTIFICATIONS),
       where('rol_destino', 'array-contains-any', roles),
       where('leida', '==', false)
     );
@@ -195,7 +213,7 @@ export const markAllAsRead = async (
       const leidaPor = notification.leida_por || [];
 
       if (!leidaPor.includes(userId)) {
-        await updateDoc(doc(db, COLLECTIONS.NOTIFICATIONS, docSnap.id), {
+        await updateDoc(doc(ensureFirebase(), COLLECTIONS.NOTIFICATIONS, docSnap.id), {
           leida: true,
           leida_por: [...leidaPor, userId],
         });
@@ -225,7 +243,7 @@ export const deleteNotification = async (
   notificationId: string
 ): Promise<NotificationResult> => {
   try {
-    await deleteDoc(doc(db, COLLECTIONS.NOTIFICATIONS, notificationId));
+    await deleteDoc(doc(ensureFirebase(), COLLECTIONS.NOTIFICATIONS, notificationId));
 
     return {
       success: true,
@@ -254,7 +272,7 @@ export const cleanOldNotifications = async (
 
     // Obtener notificaciones antiguas
     const q = query(
-      collection(db, COLLECTIONS.NOTIFICATIONS),
+      collection(ensureFirebase(), COLLECTIONS.NOTIFICATIONS),
       where('created_at', '<', cutoffTimestamp)
     );
 
@@ -262,7 +280,7 @@ export const cleanOldNotifications = async (
 
     // Eliminar cada una
     const promises = snapshot.docs.map((docSnap) =>
-      deleteDoc(doc(db, COLLECTIONS.NOTIFICATIONS, docSnap.id))
+      deleteDoc(doc(ensureFirebase(), COLLECTIONS.NOTIFICATIONS, docSnap.id))
     );
 
     await Promise.all(promises);
@@ -291,7 +309,7 @@ export const getNotificationStats = async (
   try {
     // Obtener todas las notificaciones del usuario
     const q = query(
-      collection(db, COLLECTIONS.NOTIFICATIONS),
+      collection(ensureFirebase(), COLLECTIONS.NOTIFICATIONS),
       where('rol_destino', 'array-contains-any', roles)
     );
 
@@ -343,7 +361,7 @@ export const subscribeToNotifications = (
   try {
     // Construir query para notificaciones del usuario
     const q = query(
-      collection(db, COLLECTIONS.NOTIFICATIONS),
+      collection(ensureFirebase(), COLLECTIONS.NOTIFICATIONS),
       where('rol_destino', 'array-contains-any', listener.roles),
       orderBy('created_at', 'desc'),
       limit(50)
@@ -480,7 +498,7 @@ export const getNotificationSettings = async (
   userId: string
 ): Promise<NotificationSettings | null> => {
   try {
-    const settingsRef = doc(db, COLLECTIONS.SETTINGS, userId);
+    const settingsRef = doc(ensureFirebase(), COLLECTIONS.SETTINGS, userId);
     const settingsSnap = await getDoc(settingsRef);
 
     if (!settingsSnap.exists()) {
@@ -498,7 +516,7 @@ export const saveNotificationSettings = async (
   settings: NotificationSettings
 ): Promise<NotificationResult> => {
   try {
-    const settingsRef = doc(db, COLLECTIONS.SETTINGS, settings.userId);
+    const settingsRef = doc(ensureFirebase(), COLLECTIONS.SETTINGS, settings.userId);
 
     await updateDoc(settingsRef, {
       ...settings,

@@ -96,6 +96,14 @@ export const uploadFile = async (
   file: File,
   options: UploadOptions
 ): Promise<UploadResult> => {
+  if (!storage) {
+    return {
+      success: false,
+      error: new Error('Firebase Storage no está configurado'),
+      message: 'Firebase Storage no está configurado',
+    };
+  }
+
   try {
     // Validar tipo de archivo
     if (
@@ -224,6 +232,11 @@ export const uploadImage = async (
  * Obtener URL de descarga de un archivo
  */
 export const getFileURL = async (path: string): Promise<string | null> => {
+  if (!storage) {
+    console.warn('Firebase Storage no está configurado');
+    return null;
+  }
+
   try {
     const storageRef = ref(storage, path);
     return await getDownloadURL(storageRef);
@@ -237,6 +250,14 @@ export const getFileURL = async (path: string): Promise<string | null> => {
  * Eliminar archivo
  */
 export const deleteFile = async (path: string): Promise<UploadResult> => {
+  if (!storage) {
+    return {
+      success: false,
+      error: new Error('Firebase Storage no está configurado'),
+      message: 'Firebase Storage no está configurado',
+    };
+  }
+
   try {
     const storageRef = ref(storage, path);
     await deleteObject(storageRef);
@@ -271,6 +292,14 @@ export const deleteFolder = async (
   folder: string,
   id: string
 ): Promise<UploadResult> => {
+  if (!storage) {
+    return {
+      success: false,
+      error: new Error('Firebase Storage no está configurado'),
+      message: 'Firebase Storage no está configurado',
+    };
+  }
+
   try {
     const folderRef = ref(storage, `${folder}/${id}`);
     const list = await listAll(folderRef);
@@ -299,6 +328,11 @@ export const listFiles = async (
   folder: string,
   id?: string
 ): Promise<string[]> => {
+  if (!storage) {
+    console.warn('Firebase Storage no está configurado');
+    return [];
+  }
+
   try {
     const path = id ? `${folder}/${id}` : folder;
     const folderRef = ref(storage, path);
@@ -320,6 +354,11 @@ export const listFiles = async (
  * Obtener metadata de un archivo
  */
 export const getFileMetadata = async (path: string) => {
+  if (!storage) {
+    console.warn('Firebase Storage no está configurado');
+    return null;
+  }
+
   try {
     const storageRef = ref(storage, path);
     return await getMetadata(storageRef);
@@ -336,6 +375,11 @@ export const updateFileMetadata = async (
   path: string,
   metadata: { [key: string]: string }
 ): Promise<boolean> => {
+  if (!storage) {
+    console.warn('Firebase Storage no está configurado');
+    return false;
+  }
+
   try {
     const storageRef = ref(storage, path);
     await updateMetadata(storageRef, { customMetadata: metadata });

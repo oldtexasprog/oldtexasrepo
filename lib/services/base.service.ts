@@ -68,7 +68,12 @@ export abstract class BaseService<T extends BaseDocument> {
 
   constructor(collectionName: string) {
     this.collectionName = collectionName;
-    this.collectionRef = collection(db, collectionName);
+    // Lazy initialization - solo verifica cuando realmente se usa
+    if (typeof window !== 'undefined' && !db) {
+      console.warn('Firebase no está configurado. El servicio puede no funcionar correctamente.');
+    }
+    // @ts-ignore - Permitir null durante SSR, será verificado en tiempo de ejecución
+    this.collectionRef = db ? collection(db, collectionName) : null;
   }
 
   // ==========================================================================
@@ -79,6 +84,10 @@ export abstract class BaseService<T extends BaseDocument> {
    * Obtiene un documento por ID
    */
   async getById(id: string): Promise<T | null> {
+    if (!db) {
+      throw new Error('Firebase no está configurado');
+    }
+
     try {
       const docRef = doc(db, this.collectionName, id);
       const docSnap = await getDoc(docRef);
@@ -196,6 +205,10 @@ export abstract class BaseService<T extends BaseDocument> {
     id: string,
     data: Omit<T, 'id' | 'fechaCreacion' | 'fechaActualizacion'>
   ): Promise<void> {
+    if (!db) {
+      throw new Error('Firebase no está configurado');
+    }
+
     try {
       const docRef = doc(db, this.collectionName, id);
       const docData = {
@@ -218,6 +231,10 @@ export abstract class BaseService<T extends BaseDocument> {
     id: string,
     data: Partial<Omit<T, 'id' | 'fechaCreacion' | 'fechaActualizacion'>>
   ): Promise<void> {
+    if (!db) {
+      throw new Error('Firebase no está configurado');
+    }
+
     try {
       const docRef = doc(db, this.collectionName, id);
       const updateData = {
@@ -236,6 +253,10 @@ export abstract class BaseService<T extends BaseDocument> {
    * Elimina un documento (soft delete)
    */
   async delete(id: string): Promise<void> {
+    if (!db) {
+      throw new Error('Firebase no está configurado');
+    }
+
     try {
       const docRef = doc(db, this.collectionName, id);
       await deleteDoc(docRef);
@@ -249,11 +270,15 @@ export abstract class BaseService<T extends BaseDocument> {
    * Elimina múltiples documentos en batch
    */
   async batchDelete(ids: string[]): Promise<void> {
+    if (!db) {
+      throw new Error('Firebase no está configurado');
+    }
+
     try {
       const batch = writeBatch(db);
 
       ids.forEach((id) => {
-        const docRef = doc(db, this.collectionName, id);
+        const docRef = doc(db!, this.collectionName, id);
         batch.delete(docRef);
       });
 
@@ -270,11 +295,15 @@ export abstract class BaseService<T extends BaseDocument> {
   async batchUpdate(
     updates: Array<{ id: string; data: Partial<T> }>
   ): Promise<void> {
+    if (!db) {
+      throw new Error('Firebase no está configurado');
+    }
+
     try {
       const batch = writeBatch(db);
 
       updates.forEach(({ id, data }) => {
-        const docRef = doc(db, this.collectionName, id);
+        const docRef = doc(db!, this.collectionName, id);
         batch.update(docRef, {
           ...data,
           fechaActualizacion: serverTimestamp(),
@@ -300,6 +329,10 @@ export abstract class BaseService<T extends BaseDocument> {
     callback: (data: T | null) => void,
     onError?: (error: Error) => void
   ): Unsubscribe {
+    if (!db) {
+      return () => {}; // Return empty unsubscribe function
+    }
+
     const docRef = doc(db, this.collectionName, id);
 
     return onSnapshot(
@@ -388,6 +421,10 @@ export abstract class BaseService<T extends BaseDocument> {
    * Verifica si un documento existe
    */
   async exists(id: string): Promise<boolean> {
+    if (!db) {
+      throw new Error('Firebase no está configurado');
+    }
+
     try {
       const docRef = doc(db, this.collectionName, id);
       const docSnap = await getDoc(docRef);
@@ -402,6 +439,9 @@ export abstract class BaseService<T extends BaseDocument> {
    * Obtiene la referencia a un documento
    */
   protected getDocRef(id: string) {
+    if (!db) {
+      throw new Error('Firebase no está configurado');
+    }
     return doc(db, this.collectionName, id);
   }
 
@@ -409,6 +449,9 @@ export abstract class BaseService<T extends BaseDocument> {
    * Obtiene la referencia a una subcolección
    */
   protected getSubcollectionRef(docId: string, subcollectionName: string) {
+    if (!db) {
+      throw new Error('Firebase no está configurado');
+    }
     return collection(db, this.collectionName, docId, subcollectionName);
   }
 }

@@ -135,8 +135,8 @@ export const storage: FirebaseStorage | null = app ? getStorage(app) : null;
 let messagingInstance: Messaging | null = null;
 
 export const getMessagingInstance = async (): Promise<Messaging | null> => {
-  if (typeof window === 'undefined') {
-    return null; // Messaging no está disponible en SSR
+  if (typeof window === 'undefined' || !app) {
+    return null; // Messaging no está disponible en SSR o si Firebase no está configurado
   }
 
   if (messagingInstance) {
@@ -161,7 +161,7 @@ export const getMessagingInstance = async (): Promise<Messaging | null> => {
  * Servicio de analíticas (solo disponible en navegador)
  */
 export const initializeAnalytics = async () => {
-  if (typeof window === 'undefined') {
+  if (typeof window === 'undefined' || !app) {
     return null;
   }
 

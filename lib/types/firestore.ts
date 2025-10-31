@@ -458,6 +458,8 @@ export interface Notificacion {
   // Metadata
   timestamp: Timestamp;
   expiraEn?: Timestamp;
+  fechaCreacion: Timestamp;
+  fechaActualizacion: Timestamp;
 }
 
 // ============================================================================
@@ -471,6 +473,7 @@ export interface Configuracion<T = any> {
   descripcion: string;
   tipo: TipoConfig;
   editable: boolean;
+  fechaCreacion: Timestamp;
   fechaActualizacion: Timestamp;
   actualizadoPor: string;
 }

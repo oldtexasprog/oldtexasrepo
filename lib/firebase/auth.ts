@@ -34,6 +34,14 @@ import type { Usuario, Role } from '@/lib/types';
 export const login = async (
   credentials: LoginCredentials
 ): Promise<AuthResult> => {
+  if (!auth || !db) {
+    return {
+      success: false,
+      error: new Error('Firebase no está configurado'),
+      message: 'Firebase no está configurado. Contacta al administrador.',
+    };
+  }
+
   try {
     const userCredential = await signInWithEmailAndPassword(
       auth,
@@ -109,6 +117,14 @@ export const login = async (
  * Cerrar sesión
  */
 export const logout = async (): Promise<AuthResult> => {
+  if (!auth) {
+    return {
+      success: false,
+      error: new Error('Firebase no está configurado'),
+      message: 'Firebase no está configurado.',
+    };
+  }
+
   try {
     await signOut(auth);
     return {
@@ -199,6 +215,14 @@ export const registerUser = async (data: RegisterData): Promise<AuthResult> => {
  * Enviar email de recuperación de contraseña
  */
 export const resetPassword = async (email: string): Promise<AuthResult> => {
+  if (!auth) {
+    return {
+      success: false,
+      error: new Error('Firebase no está configurado'),
+      message: 'Firebase no está configurado.',
+    };
+  }
+
   try {
     await sendPasswordResetEmail(auth, email);
 
@@ -237,6 +261,14 @@ export const updateUserProfile = async (data: {
   displayName?: string;
   photoURL?: string;
 }): Promise<AuthResult> => {
+  if (!auth || !db) {
+    return {
+      success: false,
+      error: new Error('Firebase no está configurado'),
+      message: 'Firebase no está configurado.',
+    };
+  }
+
   try {
     const currentUser = auth.currentUser;
 
@@ -284,6 +316,14 @@ export const changeEmail = async (
   newEmail: string,
   currentPassword: string
 ): Promise<AuthResult> => {
+  if (!auth || !db) {
+    return {
+      success: false,
+      error: new Error('Firebase no está configurado'),
+      message: 'Firebase no está configurado.',
+    };
+  }
+
   try {
     const currentUser = auth.currentUser;
 
@@ -357,6 +397,14 @@ export const changePassword = async (
   currentPassword: string,
   newPassword: string
 ): Promise<AuthResult> => {
+  if (!auth) {
+    return {
+      success: false,
+      error: new Error('Firebase no está configurado'),
+      message: 'Firebase no está configurado.',
+    };
+  }
+
   try {
     const currentUser = auth.currentUser;
 
@@ -414,13 +462,17 @@ export const changePassword = async (
  * Obtener el usuario actual
  */
 export const getCurrentUser = (): User | null => {
-  return auth.currentUser;
+  return auth?.currentUser || null;
 };
 
 /**
  * Obtener datos completos del usuario actual desde Firestore
  */
 export const getCurrentUserData = async (): Promise<Usuario | null> => {
+  if (!auth || !db) {
+    return null;
+  }
+
   const currentUser = auth.currentUser;
 
   if (!currentUser) {
@@ -476,6 +528,9 @@ export const isManager = async (): Promise<boolean> => {
  * Útil para React components
  */
 export const subscribeToAuthState = (callback: (user: User | null) => void) => {
+  if (!auth) {
+    return () => {}; // Return empty unsubscribe function
+  }
   return onAuthStateChanged(auth, callback);
 };
 
@@ -484,8 +539,13 @@ export const subscribeToAuthState = (callback: (user: User | null) => void) => {
  * Útil para protección de rutas
  */
 export const waitForAuthInit = (): Promise<User | null> => {
+  if (!auth) {
+    return Promise.resolve(null);
+  }
+
+  const authInstance = auth; // TypeScript type narrowing
   return new Promise((resolve) => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(authInstance, (user) => {
       unsubscribe();
       resolve(user);
     });
@@ -496,7 +556,7 @@ export const waitForAuthInit = (): Promise<User | null> => {
  * Verificar si hay una sesión activa
  */
 export const isAuthenticated = (): boolean => {
-  return auth.currentUser !== null;
+  return auth?.currentUser !== null;
 };
 
 /**
@@ -504,6 +564,10 @@ export const isAuthenticated = (): boolean => {
  * Útil para llamadas a API
  */
 export const getAuthToken = async (): Promise<string | null> => {
+  if (!auth) {
+    return null;
+  }
+
   const currentUser = auth.currentUser;
 
   if (!currentUser) {
@@ -522,6 +586,10 @@ export const getAuthToken = async (): Promise<string | null> => {
  * Forzar refresh del token de autenticación
  */
 export const refreshAuthToken = async (): Promise<string | null> => {
+  if (!auth) {
+    return null;
+  }
+
   const currentUser = auth.currentUser;
 
   if (!currentUser) {

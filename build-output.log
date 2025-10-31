@@ -1,0 +1,40 @@
+
+> old-texas-bbq---crm@1.0.0 build
+> next build
+
+ ⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /Users/pedroduran/package-lock.json as the root directory.
+ To silence this warning, set `outputFileTracingRoot` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/output#caveats for more information.
+ Detected additional lockfiles: 
+   * /Users/pedroduran/Desktop/Proyectos/Old Texas BBQ - CRM/package-lock.json
+
+   ▲ Next.js 15.5.6
+   - Environments: .env.local, .env
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 1321ms
+   Skipping linting
+   Checking validity of types ...
+Failed to compile.
+
+./lib/firebase/messaging.ts:173:22
+Type error: No overload matches this call.
+  Overload 1 of 3, '(firestore: Firestore, path: string, ...pathSegments: string[]): DocumentReference<DocumentData, DocumentData>', gave the following error.
+    Argument of type 'Firestore | null' is not assignable to parameter of type 'Firestore'.
+      Type 'null' is not assignable to type 'Firestore'.
+  Overload 2 of 3, '(reference: CollectionReference<unknown, DocumentData>, path?: string | undefined, ...pathSegments: string[]): DocumentReference<unknown, DocumentData>', gave the following error.
+    Argument of type 'Firestore | null' is not assignable to parameter of type 'CollectionReference<unknown, DocumentData>'.
+      Type 'null' is not assignable to type 'CollectionReference<unknown, DocumentData>'.
+  Overload 3 of 3, '(reference: DocumentReference<unknown, DocumentData>, path: string, ...pathSegments: string[]): DocumentReference<DocumentData, DocumentData>', gave the following error.
+    Argument of type 'Firestore | null' is not assignable to parameter of type 'DocumentReference<unknown, DocumentData>'.
+      Type 'null' is not assignable to type 'DocumentReference<unknown, DocumentData>'.
+
+[0m [90m 171 |[39m     [90m// Guardar en colección fcmTokens usando el token como ID[39m
+ [90m 172 |[39m     [90m// Esto previene duplicados del mismo dispositivo[39m
+[31m[1m>[22m[39m[90m 173 |[39m     [36mawait[39m setDoc(doc(db[33m,[39m [32m'fcmTokens'[39m[33m,[39m token)[33m,[39m tokenData)[33m;[39m
+ [90m     |[39m                      [31m[1m^[22m[39m
+ [90m 174 |[39m
+ [90m 175 |[39m     console[33m.[39mlog([32m'Token FCM guardado en Firestore'[39m)[33m;[39m
+ [90m 176 |[39m     [36mreturn[39m [36mtrue[39m[33m;[39m[0m
+Next.js build worker exited with code: 1 and signal: null

@@ -45,6 +45,15 @@ import type {
 } from './types';
 
 /**
+ * Verificar que Firebase esté configurado
+ */
+const ensureFirebaseConfigured = () => {
+  if (!db) {
+    throw new Error('Firebase no está configurado. No se pueden realizar operaciones en Firestore.');
+  }
+};
+
+/**
  * Nombres de colecciones disponibles
  */
 export const COLLECTIONS = {
@@ -65,7 +74,8 @@ export const getDocument = async <T>(
   documentId: string
 ): Promise<FirestoreResult<T>> => {
   try {
-    const docRef = doc(db, collectionName, documentId);
+    ensureFirebaseConfigured();
+    const docRef = doc(db!, collectionName, documentId);
     const docSnap = await getDoc(docRef);
 
     if (!docSnap.exists()) {
@@ -98,7 +108,8 @@ export const getDocuments = async <T>(
   options?: QueryOptions
 ): Promise<FirestoreResult<T[]>> => {
   try {
-    const colRef = collection(db, collectionName);
+    ensureFirebaseConfigured();
+    const colRef = collection(db!, collectionName);
     let q = query(colRef);
 
     // Aplicar filtros where
@@ -165,7 +176,8 @@ export const getPaginatedDocuments = async <T>(
   options?: QueryOptions
 ): Promise<PaginatedResult<T>> => {
   try {
-    const colRef = collection(db, collectionName);
+    ensureFirebaseConfigured();
+    const colRef = collection(db!, collectionName);
     let q = query(colRef);
 
     // Aplicar filtros where
@@ -227,7 +239,8 @@ export const createDocument = async <T extends DocumentData>(
   data: T
 ): Promise<FirestoreResult<T & FirestoreDocument>> => {
   try {
-    const colRef = collection(db, collectionName);
+    ensureFirebaseConfigured();
+    const colRef = collection(db!, collectionName);
     const dataWithTimestamp = {
       ...data,
       createdAt: serverTimestamp(),
@@ -264,7 +277,8 @@ export const setDocument = async <T extends DocumentData>(
   merge: boolean = true
 ): Promise<FirestoreResult<T & FirestoreDocument>> => {
   try {
-    const docRef = doc(db, collectionName, documentId);
+    ensureFirebaseConfigured();
+    const docRef = doc(db!, collectionName, documentId);
     const dataWithTimestamp = {
       ...data,
       updatedAt: serverTimestamp(),
@@ -304,7 +318,8 @@ export const updateDocument = async <T extends Partial<DocumentData>>(
   data: T
 ): Promise<FirestoreResult> => {
   try {
-    const docRef = doc(db, collectionName, documentId);
+    ensureFirebaseConfigured();
+    const docRef = doc(db!, collectionName, documentId);
     const dataWithTimestamp = {
       ...data,
       updatedAt: serverTimestamp(),
@@ -334,7 +349,8 @@ export const deleteDocument = async (
   documentId: string
 ): Promise<FirestoreResult> => {
   try {
-    const docRef = doc(db, collectionName, documentId);
+    ensureFirebaseConfigured();
+    const docRef = doc(db!, collectionName, documentId);
     await deleteDoc(docRef);
 
     return {
@@ -358,12 +374,13 @@ export const batchOperations = async <T>(
   operations: BatchOperation<T>[]
 ): Promise<FirestoreResult> => {
   try {
-    const batch = writeBatch(db);
+    ensureFirebaseConfigured();
+    const batch = writeBatch(db!);
 
     operations.forEach((operation) => {
       const docRef = operation.id
-        ? doc(db, operation.collection, operation.id)
-        : doc(collection(db, operation.collection));
+        ? doc(db!, operation.collection, operation.id)
+        : doc(collection(db!, operation.collection));
 
       switch (operation.type) {
         case 'set':
@@ -413,7 +430,8 @@ export const executeTransaction = async <T>(
   transactionFn: () => Promise<T>
 ): Promise<FirestoreResult<T>> => {
   try {
-    const result = await runTransaction(db, async (transaction) => {
+    ensureFirebaseConfigured();
+    const result = await runTransaction(db!, async (transaction) => {
       return await transactionFn();
     });
 
@@ -440,6 +458,9 @@ export const subscribeToDocument = <T>(
   documentId: string,
   callback: (data: T | null, error?: Error) => void
 ): Unsubscribe => {
+  if (!db) {
+    return () => {}; // Return empty unsubscribe function
+  }
   const docRef = doc(db, collectionName, documentId);
 
   return onSnapshot(
@@ -469,6 +490,9 @@ export const subscribeToCollection = <T>(
   options: QueryOptions,
   callback: (data: T[], error?: Error) => void
 ): Unsubscribe => {
+  if (!db) {
+    return () => {}; // Return empty unsubscribe function
+  }
   const colRef = collection(db, collectionName);
   let q = query(colRef);
 
@@ -528,7 +552,8 @@ export const countDocuments = async (
   whereConditions?: QueryOptions['where']
 ): Promise<number> => {
   try {
-    const colRef = collection(db, collectionName);
+    ensureFirebaseConfigured();
+    const colRef = collection(db!, collectionName);
     let q = query(colRef);
 
     if (whereConditions) {
@@ -560,7 +585,8 @@ export const documentExists = async (
   documentId: string
 ): Promise<boolean> => {
   try {
-    const docRef = doc(db, collectionName, documentId);
+    ensureFirebaseConfigured();
+    const docRef = doc(db!, collectionName, documentId);
     const docSnap = await getDoc(docRef);
     return docSnap.exists();
   } catch (error) {
