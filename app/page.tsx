@@ -15,7 +15,7 @@ export default function Home() {
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <Link
-              href="/login"
+              href="/"
               className="bg-white text-brand-navy px-8 py-3 rounded-lg font-semibold hover:bg-white/90 transition"
             >
               Entrar al Sistema
