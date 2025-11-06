@@ -11,6 +11,7 @@ import {
   getDoc,
   getDocs,
   addDoc,
+  setDoc,
   updateDoc,
   deleteDoc,
   query,
@@ -64,16 +65,23 @@ export interface BaseDocument {
 
 export abstract class BaseService<T extends BaseDocument> {
   protected collectionName: string;
-  protected collectionRef: CollectionReference;
+  protected _collectionRef: CollectionReference | null = null;
 
   constructor(collectionName: string) {
     this.collectionName = collectionName;
-    // Lazy initialization - solo verifica cuando realmente se usa
-    if (typeof window !== 'undefined' && !db) {
-      console.warn('Firebase no está configurado. El servicio puede no funcionar correctamente.');
+  }
+
+  /**
+   * Obtiene la referencia de la colección, inicializándola si es necesario
+   */
+  protected get collectionRef(): CollectionReference {
+    if (!this._collectionRef) {
+      if (!db) {
+        throw new Error('Firebase no está configurado. Asegúrate de que las variables de entorno estén configuradas.');
+      }
+      this._collectionRef = collection(db, this.collectionName);
     }
-    // @ts-ignore - Permitir null durante SSR, será verificado en tiempo de ejecución
-    this.collectionRef = db ? collection(db, collectionName) : null;
+    return this._collectionRef;
   }
 
   // ==========================================================================
@@ -217,7 +225,8 @@ export abstract class BaseService<T extends BaseDocument> {
         fechaActualizacion: serverTimestamp(),
       };
 
-      await updateDoc(docRef, docData as any);
+      // Usar setDoc en vez de updateDoc para crear el documento si no existe
+      await setDoc(docRef, docData as any);
     } catch (error) {
       console.error(`Error creating document with ID in ${this.collectionName}:`, error);
       throw error;
@@ -388,6 +397,10 @@ export abstract class BaseService<T extends BaseDocument> {
    * Construye una query de Firestore con las opciones proporcionadas
    */
   protected buildQuery(options?: QueryOptions) {
+    if (!db) {
+      throw new Error('Firebase no está configurado. Asegúrate de que las variables de entorno estén configuradas.');
+    }
+
     const constraints: QueryConstraint[] = [];
 
     // Agregar filtros

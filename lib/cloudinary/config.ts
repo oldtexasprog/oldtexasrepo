@@ -13,10 +13,20 @@ import type { CloudinaryConfig } from './types';
 
 /**
  * Obtener configuracion de Cloudinary desde variables de entorno
+ * 
+ * ⚠️ SEGURIDAD: CLOUDINARY_API_SECRET es una variable de servidor (sin NEXT_PUBLIC_)
+ * y NO debe exponerse al cliente. Este archivo solo debe importarse desde:
+ * - Server Components
+ * - Route Handlers (API routes)
+ * - Server Actions
+ * - Scripts de Node.js
+ * 
+ * NUNCA importar desde componentes cliente ('use client')
  */
 export const getCloudinaryConfig = (): CloudinaryConfig => {
   const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
   const apiKey = process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY;
+  // ⚠️ Variable de servidor - NO se expone al cliente
   const apiSecret = process.env.CLOUDINARY_API_SECRET;
   const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 

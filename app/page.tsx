@@ -15,14 +15,14 @@ export default function Home() {
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <Link
-              href="/"
-              className="bg-white text-brand-navy px-8 py-3 rounded-lg font-semibold hover:bg-white/90 transition"
+              href="/login"
+              className="bg-card text-primary border-2 border-primary px-8 py-3 rounded-lg font-semibold hover:bg-primary hover:text-primary-foreground transition"
             >
               Entrar al Sistema
             </Link>
             <Link
               href="/docs"
-              className="bg-brand-red text-white px-8 py-3 rounded-lg font-semibold hover:bg-brand-red/90 transition"
+              className="bg-accent text-accent-foreground px-8 py-3 rounded-lg font-semibold hover:bg-accent/90 transition"
             >
               Documentación
             </Link>

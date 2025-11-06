@@ -133,24 +133,25 @@
 - [x] Implementar login con email/password (Firebase Auth)
 - [x] Crear página de login (`/login`)
 - [x] Crear componente `ProtectedRoute`
-- [ ] Implementar middleware de autenticación
+- [x] Implementar middleware de autenticación
 - [x] Crear hook `useAuth`
 - [x] Implementar logout
-- [ ] Crear store de autenticación (Zustand)
+- [x] Crear store de autenticación (Zustand)
 - [x] Manejo de sesiones persistentes
-- [ ] Implementar recuperación de contraseña
-- [ ] Crear flujo de cambio de contraseña
-
+- [x] Implementar recuperación de contraseña
+- [x] Crear flujo de cambio de contraseña
+- [x] Implementar pagina de perfil para cambiar datos del usuario
+ 
 ### Sistema de Roles
 
 - [x] Definir enum de roles (`cajera`, `cocina`, `repartidor`, `encargado`, `admin`)
 - [x] Implementar HOC `withRole` para protección por rol
 - [x] Crear hook `useRole` para verificar permisos
-- [ ] Implementar matriz de permisos
-- [ ] Crear función `checkPermission(user, action)`
-- [ ] Implementar restricciones UI según rol
-- [ ] Agregar roles a colección `usuarios` en Firestore
-- [ ] Crear página de gestión de usuarios (solo admin)
+- [x] Implementar matriz de permisos
+- [x] Crear función `checkPermission(user, action)`
+- [x] Implementar restricciones UI según rol
+- [x] Agregar roles a colección `usuarios` en Firestore
+- [x] Crear página de gestión de usuarios (solo admin)
 
 ---
 

@@ -1,40 +1,40 @@
 'use client';
 
 import { Moon, Sun } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
+  // Evitar hydration mismatch
   useEffect(() => {
-    // Cargar tema guardado o usar preferencia del sistema
-    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
-    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light';
-
-    const initialTheme = savedTheme || systemTheme;
-    setTheme(initialTheme);
-    document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+    setMounted(true);
   }, []);
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    document.documentElement.classList.toggle('dark', newTheme === 'dark');
-  };
+  if (!mounted) {
+    return (
+      <button
+        className="fixed bottom-6 right-6 p-3 rounded-full bg-brand-navy text-white shadow-texas z-50"
+        aria-label="Cambiar tema"
+        disabled
+      >
+        <Sun className="h-5 w-5" />
+      </button>
+    );
+  }
 
   return (
     <button
-      onClick={toggleTheme}
+      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
       className="fixed bottom-6 right-6 p-3 rounded-full bg-brand-navy dark:bg-brand-red text-white shadow-texas hover:scale-110 transition-transform duration-200 z-50"
       aria-label="Cambiar tema"
     >
-      {theme === 'light' ? (
-        <Moon className="h-5 w-5" />
-      ) : (
+      {theme === 'dark' ? (
         <Sun className="h-5 w-5" />
+      ) : (
+        <Moon className="h-5 w-5" />
       )}
     </button>
   );

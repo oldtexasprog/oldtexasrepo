@@ -5,7 +5,8 @@
  */
 
 const DEV_ACCESS_COOKIE = 'dev_access_granted';
-const DEV_ACCESS_KEY = process.env.DEV_ACCESS_KEY || '271097';
+// ⚠️ SEGURIDAD: No usar fallback. En producción, DEV_ACCESS_KEY debe estar configurado.
+const DEV_ACCESS_KEY = process.env.DEV_ACCESS_KEY;
 
 /**
  * Verifica si el usuario tiene acceso a las páginas de desarrollo
@@ -25,8 +26,13 @@ export function hasDevAccess(): boolean {
 
 /**
  * Valida una clave de acceso
+ * ⚠️ SEGURIDAD: Si DEV_ACCESS_KEY no está configurado, deniega acceso
  */
 export function validateDevKey(key: string): boolean {
+  if (!DEV_ACCESS_KEY) {
+    console.warn('⚠️ DEV_ACCESS_KEY no está configurado. Acceso denegado a páginas de desarrollo.');
+    return false;
+  }
   return key === DEV_ACCESS_KEY;
 }
 

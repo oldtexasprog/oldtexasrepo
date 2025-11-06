@@ -69,6 +69,26 @@ class UsuariosService extends BaseService<Usuario> {
   }
 
   /**
+   * Actualiza el rol de un usuario
+   */
+  async updateRol(userId: string, rol: Rol): Promise<void> {
+    await this.update(userId, { rol } as any);
+  }
+
+  /**
+   * Backfill: asigna un rol por defecto a usuarios sin campo `rol`
+   */
+  async backfillRoles(defaultRol: Rol = 'cajera'): Promise<number> {
+    const all = await this.getAll();
+    const toUpdate = all.filter((u) => !(u as any).rol);
+    if (toUpdate.length === 0) return 0;
+    await this.batchUpdate(
+      toUpdate.map((u) => ({ id: u.id, data: { rol: defaultRol } as any }))
+    );
+    return toUpdate.length;
+  }
+
+  /**
    * Agrega un token FCM al usuario para notificaciones push
    */
   async addFCMToken(userId: string, token: string): Promise<void> {

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { ReactQueryProvider } from '@/lib/react-query/provider';
+import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
@@ -14,22 +15,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
+    <html lang="es" suppressHydrationWarning>
       <body>
-        <ReactQueryProvider>{children}</ReactQueryProvider>
-        <Toaster
-          position="top-right"
-          richColors
-          closeButton
-          expand={false}
-          toastOptions={{
-            style: {
-              background: 'hsl(var(--background))',
-              color: 'hsl(var(--foreground))',
-              border: '1px solid hsl(var(--border))',
-            },
-          }}
-        />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ReactQueryProvider>{children}</ReactQueryProvider>
+          <Toaster
+            position="top-right"
+            richColors
+            closeButton
+            expand={false}
+            toastOptions={{
+              style: {
+                background: 'hsl(var(--background))',
+                color: 'hsl(var(--foreground))',
+                border: '1px solid hsl(var(--border))',
+              },
+            }}
+          />
+        </ThemeProvider>
       </body>
     </html>
   );
