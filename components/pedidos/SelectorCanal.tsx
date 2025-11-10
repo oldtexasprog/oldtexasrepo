@@ -90,28 +90,36 @@ export function SelectorCanal({ value, onChange }: SelectorCanalProps) {
             className={`
               relative p-6 rounded-xl border-2 transition-all
               ${isSelected
-                ? 'ring-4 ring-primary/20 border-primary shadow-lg scale-105'
-                : `${canal.bgColor} border-border`
+                ? 'bg-primary/10 ring-4 ring-primary/30 border-primary shadow-lg scale-105'
+                : 'bg-card hover:bg-muted/50 border-border hover:border-primary/50'
               }
             `}
           >
             {/* Badge seleccionado */}
             {isSelected && (
-              <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold">
+              <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold shadow-md">
                 ✓
               </div>
             )}
 
             {/* Icono */}
             <div className="flex flex-col items-center gap-3">
-              <Icon
-                className={`h-8 w-8 ${isSelected ? 'text-primary' : canal.color}`}
-              />
+              <div className={`
+                p-3 rounded-full transition-all
+                ${isSelected
+                  ? 'bg-primary/20'
+                  : 'bg-muted/50 group-hover:bg-muted'
+                }
+              `}>
+                <Icon
+                  className={`h-8 w-8 ${isSelected ? 'text-primary' : canal.color}`}
+                />
+              </div>
               <div className="text-center">
-                <p className={`font-bold text-sm ${isSelected ? 'text-primary' : ''}`}>
+                <p className={`font-bold text-base ${isSelected ? 'text-primary' : 'text-foreground'}`}>
                   {canal.label}
                 </p>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className={`text-xs mt-1 ${isSelected ? 'text-primary/70' : 'text-muted-foreground'}`}>
                   {canal.description}
                 </p>
               </div>
