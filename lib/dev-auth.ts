@@ -5,8 +5,8 @@
  */
 
 const DEV_ACCESS_COOKIE = 'dev_access_granted';
-// ⚠️ SEGURIDAD: No usar fallback. En producción, DEV_ACCESS_KEY debe estar configurado.
-const DEV_ACCESS_KEY = process.env.DEV_ACCESS_KEY;
+// ⚠️ SEGURIDAD: No usar fallback. En producción, NEXT_PUBLIC_DEV_ACCESS_KEY debe estar configurado.
+const DEV_ACCESS_KEY = process.env.NEXT_PUBLIC_DEV_ACCESS_KEY;
 
 /**
  * Verifica si el usuario tiene acceso a las páginas de desarrollo
