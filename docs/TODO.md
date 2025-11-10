@@ -159,11 +159,11 @@
 
 ### UI - Captura de Pedidos
 
-- [ ] Crear página `/pedidos/nuevo`
-- [ ] Crear componente `FormPedido`
-- [ ] Implementar selector de canal (WhatsApp/Mostrador/Uber/Didi/Llamada/Web)
-- [ ] Crear componente `ClienteForm` (nombre, dirección, teléfono)
-- [ ] Crear componente `ProductoSelector` (búsqueda y selección)
+- [x] Crear página `/pedidos/nuevo`
+- [x] Crear componente `FormPedido`
+- [x] Implementar selector de canal (WhatsApp/Mostrador/Uber/Didi/Llamada/Web)
+- [x] Crear componente `ClienteForm` (nombre, dirección, teléfono)
+- [x] Crear componente `ProductoSelector` (búsqueda y selección)
 - [ ] Implementar carrito de productos temporal
 - [ ] Crear componente `PersonalizacionModal` (salsas, extras, presentación)
 - [ ] Implementar cálculo automático de totales
