@@ -46,7 +46,7 @@ const canales: CanalOption[] = [
     value: 'uber',
     label: 'Uber Eats',
     icon: Car,
-    color: 'text-black',
+    color: 'text-navy',
     bgColor: 'bg-gray-50 hover:bg-gray-100 border-gray-200',
     description: 'Pedido de Uber Eats',
   },
