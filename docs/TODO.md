@@ -164,15 +164,15 @@
 - [x] Implementar selector de canal (WhatsApp/Mostrador/Uber/Didi/Llamada/Web)
 - [x] Crear componente `ClienteForm` (nombre, dirección, teléfono)
 - [x] Crear componente `ProductoSelector` (búsqueda y selección)
-- [ ] Implementar carrito de productos temporal
-- [ ] Crear componente `PersonalizacionModal` (salsas, extras, presentación)
-- [ ] Implementar cálculo automático de totales
-- [ ] Crear componente `MetodoPagoSelector`
-- [ ] Implementar lógica de cambio (si paga con efectivo)
-- [ ] Crear componente `RepartidorAsignador`
-- [ ] Implementar campo de observaciones
-- [ ] Botón "Crear Pedido" con validaciones
-- [ ] Implementar feedback visual de éxito/error
+- [x] Implementar carrito de productos temporal
+- [x] Crear componente `PersonalizacionModal` (salsas, extras, presentación)
+- [x] Implementar cálculo automático de totales
+- [x] Crear componente `MetodoPagoSelector`
+- [x] Implementar lógica de cambio (si paga con efectivo)
+- [x] Crear componente `RepartidorAsignador`
+- [x] Implementar campo de observaciones
+- [x] Botón "Crear Pedido" con validaciones
+- [x] Implementar feedback visual de éxito/error
 
 ### Lógica de Negocio
 
