@@ -78,7 +78,7 @@ const canales: CanalOption[] = [
 
 export function SelectorCanal({ value, onChange }: SelectorCanalProps) {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
       {canales.map((canal) => {
         const Icon = canal.icon;
         const isSelected = value === canal.value;
@@ -88,7 +88,7 @@ export function SelectorCanal({ value, onChange }: SelectorCanalProps) {
             key={canal.value}
             onClick={() => onChange(canal.value)}
             className={`
-              relative p-6 rounded-xl border-2 transition-all
+              relative p-4 rounded-xl border-2 transition-all min-h-[140px]
               ${isSelected
                 ? 'bg-primary/10 ring-4 ring-primary/30 border-primary shadow-lg scale-105'
                 : 'bg-card hover:bg-muted/50 border-border hover:border-primary/50'
@@ -97,29 +97,29 @@ export function SelectorCanal({ value, onChange }: SelectorCanalProps) {
           >
             {/* Badge seleccionado */}
             {isSelected && (
-              <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground rounded-full w-7 h-7 flex items-center justify-center text-sm font-bold shadow-md">
+              <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-md">
                 ✓
               </div>
             )}
 
             {/* Icono */}
-            <div className="flex flex-col items-center gap-3">
+            <div className="flex flex-col items-center justify-center gap-2 h-full">
               <div className={`
-                p-3 rounded-full transition-all
+                p-2.5 rounded-full transition-all
                 ${isSelected
                   ? 'bg-primary/20'
                   : 'bg-muted/50 group-hover:bg-muted'
                 }
               `}>
                 <Icon
-                  className={`h-8 w-8 ${isSelected ? 'text-primary' : canal.color}`}
+                  className={`h-7 w-7 ${isSelected ? 'text-primary' : canal.color}`}
                 />
               </div>
               <div className="text-center">
-                <p className={`font-bold text-base ${isSelected ? 'text-primary' : 'text-foreground'}`}>
+                <p className={`font-bold text-sm ${isSelected ? 'text-primary' : 'text-foreground'}`}>
                   {canal.label}
                 </p>
-                <p className={`text-xs mt-1 ${isSelected ? 'text-primary/70' : 'text-muted-foreground'}`}>
+                <p className={`text-xs mt-1 line-clamp-2 ${isSelected ? 'text-primary/70' : 'text-muted-foreground'}`}>
                   {canal.description}
                 </p>
               </div>

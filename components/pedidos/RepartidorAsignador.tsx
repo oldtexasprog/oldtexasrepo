@@ -89,7 +89,7 @@ export function RepartidorAsignador({
           onRepartidorChange(value === 'sin-asignar' ? null : value)
         }
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Opción: Sin asignar (opcional) */}
           {!required && (
             <Card
@@ -134,34 +134,36 @@ export function RepartidorAsignador({
                 }`}
                 onClick={() => onRepartidorChange(repartidor.id)}
               >
-                <div className="flex items-center space-x-3">
+                <div className="flex items-start space-x-3">
                   <RadioGroupItem
                     value={repartidor.id}
                     id={repartidor.id}
+                    className="mt-1"
                   />
-                  <Avatar className="h-10 w-10">
+                  <Avatar className="h-10 w-10 flex-shrink-0">
                     <AvatarFallback className="bg-primary/10 text-primary font-semibold">
                       {getIniciales(repartidor.nombre)}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     <Label
                       htmlFor={repartidor.id}
-                      className="font-semibold cursor-pointer block"
+                      className="font-semibold cursor-pointer block truncate"
+                      title={repartidor.nombre}
                     >
                       {repartidor.nombre}
                     </Label>
-                    <div className="flex items-center gap-2 mt-1">
+                    <div className="flex flex-col gap-1 mt-1">
                       <Badge
                         variant={
                           repartidor.disponible ? 'default' : 'secondary'
                         }
-                        className="text-xs"
+                        className="text-xs w-fit"
                       >
                         {repartidor.disponible ? 'Disponible' : 'Ocupado'}
                       </Badge>
                       {repartidor.telefono && (
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-xs text-muted-foreground truncate">
                           {repartidor.telefono}
                         </span>
                       )}
