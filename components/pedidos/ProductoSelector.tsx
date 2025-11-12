@@ -33,13 +33,16 @@ export function ProductoSelector({ value, onChange }: ProductoSelectorProps) {
     const cargarProductos = async () => {
       try {
         setCargando(true);
-        // Usar el método correcto del servicio: getAll() con filtro de disponibles
-        const productosData = await productosService.getAll({
-          filters: [{ field: 'disponible', operator: '==', value: true }],
-          orderByField: 'orden',
-          orderDirection: 'asc',
-        });
-        setProductos(productosData);
+        // Cargar todos los productos y filtrar en cliente
+        // Esto evita requerir índice compuesto en Firestore
+        const productosData = await productosService.getAll();
+
+        // Filtrar y ordenar en el cliente
+        const productosDisponibles = productosData
+          .filter(p => p.disponible)
+          .sort((a, b) => (a.orden || 0) - (b.orden || 0));
+
+        setProductos(productosDisponibles);
       } catch (error) {
         console.error('Error al cargar productos:', error);
       } finally {
