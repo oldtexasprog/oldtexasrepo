@@ -1,14 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { SelectorCanal } from './SelectorCanal';
 import { ClienteForm } from './ClienteForm';
 import { ProductoSelector } from './ProductoSelector';
-import { CanalVenta, ClientePedido } from '@/lib/types/firestore';
-import { ArrowLeft, Save } from 'lucide-react';
+import { CarritoProductos, ItemCarrito } from './CarritoProductos';
+import { PersonalizacionModal } from './PersonalizacionModal';
+import { MetodoPagoSelector } from './MetodoPagoSelector';
+import { RepartidorAsignador } from './RepartidorAsignador';
+import { ObservacionesField } from './ObservacionesField';
+import { ResumenTotales } from './ResumenTotales';
+import { CanalVenta, ClientePedido, MetodoPago } from '@/lib/types/firestore';
+import { ArrowLeft, Save, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export function FormPedido() {
   const router = useRouter();
@@ -22,65 +31,285 @@ export function FormPedido() {
     colonia: '',
     referencia: '',
   });
-  const [productos, setProductos] = useState<any[]>([]);
+  const [carrito, setCarrito] = useState<ItemCarrito[]>([]);
+  const [costoEnvio, setCostoEnvio] = useState(0);
+  const [metodoPago, setMetodoPago] = useState<MetodoPago | null>(null);
+  const [montoPagado, setMontoPagado] = useState(0);
+  const [repartidorId, setRepartidorId] = useState<string | null>(null);
+  const [observaciones, setObservaciones] = useState('');
+  const [guardando, setGuardando] = useState(false);
+
+  // Modal de personalización
+  const [personalizacionModal, setPersonalizacionModal] = useState({
+    open: false,
+    itemIndex: -1,
+    productoNombre: '',
+  });
+
+  // Cálculos automáticos
+  const subtotal = useMemo(() => {
+    return carrito.reduce((sum, item) => sum + item.subtotal, 0);
+  }, [carrito]);
+
+  const total = useMemo(() => {
+    return subtotal + costoEnvio;
+  }, [subtotal, costoEnvio]);
+
+  const cambio = useMemo(() => {
+    if (metodoPago === 'efectivo' && montoPagado > total) {
+      return montoPagado - total;
+    }
+    return 0;
+  }, [metodoPago, montoPagado, total]);
+
+  const cantidadProductos = useMemo(() => {
+    return carrito.reduce((sum, item) => sum + item.cantidad, 0);
+  }, [carrito]);
+
+  // Handlers del carrito
+  const handleUpdateCantidad = (index: number, cantidad: number) => {
+    setCarrito((prev) => {
+      const newCarrito = [...prev];
+      newCarrito[index] = {
+        ...newCarrito[index],
+        cantidad,
+        subtotal: newCarrito[index].precio * cantidad,
+      };
+      return newCarrito;
+    });
+  };
+
+  const handleRemoveItem = (index: number) => {
+    setCarrito((prev) => prev.filter((_, i) => i !== index));
+    toast.success('Producto eliminado del carrito');
+  };
+
+  const handleEditItem = (index: number) => {
+    setPersonalizacionModal({
+      open: true,
+      itemIndex: index,
+      productoNombre: carrito[index].nombre,
+    });
+  };
+
+  const handlePersonalizacionConfirm = (personalizacion: any) => {
+    if (personalizacionModal.itemIndex >= 0) {
+      setCarrito((prev) => {
+        const newCarrito = [...prev];
+        newCarrito[personalizacionModal.itemIndex] = {
+          ...newCarrito[personalizacionModal.itemIndex],
+          personalizaciones: personalizacion,
+        };
+        return newCarrito;
+      });
+      toast.success('Personalización guardada');
+    }
+  };
+
+  // Validaciones
+  const puedeGuardar = useMemo(() => {
+    return (
+      canal &&
+      cliente.nombre &&
+      cliente.telefono &&
+      carrito.length > 0 &&
+      metodoPago &&
+      (metodoPago !== 'efectivo' || montoPagado >= total)
+    );
+  }, [canal, cliente, carrito, metodoPago, montoPagado, total]);
 
   const handleSubmit = async () => {
-    // TODO: Implementar guardado del pedido
-    console.log('Guardando pedido:', { canal, cliente, productos });
+    if (!puedeGuardar) {
+      toast.error('Por favor completa todos los campos requeridos');
+      return;
+    }
+
+    try {
+      setGuardando(true);
+      // TODO: Implementar guardado del pedido
+      console.log('Guardando pedido:', {
+        canal,
+        cliente,
+        items: carrito,
+        subtotal,
+        costoEnvio,
+        total,
+        metodoPago,
+        montoPagado,
+        cambio,
+        repartidorId,
+        observaciones,
+      });
+
+      toast.success('Pedido guardado exitosamente');
+      router.push('/pedidos');
+    } catch (error) {
+      console.error('Error guardando pedido:', error);
+      toast.error('Error al guardar el pedido');
+    } finally {
+      setGuardando(false);
+    }
   };
 
   return (
     <div className="space-y-6">
       {/* Botón volver */}
-      <Button
-        variant="outline"
-        onClick={() => router.back()}
-        className="gap-2"
-      >
+      <Button variant="outline" onClick={() => router.back()} className="gap-2">
         <ArrowLeft className="h-4 w-4" />
         Volver
       </Button>
 
-      {/* Selector de Canal */}
-      <Card className="p-6">
-        <h2 className="text-xl font-bold mb-4">1. Canal de Venta</h2>
-        <SelectorCanal value={canal} onChange={setCanal} />
-      </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Columna principal - Formulario */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* 1. Selector de Canal */}
+          <Card className="p-6">
+            <h2 className="text-xl font-bold mb-4">1. Canal de Venta</h2>
+            <SelectorCanal value={canal} onChange={setCanal} />
+          </Card>
 
-      {/* Datos del Cliente */}
-      {canal && (
-        <Card className="p-6">
-          <h2 className="text-xl font-bold mb-4">2. Datos del Cliente</h2>
-          <ClienteForm value={cliente} onChange={setCliente} />
-        </Card>
-      )}
+          {/* 2. Datos del Cliente */}
+          {canal && (
+            <Card className="p-6">
+              <h2 className="text-xl font-bold mb-4">2. Datos del Cliente</h2>
+              <ClienteForm value={cliente} onChange={setCliente} />
+            </Card>
+          )}
 
-      {/* Selección de Productos */}
-      {canal && cliente.nombre && (
-        <Card className="p-6">
-          <h2 className="text-xl font-bold mb-4">3. Productos</h2>
-          <ProductoSelector value={productos} onChange={setProductos} />
-        </Card>
-      )}
+          {/* 3. Selección de Productos */}
+          {canal && cliente.nombre && (
+            <Card className="p-6">
+              <h2 className="text-xl font-bold mb-4">3. Productos</h2>
+              <ProductoSelector value={carrito} onChange={setCarrito} />
+            </Card>
+          )}
 
-      {/* Botones de acción */}
-      {productos.length > 0 && (
-        <div className="flex gap-4 justify-end">
-          <Button
-            variant="outline"
-            onClick={() => router.back()}
-          >
-            Cancelar
-          </Button>
-          <Button
-            onClick={handleSubmit}
-            className="gap-2"
-          >
-            <Save className="h-4 w-4" />
-            Guardar Pedido
-          </Button>
+          {/* 4. Carrito de Productos */}
+          {carrito.length > 0 && (
+            <>
+              <CarritoProductos
+                items={carrito}
+                onUpdateCantidad={handleUpdateCantidad}
+                onRemoveItem={handleRemoveItem}
+                onEditItem={handleEditItem}
+              />
+
+              {/* 5. Costo de Envío */}
+              <Card className="p-6">
+                <h2 className="text-xl font-bold mb-4">4. Costo de Envío</h2>
+                <div className="space-y-2">
+                  <Label htmlFor="costoEnvio">Costo de Envío</Label>
+                  <Input
+                    id="costoEnvio"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={costoEnvio}
+                    onChange={(e) => setCostoEnvio(parseFloat(e.target.value) || 0)}
+                    placeholder="0.00"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Ingresa 0 si es pedido para recoger en mostrador
+                  </p>
+                </div>
+              </Card>
+
+              {/* 6. Método de Pago */}
+              <Card className="p-6">
+                <h2 className="text-xl font-bold mb-4">5. Método de Pago</h2>
+                <MetodoPagoSelector
+                  metodoPago={metodoPago}
+                  onMetodoPagoChange={setMetodoPago}
+                  total={total}
+                  montoPagado={montoPagado}
+                  onMontoPagadoChange={setMontoPagado}
+                />
+              </Card>
+
+              {/* 7. Asignar Repartidor */}
+              {costoEnvio > 0 && (
+                <Card className="p-6">
+                  <h2 className="text-xl font-bold mb-4">6. Repartidor</h2>
+                  <RepartidorAsignador
+                    repartidorId={repartidorId}
+                    onRepartidorChange={setRepartidorId}
+                  />
+                </Card>
+              )}
+
+              {/* 8. Observaciones */}
+              <Card className="p-6">
+                <h2 className="text-xl font-bold mb-4">7. Observaciones</h2>
+                <ObservacionesField
+                  value={observaciones}
+                  onChange={setObservaciones}
+                />
+              </Card>
+            </>
+          )}
         </div>
-      )}
+
+        {/* Columna lateral - Resumen */}
+        {carrito.length > 0 && (
+          <div className="lg:col-span-1">
+            <div className="sticky top-6 space-y-6">
+              <ResumenTotales
+                subtotal={subtotal}
+                costoEnvio={costoEnvio}
+                total={total}
+                cantidadProductos={cantidadProductos}
+                metodoPago={metodoPago || undefined}
+                cambio={cambio}
+              />
+
+              {/* Botones de acción */}
+              <div className="space-y-3">
+                <Button
+                  onClick={handleSubmit}
+                  disabled={!puedeGuardar || guardando}
+                  className="w-full gap-2 h-12 text-lg"
+                  size="lg"
+                >
+                  {guardando ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      Guardando...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-5 w-5" />
+                      Guardar Pedido
+                    </>
+                  )}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => router.back()}
+                  disabled={guardando}
+                  className="w-full"
+                >
+                  Cancelar
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Modal de Personalización */}
+      <PersonalizacionModal
+        open={personalizacionModal.open}
+        onOpenChange={(open) =>
+          setPersonalizacionModal((prev) => ({ ...prev, open }))
+        }
+        productoNombre={personalizacionModal.productoNombre}
+        personalizacion={
+          personalizacionModal.itemIndex >= 0
+            ? carrito[personalizacionModal.itemIndex]?.personalizaciones
+            : undefined
+        }
+        onConfirm={handlePersonalizacionConfirm}
+      />
     </div>
   );
 }
