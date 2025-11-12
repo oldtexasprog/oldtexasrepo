@@ -4,8 +4,6 @@ import { useState } from 'react';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/lib/firebase/config';
 import { usuariosService } from '@/lib/services';
-import type { NuevoUsuario } from '@/lib/types/firestore';
-import { ProtectedRoute } from '@/components/auth';
 
 export default function CreateAdminPage() {
   const [email, setEmail] = useState('admin@oldtexas.local');
