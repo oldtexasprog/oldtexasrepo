@@ -31,7 +31,7 @@ export function RepartidorAsignador({
   const loadRepartidores = async () => {
     try {
       setLoading(true);
-      const data = await repartidoresService.getRepartidoresActivos();
+      const data = await repartidoresService.getActivos();
       setRepartidores(data);
     } catch (error) {
       console.error('Error cargando repartidores:', error);
