@@ -8,10 +8,10 @@ export {
   app,
   auth,
   db,
-  // storage, // DEPRECATED: Usar Cloudinary en su lugar (lib/cloudinary)
+  storage,
   // getMessagingInstance, // DEPRECATED: Usar notificaciones in-app (lib/notifications)
-  initializeAnalytics,
-  firebaseInfo,
+  // initializeAnalytics, // No disponible en config.ts
+  // firebaseInfo, // No disponible en config.ts
 } from './config';
 
 // Authentication
