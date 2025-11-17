@@ -24,28 +24,70 @@ export const useAuthStore = create<AuthStoreState>((set, get) => ({
 
   initializeAuthListener: () => {
     if (get().initialized) return;
+
+    console.log('[AuthStore] Initializing auth listener...');
+
     if (!auth) {
+      console.warn('[AuthStore] Firebase auth not configured');
       set({ loading: false, initialized: true });
       return;
     }
 
-    setPersistence(auth, browserLocalPersistence).catch(() => {});
+    setPersistence(auth, browserLocalPersistence).catch((err) => {
+      console.error('[AuthStore] Error setting persistence:', err);
+    });
 
-    onAuthStateChanged(auth, async (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      console.log('[AuthStore] Auth state changed:', firebaseUser ? 'User logged in' : 'No user');
+
       if (firebaseUser) {
         try {
-          const userData = await usuariosService.getById(firebaseUser.uid);
-          set({ user: firebaseUser, userData, loading: false, error: null, initialized: true });
+          console.log('[AuthStore] Loading user data for UID:', firebaseUser.uid);
+
+          // Timeout para evitar loading infinito
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Timeout loading user data')), 10000)
+          );
+
+          const userData = await Promise.race([
+            usuariosService.getById(firebaseUser.uid),
+            timeoutPromise
+          ]) as Usuario | null;
+
+          console.log('[AuthStore] User data loaded:', userData ? 'Success' : 'No data');
+
+          set({
+            user: firebaseUser,
+            userData,
+            loading: false,
+            error: null,
+            initialized: true
+          });
+
+          // Actualizar última conexión en background (no bloquear)
           if (userData) {
-            await usuariosService.updateUltimaConexion(firebaseUser.uid);
+            usuariosService.updateUltimaConexion(firebaseUser.uid).catch((err) => {
+              console.error('[AuthStore] Error updating last connection:', err);
+            });
           }
-        } catch (e) {
-          set({ user: firebaseUser, userData: null, loading: false, error: 'Error al cargar datos del usuario', initialized: true });
+        } catch (e: any) {
+          console.error('[AuthStore] Error loading user data:', e);
+          set({
+            user: firebaseUser,
+            userData: null,
+            loading: false,
+            error: 'Error al cargar datos del usuario',
+            initialized: true
+          });
         }
       } else {
+        console.log('[AuthStore] No user, setting state to logged out');
         set({ user: null, userData: null, loading: false, error: null, initialized: true });
       }
     });
+
+    // Guardar unsubscribe para cleanup
+    set({ initialized: true });
   },
 
   signIn: async (email: string, password: string) => {
