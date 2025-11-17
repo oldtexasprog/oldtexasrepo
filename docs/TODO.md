@@ -185,7 +185,16 @@
 - [x] Calcular subtotal + envío automáticamente
 - [x] Calcular cambio si método es efectivo
 - [x] Guardar timestamp de creación
+- [x] Guardar pedido en Firestore con todos los datos
+- [x] Crear documento principal + subcolecciones (items, historial)
+- [x] Validar autenticación antes de guardar
+- [x] Sincronizar carritos de productos (eliminar estado duplicado)
+- [x] Mejorar validación de formulario según método de pago
+- [x] Feedback visual claro cuando botón está deshabilitado
 - [ ] Trigger notificación a cocina al crear pedido
+- [ ] Integrar con sistema de turnos (actualmente usa 'turno-actual' hardcoded)
+- [ ] Obtener nombre real del repartidor desde Firestore
+- [ ] Agregar opción para imprimir ticket del pedido
 
 ### Lista de Pedidos
 
