@@ -108,14 +108,23 @@ export function FormPedido() {
 
   // Validaciones
   const puedeGuardar = useMemo(() => {
-    return (
+    // Validaciones básicas
+    const validacionesBasicas =
       canal &&
       cliente.nombre &&
       cliente.telefono &&
       carrito.length > 0 &&
-      metodoPago &&
-      (metodoPago !== 'efectivo' || montoPagado >= total)
-    );
+      metodoPago;
+
+    if (!validacionesBasicas) return false;
+
+    // Si es efectivo, validar que el monto pagado sea suficiente
+    if (metodoPago === 'efectivo') {
+      return montoPagado >= total;
+    }
+
+    // Para tarjeta y transferencia, no se requiere monto pagado
+    return true;
   }, [canal, cliente, carrito, metodoPago, montoPagado, total]);
 
   const handleSubmit = async () => {
@@ -126,6 +135,15 @@ export function FormPedido() {
 
     try {
       setGuardando(true);
+
+      // Si el método no es efectivo, asignar el total como monto pagado
+      const montoPagadoFinal =
+        metodoPago === 'efectivo' ? montoPagado : total;
+      const cambioFinal =
+        metodoPago === 'efectivo' && montoPagado > total
+          ? montoPagado - total
+          : 0;
+
       // TODO: Implementar guardado del pedido
       console.log('Guardando pedido:', {
         canal,
@@ -135,8 +153,8 @@ export function FormPedido() {
         costoEnvio,
         total,
         metodoPago,
-        montoPagado,
-        cambio,
+        montoPagado: montoPagadoFinal,
+        cambio: cambioFinal,
         repartidorId,
         observaciones,
       });
@@ -270,24 +288,41 @@ export function FormPedido() {
 
               {/* Botones de acción */}
               <div className="space-y-3">
-                <Button
-                  onClick={handleSubmit}
-                  disabled={!puedeGuardar || guardando}
-                  className="w-full gap-2 h-12 text-lg"
-                  size="lg"
-                >
-                  {guardando ? (
-                    <>
-                      <Loader2 className="h-5 w-5 animate-spin" />
-                      Guardando...
-                    </>
-                  ) : (
-                    <>
-                      <Save className="h-5 w-5" />
-                      Guardar Pedido
-                    </>
+                <div className="space-y-2">
+                  <Button
+                    onClick={handleSubmit}
+                    disabled={!puedeGuardar || guardando}
+                    className="w-full gap-2 h-12 text-lg"
+                    size="lg"
+                  >
+                    {guardando ? (
+                      <>
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                        Guardando...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="h-5 w-5" />
+                        Guardar Pedido
+                      </>
+                    )}
+                  </Button>
+                  {!puedeGuardar && (
+                    <p className="text-xs text-destructive text-center">
+                      {!canal
+                        ? 'Selecciona un canal de venta'
+                        : !cliente.nombre || !cliente.telefono
+                          ? 'Completa los datos del cliente'
+                          : carrito.length === 0
+                            ? 'Agrega productos al carrito'
+                            : !metodoPago
+                              ? 'Selecciona un método de pago'
+                              : metodoPago === 'efectivo' && montoPagado < total
+                                ? `Ingresa el monto pagado (mínimo ${total.toFixed(2)})`
+                                : 'Completa todos los campos'}
+                    </p>
                   )}
-                </Button>
+                </div>
                 <Button
                   variant="outline"
                   onClick={() => router.back()}
