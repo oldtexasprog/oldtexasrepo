@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import { useClientesSugeridos } from '@/lib/hooks/useClientesSugeridos';
 import {
   Dialog,
   DialogContent,
@@ -32,6 +33,7 @@ export function ClienteForm({ value, onChange }: ClienteFormProps) {
   const [buscando, setBuscando] = useState(false);
   const [clientesEncontrados, setClientesEncontrados] = useState<ClienteEncontrado[]>([]);
   const [modalAbierto, setModalAbierto] = useState(false);
+  const { buscarClientes, getClientesFrecuentes } = useClientesSugeridos();
 
   const handleChange = (field: keyof ClientePedido, newValue: string) => {
     onChange({
@@ -97,11 +99,26 @@ export function ClienteForm({ value, onChange }: ClienteFormProps) {
 
     const timer = setTimeout(() => {
       if (busquedaTelefono) {
-        buscarCliente(busquedaTelefono);
+        // Primero buscar en localStorage (instantáneo)
+        const clientesLocales = buscarClientes(busquedaTelefono);
+
+        if (clientesLocales.length > 0) {
+          // Si hay resultados en localStorage, mostrarlos inmediatamente
+          setClientesEncontrados(
+            clientesLocales.map((c) => ({
+              ...c,
+              ultimoPedido: new Date(c.ultimaVez),
+              totalPedidos: c.vecesUsado,
+            }))
+          );
+        } else {
+          // Si no hay en localStorage, buscar en Firestore
+          buscarCliente(busquedaTelefono);
+        }
       } else {
         setClientesEncontrados([]);
       }
-    }, 500); // Debounce de 500ms
+    }, 300); // Debounce reducido a 300ms (más rápido)
 
     return () => clearTimeout(timer);
   }, [busquedaTelefono, modalAbierto]);
@@ -229,13 +246,60 @@ export function ClienteForm({ value, onChange }: ClienteFormProps) {
                 </div>
               )}
 
-              {/* Estado inicial */}
+              {/* Estado inicial - Mostrar clientes frecuentes */}
               {busquedaTelefono.length === 0 && (
-                <div className="p-8 text-center border border-dashed border-border rounded-lg">
-                  <Search className="h-12 w-12 mx-auto text-muted-foreground/50 mb-3" />
-                  <p className="text-muted-foreground">
-                    Escribe el teléfono del cliente para buscar
-                  </p>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+                    <Clock className="h-4 w-4" />
+                    Clientes Frecuentes
+                  </div>
+
+                  {(() => {
+                    const frecuentes = getClientesFrecuentes(5);
+                    return frecuentes.length > 0 ? (
+                      <div className="space-y-2">
+                        {frecuentes.map((cliente, index) => (
+                          <button
+                            key={index}
+                            onClick={() =>
+                              seleccionarCliente({
+                                ...cliente,
+                                ultimoPedido: new Date(cliente.ultimaVez),
+                                totalPedidos: cliente.vecesUsado,
+                              })
+                            }
+                            className="w-full p-3 bg-card hover:bg-muted border border-border rounded-lg text-left transition-all hover:border-primary"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex-1">
+                                <p className="font-medium text-sm">
+                                  {cliente.nombre}
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                  📱 {cliente.telefono}
+                                </p>
+                              </div>
+                              <div className="flex items-center gap-1 text-xs text-muted-foreground bg-primary/10 px-2 py-1 rounded-full">
+                                <span className="font-medium">
+                                  {cliente.vecesUsado}×
+                                </span>
+                              </div>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="p-8 text-center border border-dashed border-border rounded-lg">
+                        <Search className="h-12 w-12 mx-auto text-muted-foreground/50 mb-3" />
+                        <p className="text-muted-foreground">
+                          Aún no hay clientes guardados
+                        </p>
+                        <p className="text-sm text-muted-foreground mt-2">
+                          Escribe el teléfono para buscar
+                        </p>
+                      </div>
+                    );
+                  })()}
                 </div>
               )}
 

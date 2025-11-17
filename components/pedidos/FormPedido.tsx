@@ -27,10 +27,12 @@ import { toast } from 'sonner';
 import { Timestamp } from 'firebase/firestore';
 import { pedidosService } from '@/lib/services/pedidos.service';
 import { useAuth } from '@/lib/auth/useAuth';
+import { useClientesSugeridos } from '@/lib/hooks/useClientesSugeridos';
 
 export function FormPedido() {
   const router = useRouter();
   const { user, userData } = useAuth();
+  const { guardarCliente } = useClientesSugeridos();
 
   // Estados del formulario
   const [canal, setCanal] = useState<CanalVenta | null>(null);
@@ -252,6 +254,10 @@ export function FormPedido() {
       );
 
       console.log('Pedido creado exitosamente:', pedidoId);
+
+      // Guardar cliente en localStorage para futuras referencias
+      guardarCliente(cliente);
+
       toast.success(`Pedido #${pedidoId.slice(-6)} creado exitosamente`);
 
       // Redirigir al dashboard
