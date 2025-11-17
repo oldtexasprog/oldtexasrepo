@@ -183,17 +183,8 @@ export function FormPedido() {
               <ProductoSelector
                 value={carrito}
                 onChange={(productos) => {
-                  // Transformar ProductoCarrito[] a ItemCarrito[]
-                  const items: ItemCarrito[] = productos.map((p: any) => ({
-                    id: p.id,
-                    productoId: p.productoId,
-                    nombre: p.productoNombre, // Mapear productoNombre a nombre
-                    precio: p.precioUnitario, // Mapear precioUnitario a precio
-                    cantidad: p.cantidad,
-                    personalizaciones: {},
-                    subtotal: p.subtotal,
-                  }));
-                  setCarrito(items);
+                  // Los productos ya vienen en formato ItemCarrito[] desde ProductoSelector
+                  setCarrito(productos);
                 }}
               />
             </Card>
