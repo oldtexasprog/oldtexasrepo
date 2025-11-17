@@ -180,7 +180,22 @@ export function FormPedido() {
           {canal && cliente.nombre && (
             <Card className="p-6">
               <h2 className="text-xl font-bold mb-4">3. Productos</h2>
-              <ProductoSelector value={carrito} onChange={setCarrito} />
+              <ProductoSelector
+                value={carrito}
+                onChange={(productos) => {
+                  // Transformar ProductoCarrito[] a ItemCarrito[]
+                  const items: ItemCarrito[] = productos.map((p: any) => ({
+                    id: p.id,
+                    productoId: p.productoId,
+                    nombre: p.productoNombre, // Mapear productoNombre a nombre
+                    precio: p.precioUnitario, // Mapear precioUnitario a precio
+                    cantidad: p.cantidad,
+                    personalizaciones: {},
+                    subtotal: p.subtotal,
+                  }));
+                  setCarrito(items);
+                }}
+              />
             </Card>
           )}
 
