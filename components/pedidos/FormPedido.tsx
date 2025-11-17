@@ -14,13 +14,23 @@ import { MetodoPagoSelector } from './MetodoPagoSelector';
 import { RepartidorAsignador } from './RepartidorAsignador';
 import { ObservacionesField } from './ObservacionesField';
 import { ResumenTotales } from './ResumenTotales';
-import { CanalVenta, ClientePedido, MetodoPago } from '@/lib/types/firestore';
+import {
+  CanalVenta,
+  ClientePedido,
+  MetodoPago,
+  NuevoPedido,
+  ItemPedido,
+} from '@/lib/types/firestore';
 import { ArrowLeft, Save, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { Timestamp } from 'firebase/firestore';
+import { pedidosService } from '@/lib/services/pedidos.service';
+import { useAuth } from '@/lib/auth/useAuth';
 
 export function FormPedido() {
   const router = useRouter();
+  const { user, userData } = useAuth();
 
   // Estados del formulario
   const [canal, setCanal] = useState<CanalVenta | null>(null);
@@ -133,6 +143,11 @@ export function FormPedido() {
       return;
     }
 
+    if (!user || !userData) {
+      toast.error('Debes estar autenticado para crear pedidos');
+      return;
+    }
+
     try {
       setGuardando(true);
 
@@ -144,26 +159,76 @@ export function FormPedido() {
           ? montoPagado - total
           : 0;
 
-      // TODO: Implementar guardado del pedido
-      console.log('Guardando pedido:', {
-        canal,
-        cliente,
-        items: carrito,
-        subtotal,
-        costoEnvio,
-        total,
-        metodoPago,
-        montoPagado: montoPagadoFinal,
-        cambio: cambioFinal,
-        repartidorId,
-        observaciones,
-      });
+      const ahora = Timestamp.now();
 
-      toast.success('Pedido guardado exitosamente');
-      router.push('/pedidos');
-    } catch (error) {
+      // Preparar datos del pedido
+      const pedidoData: Omit<NuevoPedido, 'numeroPedido'> = {
+        canal: canal!,
+        cliente,
+        estado: 'pendiente',
+        totales: {
+          subtotal,
+          envio: costoEnvio,
+          descuento: 0,
+          total,
+        },
+        pago: {
+          metodo: metodoPago!,
+          requiereCambio: metodoPago === 'efectivo' && cambioFinal > 0,
+          montoRecibido: montoPagadoFinal,
+          cambio: cambioFinal,
+          pagoAdelantado: false,
+        },
+        observaciones,
+        horaRecepcion: ahora,
+        creadoPor: user.uid,
+        turnoId: 'turno-actual', // TODO: Obtener turno actual del sistema
+        cancelado: false,
+      };
+
+      // Si hay repartidor asignado, agregar datos de reparto
+      if (repartidorId) {
+        pedidoData.reparto = {
+          repartidorId,
+          repartidorNombre: 'Repartidor', // TODO: Obtener nombre del repartidor
+          comisionRepartidor: 0,
+          estadoReparto: 'asignado',
+          horaAsignacion: ahora,
+          liquidado: false,
+        };
+      }
+
+      // Preparar items del pedido
+      const items: Omit<ItemPedido, 'id'>[] = carrito.map((item) => ({
+        productoId: item.productoId,
+        productoNombre: item.nombre,
+        cantidad: item.cantidad,
+        precioUnitario: item.precio,
+        subtotal: item.subtotal,
+        personalizaciones: item.personalizaciones
+          ? {
+              salsa: item.personalizaciones.salsas,
+              presentacion: item.personalizaciones.presentacion,
+              extras: item.personalizaciones.extras,
+            }
+          : undefined,
+        notas: item.personalizaciones?.notas,
+      }));
+
+      // Guardar pedido en Firestore
+      const pedidoId = await pedidosService.crearPedidoCompleto(
+        pedidoData,
+        items
+      );
+
+      console.log('Pedido creado exitosamente:', pedidoId);
+      toast.success(`Pedido #${pedidoId.slice(-6)} creado exitosamente`);
+
+      // Redirigir al dashboard
+      router.push('/dashboard');
+    } catch (error: any) {
       console.error('Error guardando pedido:', error);
-      toast.error('Error al guardar el pedido');
+      toast.error(error?.message || 'Error al guardar el pedido');
     } finally {
       setGuardando(false);
     }
