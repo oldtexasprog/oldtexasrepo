@@ -199,21 +199,51 @@ export function FormPedido() {
       }
 
       // Preparar items del pedido
-      const items: Omit<ItemPedido, 'id'>[] = carrito.map((item) => ({
-        productoId: item.productoId,
-        productoNombre: item.nombre,
-        cantidad: item.cantidad,
-        precioUnitario: item.precio,
-        subtotal: item.subtotal,
-        personalizaciones: item.personalizaciones
-          ? {
-              salsa: item.personalizaciones.salsas,
-              presentacion: item.personalizaciones.presentacion,
-              extras: item.personalizaciones.extras,
-            }
-          : undefined,
-        notas: item.personalizaciones?.notas,
-      }));
+      const items: Omit<ItemPedido, 'id'>[] = carrito.map((item) => {
+        const itemPedido: any = {
+          productoId: item.productoId,
+          productoNombre: item.nombre,
+          cantidad: item.cantidad,
+          precioUnitario: item.precio,
+          subtotal: item.subtotal,
+        };
+
+        // Solo agregar personalizaciones si existen y tienen contenido
+        if (item.personalizaciones) {
+          const personalizaciones: any = {};
+
+          if (
+            item.personalizaciones.salsas &&
+            item.personalizaciones.salsas.length > 0
+          ) {
+            personalizaciones.salsa = item.personalizaciones.salsas;
+          }
+
+          if (item.personalizaciones.presentacion) {
+            personalizaciones.presentacion =
+              item.personalizaciones.presentacion;
+          }
+
+          if (
+            item.personalizaciones.extras &&
+            item.personalizaciones.extras.length > 0
+          ) {
+            personalizaciones.extras = item.personalizaciones.extras;
+          }
+
+          // Solo agregar el objeto personalizaciones si tiene al menos un campo
+          if (Object.keys(personalizaciones).length > 0) {
+            itemPedido.personalizaciones = personalizaciones;
+          }
+        }
+
+        // Solo agregar notas si existe
+        if (item.personalizaciones?.notas) {
+          itemPedido.notas = item.personalizaciones.notas;
+        }
+
+        return itemPedido;
+      });
 
       // Guardar pedido en Firestore
       const pedidoId = await pedidosService.crearPedidoCompleto(
