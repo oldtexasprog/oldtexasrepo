@@ -176,15 +176,15 @@
 
 ### Lógica de Negocio
 
-- [ ] Implementar hook `usePedidos`
-- [ ] Función para crear pedido (`createPedido`)
-- [ ] Función para editar pedido (`updatePedido`)
-- [ ] Función para cancelar pedido (`cancelPedido`)
-- [ ] Generar ID consecutivo de pedido
-- [ ] Implementar validaciones de formulario
-- [ ] Calcular subtotal + envío automáticamente
-- [ ] Calcular cambio si método es efectivo
-- [ ] Guardar timestamp de creación
+- [x] Implementar hook `usePedidos`
+- [x] Función para crear pedido (`createPedido`)
+- [x] Función para editar pedido (`updatePedido`)
+- [x] Función para cancelar pedido (`cancelPedido`)
+- [x] Generar ID consecutivo de pedido
+- [x] Implementar validaciones de formulario
+- [x] Calcular subtotal + envío automáticamente
+- [x] Calcular cambio si método es efectivo
+- [x] Guardar timestamp de creación
 - [ ] Trigger notificación a cocina al crear pedido
 
 ### Lista de Pedidos
