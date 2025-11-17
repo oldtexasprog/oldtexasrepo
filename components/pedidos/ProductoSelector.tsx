@@ -26,7 +26,17 @@ export function ProductoSelector({ value, onChange }: ProductoSelectorProps) {
   const [productos, setProductos] = useState<Producto[]>([]);
   const [busqueda, setBusqueda] = useState('');
   const [cargando, setCargando] = useState(true);
-  const [carrito, setCarrito] = useState<ProductoCarrito[]>(value);
+
+  // Usar value del prop en lugar de estado local
+  // Convertir ItemCarrito[] a ProductoCarrito[] para compatibilidad interna
+  const carrito: ProductoCarrito[] = value.map((item: any) => ({
+    id: item.id,
+    productoId: item.productoId,
+    productoNombre: item.nombre || item.productoNombre,
+    cantidad: item.cantidad,
+    precioUnitario: item.precio || item.precioUnitario,
+    subtotal: item.subtotal,
+  }));
 
   // Cargar productos
   useEffect(() => {
@@ -75,25 +85,33 @@ export function ProductoSelector({ value, onChange }: ProductoSelectorProps) {
             }
           : p
       );
-      setCarrito(nuevoCarrito);
-      onChange(nuevoCarrito);
+      // Transformar a ItemCarrito[] antes de enviar al padre
+      const items = nuevoCarrito.map((p) => ({
+        id: p.id,
+        productoId: p.productoId,
+        nombre: p.productoNombre,
+        precio: p.precioUnitario,
+        cantidad: p.cantidad,
+        personalizaciones: {},
+        subtotal: p.subtotal,
+      }));
+      onChange(items);
     } else {
       // Si no existe, agregar nuevo
-      const nuevoProducto: ProductoCarrito = {
+      const precio = producto.enPromocion && producto.precioPromocion
+        ? producto.precioPromocion
+        : producto.precio;
+
+      const nuevoProducto = {
         id: `temp-${Date.now()}`,
         productoId: producto.id,
-        productoNombre: producto.nombre,
+        nombre: producto.nombre,
+        precio: precio,
         cantidad: 1,
-        precioUnitario: producto.enPromocion && producto.precioPromocion
-          ? producto.precioPromocion
-          : producto.precio,
-        subtotal: producto.enPromocion && producto.precioPromocion
-          ? producto.precioPromocion
-          : producto.precio,
+        personalizaciones: {},
+        subtotal: precio,
       };
-      const nuevoCarrito = [...carrito, nuevoProducto];
-      setCarrito(nuevoCarrito);
-      onChange(nuevoCarrito);
+      onChange([...value, nuevoProducto]);
     }
   };
 
@@ -114,15 +132,34 @@ export function ProductoSelector({ value, onChange }: ProductoSelectorProps) {
       })
       .filter((p) => p !== null) as ProductoCarrito[];
 
-    setCarrito(nuevoCarrito);
-    onChange(nuevoCarrito);
+    // Transformar a ItemCarrito[] antes de enviar al padre
+    const items = nuevoCarrito.map((p) => ({
+      id: p.id,
+      productoId: p.productoId,
+      nombre: p.productoNombre,
+      precio: p.precioUnitario,
+      cantidad: p.cantidad,
+      personalizaciones: {},
+      subtotal: p.subtotal,
+    }));
+    onChange(items);
   };
 
   // Eliminar producto
   const eliminarProducto = (productoId: string) => {
     const nuevoCarrito = carrito.filter((p) => p.productoId !== productoId);
-    setCarrito(nuevoCarrito);
-    onChange(nuevoCarrito);
+
+    // Transformar a ItemCarrito[] antes de enviar al padre
+    const items = nuevoCarrito.map((p) => ({
+      id: p.id,
+      productoId: p.productoId,
+      nombre: p.productoNombre,
+      precio: p.precioUnitario,
+      cantidad: p.cantidad,
+      personalizaciones: {},
+      subtotal: p.subtotal,
+    }));
+    onChange(items);
   };
 
   // Calcular total
