@@ -16,7 +16,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { useTurnoActual } from '@/lib/hooks/useTurnoActual';
 import { turnosService } from '@/lib/services';
-import { useUserData } from '@/lib/hooks/useUserData';
+import { useAuth } from '@/lib/auth/useAuth';
 import { toast } from 'sonner';
 import { formatCurrency } from '@/lib/utils/formatters';
 import {
@@ -34,7 +34,7 @@ import type { TipoTurno } from '@/lib/types/firestore';
 
 export function GestionTurnos() {
   const { turno, loading, reload } = useTurnoActual();
-  const { userData } = useUserData();
+  const { userData } = useAuth();
   const [procesando, setProcesando] = useState(false);
 
   // Estado para apertura

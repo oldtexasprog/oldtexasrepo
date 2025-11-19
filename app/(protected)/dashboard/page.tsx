@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { ProtectedRoute } from '@/components/auth/protected-route';
 import { useAuth } from '@/lib/auth/useAuth';
 import { useRouter } from 'next/navigation';
 import { LABELS_ROL } from '@/lib/types/firestore';
@@ -202,9 +201,5 @@ function DashboardContent() {
 }
 
 export default function DashboardPage() {
-  return (
-    <ProtectedRoute>
-      <DashboardContent />
-    </ProtectedRoute>
-  );
+  return <DashboardContent />;
 }

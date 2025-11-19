@@ -1,9 +1,6 @@
-'use client';
-
-import { ProtectedRoute } from '@/components/auth/protected-route';
 import { FormPedido } from '@/components/pedidos/FormPedido';
 
-function NuevoPedidoContent() {
+export default function NuevoPedidoPage() {
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
@@ -19,13 +16,5 @@ function NuevoPedidoContent() {
         <FormPedido />
       </div>
     </div>
-  );
-}
-
-export default function NuevoPedidoPage() {
-  return (
-    <ProtectedRoute allowedRoles={['admin', 'cajera', 'encargado']}>
-      <NuevoPedidoContent />
-    </ProtectedRoute>
   );
 }

@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/auth/useAuth';
 import { usuariosService } from '@/lib/services';
-import { ProtectedRoute } from '@/components/auth';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -290,9 +289,5 @@ function PerfilContent() {
 }
 
 export default function PerfilPage() {
-  return (
-    <ProtectedRoute>
-      <PerfilContent />
-    </ProtectedRoute>
-  );
+  return <PerfilContent />;
 }

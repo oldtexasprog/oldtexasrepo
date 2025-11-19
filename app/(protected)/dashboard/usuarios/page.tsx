@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { ProtectedRoute } from '@/components/auth';
-import { Can } from '@/components/auth';
+import { Can, ProtectedRoute } from '@/components/auth';
 import { usuariosService } from '@/lib/services';
 import type { Rol, Usuario } from '@/lib/types/firestore';
 import { Button } from '@/components/ui/button';
