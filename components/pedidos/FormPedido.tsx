@@ -28,11 +28,13 @@ import { Timestamp } from 'firebase/firestore';
 import { pedidosService } from '@/lib/services/pedidos.service';
 import { useAuth } from '@/lib/auth/useAuth';
 import { useClientesSugeridos } from '@/lib/hooks/useClientesSugeridos';
+import { useTurnoActual } from '@/lib/hooks/useTurnoActual';
 
 export function FormPedido() {
   const router = useRouter();
   const { user, userData } = useAuth();
   const { guardarCliente } = useClientesSugeridos();
+  const { turno } = useTurnoActual();
 
   // Estados del formulario
   const [canal, setCanal] = useState<CanalVenta | null>(null);
@@ -48,6 +50,7 @@ export function FormPedido() {
   const [metodoPago, setMetodoPago] = useState<MetodoPago | null>(null);
   const [montoPagado, setMontoPagado] = useState(0);
   const [repartidorId, setRepartidorId] = useState<string | null>(null);
+  const [repartidorNombre, setRepartidorNombre] = useState<string | null>(null);
   const [observaciones, setObservaciones] = useState('');
   const [guardando, setGuardando] = useState(false);
 
@@ -163,6 +166,12 @@ export function FormPedido() {
 
       const ahora = Timestamp.now();
 
+      // Validar que haya un turno abierto
+      if (!turno) {
+        toast.error('No hay un turno abierto. Solicita al encargado que abra un turno.');
+        return;
+      }
+
       // Preparar datos del pedido
       const pedidoData: Omit<NuevoPedido, 'numeroPedido'> = {
         canal: canal!,
@@ -184,15 +193,15 @@ export function FormPedido() {
         observaciones,
         horaRecepcion: ahora,
         creadoPor: user.uid,
-        turnoId: 'turno-actual', // TODO: Obtener turno actual del sistema
+        turnoId: turno.id,
         cancelado: false,
       };
 
       // Si hay repartidor asignado, agregar datos de reparto
-      if (repartidorId) {
+      if (repartidorId && repartidorNombre) {
         pedidoData.reparto = {
           repartidorId,
-          repartidorNombre: 'Repartidor', // TODO: Obtener nombre del repartidor
+          repartidorNombre,
           comisionRepartidor: 0,
           estadoReparto: 'asignado',
           horaAsignacion: ahora,
@@ -357,7 +366,10 @@ export function FormPedido() {
                   <h2 className="text-xl font-bold mb-4">6. Repartidor</h2>
                   <RepartidorAsignador
                     repartidorId={repartidorId}
-                    onRepartidorChange={setRepartidorId}
+                    onRepartidorChange={(id, nombre) => {
+                      setRepartidorId(id);
+                      setRepartidorNombre(nombre || null);
+                    }}
                   />
                 </Card>
               )}

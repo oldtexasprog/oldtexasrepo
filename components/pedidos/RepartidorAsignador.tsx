@@ -12,7 +12,7 @@ import type { Repartidor } from '@/lib/types/firestore';
 
 interface RepartidorAsignadorProps {
   repartidorId: string | null;
-  onRepartidorChange: (repartidorId: string | null) => void;
+  onRepartidorChange: (repartidorId: string | null, repartidorNombre?: string | null) => void;
   required?: boolean;
 }
 
@@ -85,9 +85,14 @@ export function RepartidorAsignador({
 
       <RadioGroup
         value={repartidorId || 'sin-asignar'}
-        onValueChange={(value) =>
-          onRepartidorChange(value === 'sin-asignar' ? null : value)
-        }
+        onValueChange={(value) => {
+          if (value === 'sin-asignar') {
+            onRepartidorChange(null, null);
+          } else {
+            const repartidor = repartidores.find((r) => r.id === value);
+            onRepartidorChange(value, repartidor?.nombre || null);
+          }
+        }}
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Opción: Sin asignar (opcional) */}
@@ -98,7 +103,7 @@ export function RepartidorAsignador({
                   ? 'border-primary ring-2 ring-primary ring-offset-2'
                   : 'hover:border-primary/50'
               }`}
-              onClick={() => onRepartidorChange(null)}
+              onClick={() => onRepartidorChange(null, null)}
             >
               <div className="flex items-center space-x-3">
                 <RadioGroupItem value="sin-asignar" id="sin-asignar" />
@@ -132,7 +137,7 @@ export function RepartidorAsignador({
                     ? 'border-primary ring-2 ring-primary ring-offset-2'
                     : 'hover:border-primary/50'
                 }`}
-                onClick={() => onRepartidorChange(repartidor.id)}
+                onClick={() => onRepartidorChange(repartidor.id, repartidor.nombre)}
               >
                 <div className="flex items-start space-x-3">
                   <RadioGroupItem
