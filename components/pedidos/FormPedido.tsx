@@ -26,6 +26,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Timestamp } from 'firebase/firestore';
 import { pedidosService } from '@/lib/services/pedidos.service';
+import { notificacionesService } from '@/lib/services/notificaciones.service';
 import { useAuth } from '@/lib/auth/useAuth';
 import { useClientesSugeridos } from '@/lib/hooks/useClientesSugeridos';
 import { useTurnoActual } from '@/lib/hooks/useTurnoActual';
@@ -266,6 +267,21 @@ export function FormPedido() {
 
       // Guardar cliente en localStorage para futuras referencias
       guardarCliente(cliente);
+
+      // Enviar notificación a cocina
+      try {
+        await notificacionesService.crearParaRol(
+          'cocina',
+          'nuevo_pedido',
+          '🔥 Nuevo Pedido',
+          `Pedido #${pedidoId.slice(-8)} - ${cantidadProductos} producto(s) - ${canal}`,
+          'alta',
+          pedidoId
+        );
+      } catch (notifError) {
+        console.error('Error enviando notificación a cocina:', notifError);
+        // No bloquear el flujo si falla la notificación
+      }
 
       toast.success(`Pedido #${pedidoId.slice(-6)} creado exitosamente`);
 
