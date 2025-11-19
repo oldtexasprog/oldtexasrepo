@@ -189,23 +189,23 @@ export function GestionTurnos() {
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Total Ventas</p>
               <p className="font-semibold text-green-600">
-                {formatCurrency(turno.totales.totalVentas)}
+                {formatCurrency(turno.totales?.totalVentas || 0)}
               </p>
             </div>
 
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Efectivo</p>
-              <p className="font-semibold">{formatCurrency(turno.totales.efectivo)}</p>
+              <p className="font-semibold">{formatCurrency(turno.totales?.efectivo || 0)}</p>
             </div>
 
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Tarjeta</p>
-              <p className="font-semibold">{formatCurrency(turno.totales.tarjeta)}</p>
+              <p className="font-semibold">{formatCurrency(turno.totales?.tarjeta || 0)}</p>
             </div>
 
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Transferencias</p>
-              <p className="font-semibold">{formatCurrency(turno.totales.transferencia)}</p>
+              <p className="font-semibold">{formatCurrency(turno.totales?.transferencia || 0)}</p>
             </div>
           </div>
         ) : (
@@ -343,7 +343,7 @@ export function GestionTurnos() {
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Efectivo esperado:</span>
                   <span className="font-medium">
-                    {formatCurrency(turno.fondoInicial + turno.totales.efectivo)}
+                    {formatCurrency(turno.fondoInicial + (turno.totales?.efectivo || 0))}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
@@ -357,7 +357,7 @@ export function GestionTurnos() {
                   <span
                     className={
                       parseFloat(datosCierre.efectivoReal) -
-                        (turno.fondoInicial + turno.totales.efectivo) >=
+                        (turno.fondoInicial + (turno.totales?.efectivo || 0)) >=
                       0
                         ? 'text-green-600'
                         : 'text-red-600'
@@ -365,7 +365,7 @@ export function GestionTurnos() {
                   >
                     {formatCurrency(
                       parseFloat(datosCierre.efectivoReal) -
-                        (turno.fondoInicial + turno.totales.efectivo)
+                        (turno.fondoInicial + (turno.totales?.efectivo || 0))
                     )}
                   </span>
                 </div>

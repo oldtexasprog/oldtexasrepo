@@ -151,7 +151,7 @@ function DashboardContent() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <a
               //POR AHORA POR QUE NO HAY PEDIDOS, REDIRECCIONAMOS A LA PAGINA DE CREACION DE PEDIDO
-              href="/pedidos/nuevo"
+              href="/pedidos"
               className="p-4 border border-border rounded-lg hover:bg-muted transition"
             >
               <div className="text-3xl mb-2">📝</div>
