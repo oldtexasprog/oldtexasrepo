@@ -1,0 +1,16 @@
+import { GestionTurnos } from '@/components/turnos/GestionTurnos';
+
+export default function TurnosPage() {
+  return (
+    <div className="container mx-auto p-6 space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold">Gestión de Turnos</h1>
+        <p className="text-muted-foreground">
+          Apertura y cierre de turnos, cortes de caja
+        </p>
+      </div>
+
+      <GestionTurnos />
+    </div>
+  );
+}

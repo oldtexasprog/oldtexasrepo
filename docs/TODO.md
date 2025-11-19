@@ -295,21 +295,24 @@
 
 ## 💰 FASE 7: MÓDULO DE CORTE DE CAJA
 
-### Corte de Turno
+### Gestión de Turnos
+
+- [x] Crear página `/turnos`
+- [x] Componente `GestionTurnos`
+- [x] Vista de estado del turno actual
+- [x] Formulario de apertura de turno (tipo, fondo inicial)
+- [x] Formulario de cierre de turno (efectivo real, observaciones)
+- [x] Mostrar totales del turno (ventas, efectivo, tarjeta, transferencia)
+- [x] Calcular diferencia automática al cerrar
+- [x] Validaciones completas
+- [x] Integración con useTurnoActual hook
+
+### Corte de Turno (Histórico)
 
 - [ ] Crear página `/caja/corte`
-- [ ] Componente `CorteCaja`
-- [ ] Selector de turno (matutino/vespertino)
-- [ ] Mostrar fondo inicial
-- [ ] Resumen de ventas por método de pago
-- [ ] Total en efectivo esperado
-- [ ] Total en tarjeta/transferencia
-- [ ] Total de envíos cobrados
-- [ ] Total de comisiones de repartidores
-- [ ] Campo para ingresar efectivo real en caja
-- [ ] Calcular diferencia (faltante/sobrante)
-- [ ] Botón "Cerrar Turno"
-- [ ] Generar documento de corte en Firestore
+- [ ] Componente `CorteCaja` para ver turnos cerrados
+- [ ] Filtro por fecha
+- [ ] Ver detalles de turnos pasados
 - [ ] Exportar PDF del corte
 
 ### Reportes y Métricas
