@@ -191,17 +191,19 @@
 - [x] Sincronizar carritos de productos (eliminar estado duplicado)
 - [x] Mejorar validación de formulario según método de pago
 - [x] Feedback visual claro cuando botón está deshabilitado
-- [ ] Trigger notificación a cocina al crear pedido
-- [ ] Integrar con sistema de turnos (actualmente usa 'turno-actual' hardcoded)
-- [ ] Obtener nombre real del repartidor desde Firestore
-- [ ] Agregar opción para imprimir ticket del pedido
+- [x] Trigger notificación a cocina al crear pedido
+- [x] Integrar con sistema de turnos (actualmente usa 'turno-actual' hardcoded)
+- [x] Obtener nombre real del repartidor desde Firestore
+- [x] Agregar opción para imprimir ticket del pedido
 
 ### Lista de Pedidos
 
-- [ ] Crear página `/pedidos`
-- [ ] Componente `ListaPedidos` con filtros
-- [ ] Filtro por estado (pendiente/en_preparacion/listo/en_reparto/entregado)
-- [ ] Filtro por fecha
+- [x] Crear página `/pedidos`
+- [x] Componente `ListaPedidos` con filtros
+- [x] Filtro por estado (pendiente/en_preparacion/listo/en_reparto/entregado)
+- [x] Filtro por fecha
+- [x] Filtro por canal de venta
+- [x] Búsqueda por número de pedido, cliente o teléfono
 - [ ] Filtro por canal
 - [ ] Filtro por repartidor
 - [ ] Componente `PedidoCard` con info resumida
