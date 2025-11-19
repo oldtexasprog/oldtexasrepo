@@ -283,7 +283,28 @@ export function FormPedido() {
         // No bloquear el flujo si falla la notificación
       }
 
-      toast.success(`Pedido #${pedidoId.slice(-6)} creado exitosamente`);
+      toast.success(`Pedido #${pedidoId.slice(-6)} creado exitosamente`, {
+        duration: 5000,
+        action: {
+          label: 'Imprimir Ticket',
+          onClick: async () => {
+            // Obtener el pedido completo con items
+            const pedidoCompleto = await pedidosService.getById(pedidoId);
+            const itemsPedido = await pedidosService.getItems(pedidoId);
+
+            if (pedidoCompleto && itemsPedido) {
+              const { imprimirTicket } = await import('@/lib/utils/ticket');
+              imprimirTicket({
+                pedido: pedidoCompleto,
+                items: itemsPedido,
+                nombreNegocio: 'Old Texas BBQ',
+                direccionNegocio: 'Piedras Negras, Coahuila',
+                telefonoNegocio: '878-XXX-XXXX',
+              });
+            }
+          },
+        },
+      });
 
       // Redirigir al dashboard
       router.push('/dashboard');
