@@ -29,7 +29,7 @@ class NotificacionesService extends BaseService<Notificacion> {
     pedidoId?: string,
     turnoId?: string
   ): Promise<string> {
-    const notificacion: Omit<Notificacion, 'id' | 'fechaCreacion' | 'fechaActualizacion'> = {
+    const notificacion: any = {
       usuarioId,
       tipo,
       titulo,
@@ -37,10 +37,12 @@ class NotificacionesService extends BaseService<Notificacion> {
       prioridad,
       leida: false,
       timestamp: Timestamp.now(),
-      pedidoId,
-      turnoId,
       expiraEn: Timestamp.fromDate(new Date(Date.now() + 24 * 60 * 60 * 1000)), // 24 horas
     };
+
+    // Solo agregar campos opcionales si tienen valor
+    if (pedidoId) notificacion.pedidoId = pedidoId;
+    if (turnoId) notificacion.turnoId = turnoId;
 
     return this.create(notificacion);
   }
@@ -57,7 +59,7 @@ class NotificacionesService extends BaseService<Notificacion> {
     pedidoId?: string,
     turnoId?: string
   ): Promise<string> {
-    const notificacion: Omit<Notificacion, 'id' | 'fechaCreacion' | 'fechaActualizacion'> = {
+    const notificacion: any = {
       rol,
       tipo,
       titulo,
@@ -65,10 +67,12 @@ class NotificacionesService extends BaseService<Notificacion> {
       prioridad,
       leida: false,
       timestamp: Timestamp.now(),
-      pedidoId,
-      turnoId,
       expiraEn: Timestamp.fromDate(new Date(Date.now() + 24 * 60 * 60 * 1000)),
     };
+
+    // Solo agregar campos opcionales si tienen valor
+    if (pedidoId) notificacion.pedidoId = pedidoId;
+    if (turnoId) notificacion.turnoId = turnoId;
 
     return this.create(notificacion);
   }
