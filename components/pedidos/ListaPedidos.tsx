@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,21 +12,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { pedidosService } from '@/lib/services';
-import type { Pedido, EstadoPedido, CanalVenta } from '@/lib/types/firestore';
-import { Search, Filter, RefreshCw, Loader2, Package } from 'lucide-react';
-import { formatCurrency } from '@/lib/utils/formatters';
-import Link from 'next/link';
+import { pedidosService, repartidoresService } from '@/lib/services';
+import type {
+  Pedido,
+  EstadoPedido,
+  CanalVenta,
+  Repartidor,
+} from '@/lib/types/firestore';
+import {
+  Search,
+  Filter,
+  RefreshCw,
+  Loader2,
+  Package,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react';
+import { toast } from 'sonner';
+import { PedidoCard } from './PedidoCard';
+import { PedidoDetalleModal } from './PedidoDetalleModal';
 
-const ESTADOS: { value: EstadoPedido | 'todos'; label: string; color: string }[] = [
-  { value: 'todos', label: 'Todos', color: 'secondary' },
-  { value: 'pendiente', label: 'Pendiente', color: 'default' },
-  { value: 'en_preparacion', label: 'En Preparación', color: 'default' },
-  { value: 'listo', label: 'Listo', color: 'default' },
-  { value: 'en_reparto', label: 'En Reparto', color: 'default' },
-  { value: 'entregado', label: 'Entregado', color: 'default' },
-  { value: 'cancelado', label: 'Cancelado', color: 'destructive' },
+const ESTADOS: { value: EstadoPedido | 'todos'; label: string }[] = [
+  { value: 'todos', label: 'Todos los estados' },
+  { value: 'pendiente', label: 'Pendiente' },
+  { value: 'en_preparacion', label: 'En Preparación' },
+  { value: 'listo', label: 'Listo' },
+  { value: 'en_reparto', label: 'En Reparto' },
+  { value: 'entregado', label: 'Entregado' },
+  { value: 'cancelado', label: 'Cancelado' },
 ];
 
 const CANALES: { value: CanalVenta | 'todos'; label: string }[] = [
@@ -39,51 +52,77 @@ const CANALES: { value: CanalVenta | 'todos'; label: string }[] = [
   { value: 'web', label: 'Web' },
 ];
 
+const ITEMS_POR_PAGINA = 12;
+
 export function ListaPedidos() {
+  // Estados de datos
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [pedidosFiltrados, setPedidosFiltrados] = useState<Pedido[]>([]);
+  const [repartidores, setRepartidores] = useState<Repartidor[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingAccion, setLoadingAccion] = useState(false);
+
+  // Estados de filtros
   const [filtros, setFiltros] = useState({
     busqueda: '',
     estado: 'todos' as EstadoPedido | 'todos',
     canal: 'todos' as CanalVenta | 'todos',
-    fecha: new Date().toISOString().split('T')[0], // Hoy por defecto
+    repartidor: 'todos',
+    fecha: '', // Vacío = todas las fechas
   });
 
+  // Estados de paginación
+  const [paginaActual, setPaginaActual] = useState(1);
+  const totalPaginas = Math.ceil(pedidosFiltrados.length / ITEMS_POR_PAGINA);
+
+  // Estados del modal
+  const [pedidoSeleccionado, setPedidoSeleccionado] = useState<Pedido | null>(
+    null
+  );
+  const [modalOpen, setModalOpen] = useState(false);
+
+  // Cargar datos iniciales
   useEffect(() => {
-    loadPedidos();
+    loadDatos();
   }, []);
 
+  // Aplicar filtros cuando cambian
   useEffect(() => {
     aplicarFiltros();
+    setPaginaActual(1); // Reset a página 1 al cambiar filtros
   }, [filtros, pedidos]);
 
-  const loadPedidos = async () => {
+  const loadDatos = async () => {
     try {
       setLoading(true);
-      // Por ahora cargamos todos, en producción implementar paginación
-      const data = await pedidosService.getAll({
-        orderByField: 'fechaCreacion',
-        orderDirection: 'desc',
-        limitCount: 100,
-      });
-      setPedidos(data);
+      const [pedidosData, repartidoresData] = await Promise.all([
+        pedidosService.getAll({
+          orderByField: 'fechaCreacion',
+          orderDirection: 'desc',
+          limitCount: 500, // Cargar más para filtrar en cliente
+        }),
+        repartidoresService.getActivos(),
+      ]);
+      setPedidos(pedidosData);
+      setRepartidores(repartidoresData);
     } catch (error) {
-      console.error('Error cargando pedidos:', error);
+      console.error('Error cargando datos:', error);
+      toast.error('Error al cargar los pedidos');
     } finally {
       setLoading(false);
     }
   };
 
-  const aplicarFiltros = () => {
+  const aplicarFiltros = useCallback(() => {
     let resultados = [...pedidos];
 
-    // Filtro por búsqueda (número de pedido o cliente)
+    // Filtro por búsqueda (número de pedido, cliente o teléfono)
     if (filtros.busqueda) {
-      const busqueda = filtros.busqueda.toLowerCase();
+      const busqueda = filtros.busqueda.toLowerCase().trim();
       resultados = resultados.filter(
         (p) =>
           p.numeroPedido.toString().includes(busqueda) ||
+          p.id.toLowerCase().includes(busqueda) ||
           p.cliente.nombre.toLowerCase().includes(busqueda) ||
           p.cliente.telefono.includes(busqueda)
       );
@@ -99,6 +138,17 @@ export function ListaPedidos() {
       resultados = resultados.filter((p) => p.canal === filtros.canal);
     }
 
+    // Filtro por repartidor
+    if (filtros.repartidor !== 'todos') {
+      if (filtros.repartidor === 'sin_asignar') {
+        resultados = resultados.filter((p) => !p.reparto?.repartidorId);
+      } else {
+        resultados = resultados.filter(
+          (p) => p.reparto?.repartidorId === filtros.repartidor
+        );
+      }
+    }
+
     // Filtro por fecha
     if (filtros.fecha) {
       resultados = resultados.filter((p) => {
@@ -108,22 +158,46 @@ export function ListaPedidos() {
     }
 
     setPedidosFiltrados(resultados);
+  }, [filtros, pedidos]);
+
+  const handleVerDetalles = (pedido: Pedido) => {
+    setPedidoSeleccionado(pedido);
+    setModalOpen(true);
   };
 
-  const getEstadoBadgeColor = (estado: EstadoPedido) => {
-    const colores = {
-      pendiente: 'bg-yellow-500/10 text-yellow-700 border-yellow-500/20',
-      en_preparacion: 'bg-blue-500/10 text-blue-700 border-blue-500/20',
-      listo: 'bg-green-500/10 text-green-700 border-green-500/20',
-      en_reparto: 'bg-purple-500/10 text-purple-700 border-purple-500/20',
-      entregado: 'bg-emerald-500/10 text-emerald-700 border-emerald-500/20',
-      cancelado: 'bg-red-500/10 text-red-700 border-red-500/20',
-    };
-    return colores[estado] || '';
+  const handleCambiarEstado = async (
+    pedidoId: string,
+    nuevoEstado: EstadoPedido
+  ) => {
+    try {
+      setLoadingAccion(true);
+      await pedidosService.update(pedidoId, { estado: nuevoEstado });
+
+      // Actualizar estado local
+      setPedidos((prev) =>
+        prev.map((p) =>
+          p.id === pedidoId ? { ...p, estado: nuevoEstado } : p
+        )
+      );
+
+      // Actualizar pedido seleccionado si está abierto el modal
+      if (pedidoSeleccionado?.id === pedidoId) {
+        setPedidoSeleccionado((prev) =>
+          prev ? { ...prev, estado: nuevoEstado } : null
+        );
+      }
+
+      toast.success(`Pedido actualizado a: ${getEstadoLabel(nuevoEstado)}`);
+    } catch (error) {
+      console.error('Error actualizando estado:', error);
+      toast.error('Error al actualizar el pedido');
+    } finally {
+      setLoadingAccion(false);
+    }
   };
 
   const getEstadoLabel = (estado: EstadoPedido) => {
-    const labels = {
+    const labels: Record<EstadoPedido, string> = {
       pendiente: 'Pendiente',
       en_preparacion: 'En Preparación',
       listo: 'Listo',
@@ -131,8 +205,24 @@ export function ListaPedidos() {
       entregado: 'Entregado',
       cancelado: 'Cancelado',
     };
-    return labels[estado] || estado;
+    return labels[estado];
   };
+
+  const limpiarFiltros = () => {
+    setFiltros({
+      busqueda: '',
+      estado: 'todos',
+      canal: 'todos',
+      repartidor: 'todos',
+      fecha: '',
+    });
+  };
+
+  // Obtener pedidos de la página actual
+  const pedidosPaginados = pedidosFiltrados.slice(
+    (paginaActual - 1) * ITEMS_POR_PAGINA,
+    paginaActual * ITEMS_POR_PAGINA
+  );
 
   if (loading) {
     return (
@@ -154,14 +244,14 @@ export function ListaPedidos() {
           <h2 className="text-lg font-semibold">Filtros</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           {/* Búsqueda */}
-          <div className="space-y-2">
+          <div className="space-y-2 lg:col-span-1">
             <Label>Buscar</Label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="# Pedido, cliente, teléfono..."
+                placeholder="# Pedido, ID, cliente..."
                 value={filtros.busqueda}
                 onChange={(e) =>
                   setFiltros({ ...filtros, busqueda: e.target.value })
@@ -215,6 +305,30 @@ export function ListaPedidos() {
             </Select>
           </div>
 
+          {/* Repartidor */}
+          <div className="space-y-2">
+            <Label>Repartidor</Label>
+            <Select
+              value={filtros.repartidor}
+              onValueChange={(value) =>
+                setFiltros({ ...filtros, repartidor: value })
+              }
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="todos">Todos</SelectItem>
+                <SelectItem value="sin_asignar">Sin asignar</SelectItem>
+                {repartidores.map((rep) => (
+                  <SelectItem key={rep.id} value={rep.id}>
+                    {rep.nombre}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           {/* Fecha */}
           <div className="space-y-2">
             <Label>Fecha</Label>
@@ -229,13 +343,29 @@ export function ListaPedidos() {
         </div>
 
         <div className="flex items-center justify-between mt-4 pt-4 border-t">
-          <p className="text-sm text-muted-foreground">
-            {pedidosFiltrados.length} pedido(s) encontrado(s)
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-sm text-muted-foreground">
+              {pedidosFiltrados.length} pedido(s) encontrado(s)
+            </p>
+            {(filtros.busqueda ||
+              filtros.estado !== 'todos' ||
+              filtros.canal !== 'todos' ||
+              filtros.repartidor !== 'todos' ||
+              filtros.fecha) && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={limpiarFiltros}
+                className="text-muted-foreground"
+              >
+                Limpiar filtros
+              </Button>
+            )}
+          </div>
           <Button
             variant="outline"
             size="sm"
-            onClick={loadPedidos}
+            onClick={loadDatos}
             className="gap-2"
           >
             <RefreshCw className="h-4 w-4" />
@@ -255,90 +385,102 @@ export function ListaPedidos() {
                 No se encontraron pedidos con los filtros seleccionados
               </p>
             </div>
-            <Button variant="outline" onClick={() => setFiltros({
-              busqueda: '',
-              estado: 'todos',
-              canal: 'todos',
-              fecha: new Date().toISOString().split('T')[0],
-            })}>
+            <Button variant="outline" onClick={limpiarFiltros}>
               Limpiar filtros
             </Button>
           </div>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 gap-4">
-          {pedidosFiltrados.map((pedido) => (
-            <Card key={pedido.id} className="p-6 hover:shadow-lg transition-shadow">
-              <div className="flex items-start justify-between gap-4">
-                {/* Información principal */}
-                <div className="flex-1 space-y-3">
-                  <div className="flex items-center gap-3">
-                    <h3 className="text-xl font-bold">
-                      Pedido #{pedido.numeroPedido}
-                    </h3>
-                    <Badge className={getEstadoBadgeColor(pedido.estado)}>
-                      {getEstadoLabel(pedido.estado)}
-                    </Badge>
-                    <Badge variant="outline">{pedido.canal.toUpperCase()}</Badge>
+        <>
+          {/* Grid de pedidos */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {pedidosPaginados.map((pedido) => (
+              <PedidoCard
+                key={pedido.id}
+                pedido={pedido}
+                onVerDetalles={handleVerDetalles}
+                onCambiarEstado={handleCambiarEstado}
+                loadingAccion={loadingAccion}
+              />
+            ))}
+          </div>
+
+          {/* Paginación */}
+          {totalPaginas > 1 && (
+            <Card className="p-4">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-muted-foreground">
+                  Mostrando {(paginaActual - 1) * ITEMS_POR_PAGINA + 1} -{' '}
+                  {Math.min(paginaActual * ITEMS_POR_PAGINA, pedidosFiltrados.length)} de{' '}
+                  {pedidosFiltrados.length} pedidos
+                </p>
+
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setPaginaActual((p) => Math.max(1, p - 1))}
+                    disabled={paginaActual === 1}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    Anterior
+                  </Button>
+
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: Math.min(5, totalPaginas) }, (_, i) => {
+                      let pageNum: number;
+                      if (totalPaginas <= 5) {
+                        pageNum = i + 1;
+                      } else if (paginaActual <= 3) {
+                        pageNum = i + 1;
+                      } else if (paginaActual >= totalPaginas - 2) {
+                        pageNum = totalPaginas - 4 + i;
+                      } else {
+                        pageNum = paginaActual - 2 + i;
+                      }
+
+                      return (
+                        <Button
+                          key={pageNum}
+                          variant={paginaActual === pageNum ? 'default' : 'outline'}
+                          size="sm"
+                          onClick={() => setPaginaActual(pageNum)}
+                          className="w-10"
+                        >
+                          {pageNum}
+                        </Button>
+                      );
+                    })}
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                    <div>
-                      <p className="text-muted-foreground">Cliente</p>
-                      <p className="font-medium">{pedido.cliente.nombre}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {pedido.cliente.telefono}
-                      </p>
-                    </div>
-
-                    <div>
-                      <p className="text-muted-foreground">Fecha</p>
-                      <p className="font-medium">
-                        {pedido.fechaCreacion.toDate().toLocaleDateString('es-MX')}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {pedido.fechaCreacion.toDate().toLocaleTimeString('es-MX', {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </p>
-                    </div>
-
-                    <div>
-                      <p className="text-muted-foreground">Total</p>
-                      <p className="font-bold text-lg">
-                        {formatCurrency(pedido.totales.total)}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {pedido.pago.metodo.toUpperCase()}
-                      </p>
-                    </div>
-                  </div>
-
-                  {pedido.cliente.direccion && (
-                    <div className="text-sm">
-                      <p className="text-muted-foreground">Dirección:</p>
-                      <p>
-                        {pedido.cliente.direccion}
-                        {pedido.cliente.colonia && `, ${pedido.cliente.colonia}`}
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                {/* Acciones */}
-                <div className="flex flex-col gap-2">
-                  <Link href={`/pedidos/${pedido.id}`}>
-                    <Button size="sm" variant="outline" className="w-full">
-                      Ver Detalles
-                    </Button>
-                  </Link>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      setPaginaActual((p) => Math.min(totalPaginas, p + 1))
+                    }
+                    disabled={paginaActual === totalPaginas}
+                  >
+                    Siguiente
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
             </Card>
-          ))}
-        </div>
+          )}
+        </>
       )}
+
+      {/* Modal de detalles */}
+      <PedidoDetalleModal
+        pedido={pedidoSeleccionado}
+        open={modalOpen}
+        onClose={() => {
+          setModalOpen(false);
+          setPedidoSeleccionado(null);
+        }}
+        onCambiarEstado={handleCambiarEstado}
+      />
     </div>
   );
 }

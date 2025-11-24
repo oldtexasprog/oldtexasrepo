@@ -204,13 +204,13 @@
 - [x] Filtro por fecha
 - [x] Filtro por canal de venta
 - [x] Búsqueda por número de pedido, cliente o teléfono
-- [ ] Filtro por canal
-- [ ] Filtro por repartidor
-- [ ] Componente `PedidoCard` con info resumida
-- [ ] Modal de detalles del pedido
-- [ ] Botones de acción según estado
-- [ ] Implementar búsqueda por ID o cliente
-- [ ] Paginación o scroll infinito
+- [x] Filtro por canal
+- [x] Filtro por repartidor
+- [x] Componente `PedidoCard` con info resumida
+- [x] Modal de detalles del pedido
+- [x] Botones de acción según estado
+- [x] Implementar búsqueda por ID o cliente
+- [x] Paginación (12 items por página)
 - [ ] Vista en tiempo real (onSnapshot)
 
 ### Bitácora Digital
