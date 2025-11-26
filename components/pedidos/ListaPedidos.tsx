@@ -81,9 +81,50 @@ export function ListaPedidos() {
   );
   const [modalOpen, setModalOpen] = useState(false);
 
-  // Cargar datos iniciales
+  // Cargar datos iniciales y suscripción en tiempo real
   useEffect(() => {
-    loadDatos();
+    let unsubscribe: (() => void) | undefined;
+
+    const setupRealtimeListener = async () => {
+      try {
+        setLoading(true);
+
+        // Cargar repartidores una vez
+        const repartidoresData = await repartidoresService.getActivos();
+        setRepartidores(repartidoresData);
+
+        // Suscribirse a cambios en tiempo real de pedidos
+        unsubscribe = pedidosService.onCollectionChange(
+          (pedidosData) => {
+            setPedidos(pedidosData);
+            setLoading(false);
+          },
+          {
+            orderByField: 'fechaCreacion',
+            orderDirection: 'desc',
+            limitCount: 500,
+          },
+          (error) => {
+            console.error('Error en listener de pedidos:', error);
+            toast.error('Error al cargar los pedidos en tiempo real');
+            setLoading(false);
+          }
+        );
+      } catch (error) {
+        console.error('Error configurando listener:', error);
+        toast.error('Error al configurar la actualización en tiempo real');
+        setLoading(false);
+      }
+    };
+
+    setupRealtimeListener();
+
+    // Cleanup: desuscribirse al desmontar
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, []);
 
   // Aplicar filtros cuando cambian
@@ -93,24 +134,8 @@ export function ListaPedidos() {
   }, [filtros, pedidos]);
 
   const loadDatos = async () => {
-    try {
-      setLoading(true);
-      const [pedidosData, repartidoresData] = await Promise.all([
-        pedidosService.getAll({
-          orderByField: 'fechaCreacion',
-          orderDirection: 'desc',
-          limitCount: 500, // Cargar más para filtrar en cliente
-        }),
-        repartidoresService.getActivos(),
-      ]);
-      setPedidos(pedidosData);
-      setRepartidores(repartidoresData);
-    } catch (error) {
-      console.error('Error cargando datos:', error);
-      toast.error('Error al cargar los pedidos');
-    } finally {
-      setLoading(false);
-    }
+    // Ya no es necesario recargar manualmente, el listener lo hace automáticamente
+    toast.success('Los pedidos se actualizan automáticamente');
   };
 
   const aplicarFiltros = useCallback(() => {

@@ -211,16 +211,20 @@
 - [x] Botones de acción según estado
 - [x] Implementar búsqueda por ID o cliente
 - [x] Paginación (12 items por página)
-- [ ] Vista en tiempo real (onSnapshot)
+- [x] Vista en tiempo real (onSnapshot)
 
 ### Bitácora Digital
 
-- [ ] Crear componente `BitacoraDigital`
-- [ ] Vista tabla con todos los pedidos del día
-- [ ] Columnas: ID, Monto, Cambio, Colonia, Envío, Repartidor, Método de pago
-- [ ] Totales automáticos por método de pago
-- [ ] Botón exportar a Excel/CSV
-- [ ] Filtro por turno (matutino/vespertino)
+- [x] Crear página `/bitacora`
+- [x] Crear componente `BitacoraDigital`
+- [x] Vista tabla con todos los pedidos del día
+- [x] Columnas: ID, Número, Cliente, Colonia, Monto, Cambio, Envío, Repartidor, Método de pago, Estado, Hora
+- [x] Totales automáticos por método de pago (Efectivo, Tarjeta, Transferencia)
+- [x] Filtro por fecha
+- [x] Filtro por turno (matutino/vespertino)
+- [x] Botón exportar a CSV
+- [x] Actualización en tiempo real con onSnapshot
+- [x] Totales de envíos y cambio
 
 ---
 

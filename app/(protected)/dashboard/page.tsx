@@ -194,6 +194,17 @@ function DashboardContent() {
             </a>
 
             <a
+              href="/bitacora"
+              className="p-4 border border-border rounded-lg hover:bg-muted transition"
+            >
+              <div className="text-3xl mb-2">📋</div>
+              <h3 className="font-bold mb-1">Bitácora</h3>
+              <p className="text-sm text-muted-foreground">
+                Registro de pedidos del día
+              </p>
+            </a>
+
+            <a
               href="/dashboard/usuarios"
               className="p-4 border border-border rounded-lg hover:bg-muted transition"
             >
