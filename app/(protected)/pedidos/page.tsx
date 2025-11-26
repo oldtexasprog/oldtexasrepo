@@ -1,4 +1,7 @@
 import { ListaPedidos } from '@/components/pedidos/ListaPedidos';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
+import Link from 'next/link';
 
 export default function PedidosPage() {
   return (
@@ -10,6 +13,12 @@ export default function PedidosPage() {
             Gestiona y consulta todos los pedidos del sistema
           </p>
         </div>
+        <Link href="/pedidos/nuevo">
+          <Button className="gap-2">
+            <Plus className="h-4 w-4" />
+            Crear Pedido
+          </Button>
+        </Link>
       </div>
 
       <ListaPedidos />
