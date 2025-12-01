@@ -232,28 +232,30 @@
 
 ### Tablero de Comandas
 
-- [ ] Crear página `/cocina`
-- [ ] Componente `TableroComandas` (tipo Kanban)
-- [ ] Columnas: Pendiente | En Preparación | Listo
-- [ ] Componente `ComandaCard`
-- [ ] Mostrar productos con cantidades
-- [ ] Destacar personalizaciones (color/icono)
-- [ ] Mostrar tiempo transcurrido desde creación
-- [ ] Drag & drop entre columnas (opcional)
-- [ ] Botón "Marcar como Listo"
-- [ ] Actualización en tiempo real (onSnapshot)
-- [ ] Notificación sonora cuando llega nuevo pedido
+- [x] Crear página `/cocina`
+- [x] Componente `TableroComandas` (tipo Kanban)
+- [x] Columnas: Pendiente | En Preparación | Listo
+- [x] Componente `ComandaCard`
+- [x] Mostrar productos con cantidades
+- [x] Destacar personalizaciones (color/icono)
+- [x] Mostrar tiempo transcurrido desde creación
+- [x] Drag & drop entre columnas con @dnd-kit
+- [x] Botón "Iniciar Preparación"
+- [x] Botón "Marcar como Listo"
+- [x] Actualización en tiempo real (onSnapshot)
+- [x] Notificación sonora cuando llega nuevo pedido
+- [x] Alerta visual y sonora para pedidos urgentes (>30 min)
+- [x] Badge de contador por columna
 - [ ] Modo pantalla completa (sin distracciones)
 
 ### Lógica de Cocina
 
-- [ ] Implementar hook `useCocina`
-- [ ] Función `marcarEnPreparacion(pedidoId)`
-- [ ] Función `marcarListo(pedidoId)`
+- [x] Función `marcarEnPreparacion(pedidoId)` - Implementada en TableroComandas
+- [x] Función `marcarListo(pedidoId)` - Implementada en TableroComandas
 - [ ] Trigger notificación a reparto cuando pedido listo
-- [ ] Actualizar timestamps en Firestore
-- [ ] Ordenar por prioridad/tiempo de espera
-- [ ] Filtrar solo pedidos del día actual
+- [x] Actualizar timestamps en Firestore
+- [x] Ordenar por prioridad/tiempo de espera (más antiguos primero)
+- [x] Filtrar solo pedidos del día actual (pendiente, en_preparacion, listo)
 
 ---
 
