@@ -428,6 +428,30 @@ export interface TransaccionTurno {
 }
 
 // ============================================================================
+// COLECCIÓN: COLONIAS
+// ============================================================================
+
+export interface Colonia {
+  // Identificación
+  id: string;
+  nombre: string;
+
+  // Costo de envío
+  costoEnvio: number;
+
+  // Zona geográfica (opcional)
+  zona?: string; // ej: "Norte", "Sur", "Centro", "Este", "Oeste"
+
+  // Estado
+  activa: boolean;
+
+  // Metadata
+  fechaCreacion: Timestamp;
+  fechaActualizacion: Timestamp;
+  creadoPor: string;
+}
+
+// ============================================================================
 // COLECCIÓN: NOTIFICACIONES
 // ============================================================================
 

@@ -14,6 +14,7 @@ import { MetodoPagoSelector } from './MetodoPagoSelector';
 import { RepartidorAsignador } from './RepartidorAsignador';
 import { ObservacionesField } from './ObservacionesField';
 import { ResumenTotales } from './ResumenTotales';
+import { SelectorColonia } from './SelectorColonia';
 import {
   CanalVenta,
   ClientePedido,
@@ -47,6 +48,7 @@ export function FormPedido() {
     referencia: '',
   });
   const [carrito, setCarrito] = useState<ItemCarrito[]>([]);
+  const [coloniaId, setColoniaId] = useState<string>('');
   const [costoEnvio, setCostoEnvio] = useState(0);
   const [metodoPago, setMetodoPago] = useState<MetodoPago | null>(null);
   const [montoPagado, setMontoPagado] = useState(0);
@@ -129,6 +131,7 @@ export function FormPedido() {
       canal &&
       cliente.nombre &&
       cliente.telefono &&
+      coloniaId && // Nueva validación de colonia
       carrito.length > 0 &&
       metodoPago;
 
@@ -141,7 +144,7 @@ export function FormPedido() {
 
     // Para tarjeta y transferencia, no se requiere monto pagado
     return true;
-  }, [canal, cliente, carrito, metodoPago, montoPagado, total]);
+  }, [canal, cliente, coloniaId, carrito, metodoPago, montoPagado, total]);
 
   const handleSubmit = async () => {
     if (!puedeGuardar) {
@@ -333,18 +336,10 @@ export function FormPedido() {
             <SelectorCanal value={canal} onChange={setCanal} />
           </Card>
 
-          {/* 2. Datos del Cliente */}
+          {/* 2. Selección de Productos */}
           {canal && (
             <Card className="p-6">
-              <h2 className="text-xl font-bold mb-4">2. Datos del Cliente</h2>
-              <ClienteForm value={cliente} onChange={setCliente} />
-            </Card>
-          )}
-
-          {/* 3. Selección de Productos */}
-          {canal && cliente.nombre && (
-            <Card className="p-6">
-              <h2 className="text-xl font-bold mb-4">3. Productos</h2>
+              <h2 className="text-xl font-bold mb-4">2. Productos</h2>
               <ProductoSelector
                 value={carrito}
                 onChange={(productos) => {
@@ -355,7 +350,7 @@ export function FormPedido() {
             </Card>
           )}
 
-          {/* 4. Carrito de Productos */}
+          {/* 3. Carrito de Productos */}
           {carrito.length > 0 && (
             <>
               <CarritoProductos
@@ -365,29 +360,33 @@ export function FormPedido() {
                 onEditItem={handleEditItem}
               />
 
-              {/* 5. Costo de Envío */}
+              {/* 4. Datos del Cliente */}
               <Card className="p-6">
-                <h2 className="text-xl font-bold mb-4">4. Costo de Envío</h2>
-                <div className="space-y-2">
-                  <Label htmlFor="costoEnvio">Costo de Envío</Label>
-                  <Input
-                    id="costoEnvio"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={costoEnvio}
-                    onChange={(e) => setCostoEnvio(parseFloat(e.target.value) || 0)}
-                    placeholder="0.00"
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    Ingresa 0 si es pedido para recoger en mostrador
-                  </p>
-                </div>
+                <h2 className="text-xl font-bold mb-4">3. Datos del Cliente</h2>
+                <ClienteForm value={cliente} onChange={setCliente} />
+              </Card>
+
+              {/* 5. Colonia y Costo de Envío */}
+              <Card className="p-6">
+                <h2 className="text-xl font-bold mb-4">4. Colonia y Envío</h2>
+                <SelectorColonia
+                  value={coloniaId}
+                  onChange={(id, colonia) => {
+                    setColoniaId(id);
+                    setCostoEnvio(colonia.costoEnvio);
+                    // Actualizar el nombre de la colonia en los datos del cliente
+                    setCliente((prev) => ({
+                      ...prev,
+                      colonia: colonia.nombre,
+                    }));
+                  }}
+                  error={cliente.nombre && !coloniaId ? 'Selecciona una colonia' : undefined}
+                />
               </Card>
 
               {/* 6. Método de Pago */}
               <Card className="p-6">
-                <h2 className="text-xl font-bold mb-4">5. Método de Pago</h2>
+                <h2 className="text-xl font-bold mb-4">5. Total y Método de Pago</h2>
                 <MetodoPagoSelector
                   metodoPago={metodoPago}
                   onMetodoPagoChange={setMetodoPago}

@@ -216,6 +216,17 @@ function DashboardContent() {
             </a>
 
             <a
+              href="/colonias"
+              className="p-4 border border-border rounded-lg hover:bg-muted transition"
+            >
+              <div className="text-3xl mb-2">📍</div>
+              <h3 className="font-bold mb-1">Colonias</h3>
+              <p className="text-sm text-muted-foreground">
+                Gestión de colonias y costos de envío
+              </p>
+            </a>
+
+            <a
               href="/reportes"
               className="p-4 border border-border rounded-lg hover:bg-muted transition"
             >
