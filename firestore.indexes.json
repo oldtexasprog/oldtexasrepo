@@ -1,0 +1,37 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "colonias",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "activa",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "nombre",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "colonias",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "zona",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "activa",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "nombre",
+          "order": "ASCENDING"
+        }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

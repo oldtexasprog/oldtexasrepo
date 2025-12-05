@@ -107,15 +107,15 @@ export function SelectorColonia({
 
       {/* Mostrar información de la colonia seleccionada */}
       {coloniaSeleccionada && (
-        <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm">
-          <DollarSign className="h-4 w-4 text-blue-600" />
+        <div className="flex items-center gap-2 p-3 bg-card border border-border rounded-lg text-sm shadow-sm">
+          <DollarSign className="h-4 w-4 text-primary" />
           <div>
-            <span className="text-muted-foreground">Costo de envío: </span>
-            <span className="font-bold text-blue-700">
+            <span className="text-foreground/80">Costo de envío: </span>
+            <span className="font-bold text-primary">
               {formatCurrency(coloniaSeleccionada.costoEnvio)}
             </span>
             {coloniaSeleccionada.zona && (
-              <span className="text-xs text-muted-foreground ml-2">
+              <span className="text-xs text-foreground/70 ml-2">
                 • Zona: {coloniaSeleccionada.zona}
               </span>
             )}

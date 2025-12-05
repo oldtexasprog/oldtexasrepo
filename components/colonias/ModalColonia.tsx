@@ -145,12 +145,15 @@ export function ModalColonia({ open, colonia, onClose }: ModalColoniaProps) {
             {/* Zona */}
             <div className="space-y-2">
               <Label htmlFor="zona">Zona (Opcional)</Label>
-              <Select value={zona} onValueChange={setZona}>
+              <Select
+                value={zona === '' ? 'sin_zona' : zona}
+                onValueChange={(value) => setZona(value === 'sin_zona' ? '' : value)}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Selecciona una zona" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Sin zona</SelectItem>
+                  <SelectItem value="sin_zona">Sin zona</SelectItem>
                   {ZONAS.map((z) => (
                     <SelectItem key={z} value={z}>
                       {z}

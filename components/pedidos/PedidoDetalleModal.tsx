@@ -203,7 +203,9 @@ export function PedidoDetalleModal({
                           <span className="font-bold text-lg">
                             {item.cantidad}x
                           </span>
-                          <span className="font-medium">{item.nombreProducto}</span>
+                          <span className="font-medium">
+                            {item.productoNombre}
+                          </span>
                         </div>
                         {/* Personalizaciones */}
                         {item.personalizaciones && (
