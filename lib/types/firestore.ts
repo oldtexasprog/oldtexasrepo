@@ -65,6 +65,8 @@ export type TipoPersonalizacion =
 
 export type TipoComision = 'fijo' | 'porcentaje';
 
+export type TipoDescuento = 'porcentaje' | 'monto_fijo';
+
 export type TipoTransaccion = 'venta' | 'gasto' | 'retiro' | 'ajuste';
 
 export type CategoriaConfig =
@@ -129,6 +131,12 @@ export interface ClientePedido {
   referencia?: string;
 }
 
+export interface DescuentoPedido {
+  tipo: TipoDescuento;
+  valor: number; // Porcentaje (0-100) o monto fijo
+  monto: number; // Monto final del descuento en pesos
+}
+
 export interface TotalesPedido {
   subtotal: number;
   envio: number;
@@ -173,6 +181,9 @@ export interface Pedido {
 
   // Totales
   totales: TotalesPedido;
+
+  // Descuento (opcional)
+  descuento?: DescuentoPedido;
 
   // Pago
   pago: PagoPedido;

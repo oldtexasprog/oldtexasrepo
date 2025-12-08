@@ -356,8 +356,15 @@ export function BitacoraDigital() {
                       </div>
                     </TableCell>
                     <TableCell>{pedido.cliente.colonia || 'N/A'}</TableCell>
-                    <TableCell className="text-right font-semibold">
-                      {formatCurrency(pedido.totales.total)}
+                    <TableCell className="text-right">
+                      <div className="font-semibold">
+                        {formatCurrency(pedido.totales.total)}
+                      </div>
+                      {pedido.totales.descuento > 0 && (
+                        <div className="text-xs text-green-600">
+                          Desc: -{formatCurrency(pedido.totales.descuento)}
+                        </div>
+                      )}
                     </TableCell>
                     <TableCell>
                       <Badge variant="outline">
@@ -370,8 +377,8 @@ export function BitacoraDigital() {
                         : '-'}
                     </TableCell>
                     <TableCell className="text-right">
-                      {pedido.totales.costoEnvio
-                        ? formatCurrency(pedido.totales.costoEnvio)
+                      {pedido.totales.envio
+                        ? formatCurrency(pedido.totales.envio)
                         : '-'}
                     </TableCell>
                     <TableCell className="text-sm">

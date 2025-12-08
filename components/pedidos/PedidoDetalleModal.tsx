@@ -277,10 +277,16 @@ export function PedidoDetalleModal({
                 <span>Subtotal</span>
                 <span>{formatCurrency(pedido.totales.subtotal)}</span>
               </div>
-              {pedido.totales.costoEnvio > 0 && (
+              {pedido.totales.envio > 0 && (
                 <div className="flex justify-between">
                   <span>Envío</span>
-                  <span>{formatCurrency(pedido.totales.costoEnvio)}</span>
+                  <span>{formatCurrency(pedido.totales.envio)}</span>
+                </div>
+              )}
+              {pedido.totales.descuento > 0 && (
+                <div className="flex justify-between text-green-600 dark:text-green-400">
+                  <span>Descuento</span>
+                  <span>-{formatCurrency(pedido.totales.descuento)}</span>
                 </div>
               )}
               <Separator />

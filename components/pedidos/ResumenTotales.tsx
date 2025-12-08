@@ -3,12 +3,13 @@
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
-import { DollarSign, Package, Truck, Calculator } from 'lucide-react';
+import { DollarSign, Package, Truck, Calculator, Percent } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils/formatters';
 
 interface ResumenTotalesProps {
   subtotal: number;
   costoEnvio: number;
+  descuento?: number;
   total: number;
   cantidadProductos: number;
   metodoPago?: string;
@@ -18,6 +19,7 @@ interface ResumenTotalesProps {
 export function ResumenTotales({
   subtotal,
   costoEnvio,
+  descuento = 0,
   total,
   cantidadProductos,
   metodoPago,
@@ -61,6 +63,19 @@ export function ResumenTotales({
             {costoEnvio > 0 ? formatCurrency(costoEnvio) : 'Gratis'}
           </span>
         </div>
+
+        {/* Descuento */}
+        {descuento > 0 && (
+          <div className="flex items-center justify-between text-green-600 dark:text-green-400">
+            <div className="flex items-center gap-2">
+              <Percent className="h-4 w-4" />
+              <span className="text-sm font-medium">Descuento</span>
+            </div>
+            <span className="text-lg font-semibold">
+              -{formatCurrency(descuento)}
+            </span>
+          </div>
+        )}
 
         <Separator className="my-4" />
 

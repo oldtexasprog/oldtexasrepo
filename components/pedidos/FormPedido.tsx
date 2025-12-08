@@ -15,12 +15,14 @@ import { RepartidorAsignador } from './RepartidorAsignador';
 import { ObservacionesField } from './ObservacionesField';
 import { ResumenTotales } from './ResumenTotales';
 import { SelectorColonia } from './SelectorColonia';
+import { DescuentoSelector } from './DescuentoSelector';
 import {
   CanalVenta,
   ClientePedido,
   MetodoPago,
   NuevoPedido,
   ItemPedido,
+  DescuentoPedido,
 } from '@/lib/types/firestore';
 import { ArrowLeft, Save, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -50,6 +52,7 @@ export function FormPedido() {
   const [carrito, setCarrito] = useState<ItemCarrito[]>([]);
   const [coloniaId, setColoniaId] = useState<string>('');
   const [costoEnvio, setCostoEnvio] = useState(0);
+  const [descuento, setDescuento] = useState<DescuentoPedido | null>(null);
   const [metodoPago, setMetodoPago] = useState<MetodoPago | null>(null);
   const [montoPagado, setMontoPagado] = useState(0);
   const [repartidorId, setRepartidorId] = useState<string | null>(null);
@@ -69,9 +72,13 @@ export function FormPedido() {
     return carrito.reduce((sum, item) => sum + item.subtotal, 0);
   }, [carrito]);
 
+  const montoDescuento = useMemo(() => {
+    return descuento?.monto || 0;
+  }, [descuento]);
+
   const total = useMemo(() => {
-    return subtotal + costoEnvio;
-  }, [subtotal, costoEnvio]);
+    return subtotal + costoEnvio - montoDescuento;
+  }, [subtotal, costoEnvio, montoDescuento]);
 
   const cambio = useMemo(() => {
     if (metodoPago === 'efectivo' && montoPagado > total) {
@@ -184,9 +191,10 @@ export function FormPedido() {
         totales: {
           subtotal,
           envio: costoEnvio,
-          descuento: 0,
+          descuento: montoDescuento,
           total,
         },
+        descuento: descuento || undefined,
         pago: {
           metodo: metodoPago!,
           requiereCambio: metodoPago === 'efectivo' && cambioFinal > 0,
@@ -384,9 +392,19 @@ export function FormPedido() {
                 />
               </Card>
 
-              {/* 6. Método de Pago */}
+              {/* 6. Descuento */}
               <Card className="p-6">
-                <h2 className="text-xl font-bold mb-4">5. Total y Método de Pago</h2>
+                <h2 className="text-xl font-bold mb-4">5. Descuento (Opcional)</h2>
+                <DescuentoSelector
+                  subtotal={subtotal}
+                  descuento={descuento}
+                  onChange={setDescuento}
+                />
+              </Card>
+
+              {/* 7. Método de Pago */}
+              <Card className="p-6">
+                <h2 className="text-xl font-bold mb-4">6. Total y Método de Pago</h2>
                 <MetodoPagoSelector
                   metodoPago={metodoPago}
                   onMetodoPagoChange={setMetodoPago}
@@ -396,10 +414,10 @@ export function FormPedido() {
                 />
               </Card>
 
-              {/* 7. Asignar Repartidor */}
+              {/* 8. Asignar Repartidor */}
               {costoEnvio > 0 && (
                 <Card className="p-6">
-                  <h2 className="text-xl font-bold mb-4">6. Repartidor</h2>
+                  <h2 className="text-xl font-bold mb-4">7. Repartidor</h2>
                   <RepartidorAsignador
                     repartidorId={repartidorId}
                     onRepartidorChange={(id, nombre) => {
@@ -410,9 +428,9 @@ export function FormPedido() {
                 </Card>
               )}
 
-              {/* 8. Observaciones */}
+              {/* 9. Observaciones */}
               <Card className="p-6">
-                <h2 className="text-xl font-bold mb-4">7. Observaciones</h2>
+                <h2 className="text-xl font-bold mb-4">8. Observaciones</h2>
                 <ObservacionesField
                   value={observaciones}
                   onChange={setObservaciones}
@@ -429,6 +447,7 @@ export function FormPedido() {
               <ResumenTotales
                 subtotal={subtotal}
                 costoEnvio={costoEnvio}
+                descuento={montoDescuento}
                 total={total}
                 cantidadProductos={cantidadProductos}
                 metodoPago={metodoPago || undefined}
