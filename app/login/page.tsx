@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth/useAuth';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
@@ -8,7 +8,7 @@ import Link from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { signIn, loading: authLoading } = useAuth();
+  const { signIn, loading: authLoading, userData } = useAuth();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -18,6 +18,13 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Redirigir cuando userData esté listo después del login
+  useEffect(() => {
+    if (userData && !authLoading && loading) {
+      router.push('/dashboard');
+    }
+  }, [userData, authLoading, loading, router]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -25,10 +32,9 @@ export default function LoginPage() {
 
     try {
       await signIn(formData.email, formData.password);
-      router.push('/dashboard');
+      // El redirect se manejará en useEffect cuando userData esté listo
     } catch (err: any) {
       setError(err.message);
-    } finally {
       setLoading(false);
     }
   };
