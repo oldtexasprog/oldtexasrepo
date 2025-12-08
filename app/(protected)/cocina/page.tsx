@@ -1,7 +1,23 @@
+'use client';
+
+import { useState } from 'react';
 import { TableroComandas } from '@/components/cocina/TableroComandas';
-import { ChefHat } from 'lucide-react';
+import { ChefHat, Maximize2, Minimize2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function CocinaPage() {
+  const [pantallaCompleta, setPantallaCompleta] = useState(false);
+
+  const togglePantallaCompleta = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+      setPantallaCompleta(true);
+    } else {
+      document.exitFullscreen();
+      setPantallaCompleta(false);
+    }
+  };
+
   return (
     <div className="container mx-auto p-6 space-y-6 h-screen flex flex-col">
       {/* Header */}
@@ -18,10 +34,32 @@ export default function CocinaPage() {
           </div>
         </div>
 
-        {/* Indicador de tiempo real */}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-          Actualizando en tiempo real
+        <div className="flex items-center gap-4">
+          {/* Indicador de tiempo real */}
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+            Actualizando en tiempo real
+          </div>
+
+          {/* Botón pantalla completa */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={togglePantallaCompleta}
+            className="gap-2"
+          >
+            {pantallaCompleta ? (
+              <>
+                <Minimize2 className="h-4 w-4" />
+                Salir
+              </>
+            ) : (
+              <>
+                <Maximize2 className="h-4 w-4" />
+                Pantalla Completa
+              </>
+            )}
+          </Button>
         </div>
       </div>
 

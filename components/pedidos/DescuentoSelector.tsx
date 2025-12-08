@@ -127,10 +127,10 @@ export function DescuentoSelector({
         <div className="space-y-1">
           <Label className="text-xs text-muted-foreground">Tipo</Label>
           <Select value={tipoDescuento} onValueChange={handleTipoChange}>
-            <SelectTrigger>
+            <SelectTrigger className="bg-background">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-popover">
               <SelectItem value="porcentaje">
                 <div className="flex items-center gap-2">
                   <Percent className="h-3 w-3" />

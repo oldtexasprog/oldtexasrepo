@@ -16,6 +16,7 @@ import type { Pedido, ItemPedido, EstadoPedido } from '@/lib/types/firestore';
 import { ComandaCard } from './ComandaCard';
 import { SortableComandaCard } from './SortableComandaCard';
 import { pedidosService } from '@/lib/services/pedidos.service';
+import { notificacionesService } from '@/lib/services/notificaciones.service';
 import { Badge } from '@/components/ui/badge';
 import { Clock, ChefHat, CheckCircle, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
@@ -200,9 +201,52 @@ export function TableroComandas({ pedidosIniciales = [] }: TableroComandasProps)
       setLoadingAccion(pedidoId);
 
       try {
+        // Obtener el pedido actual para acceder a sus datos
+        const pedidoActual = pedidos.find((p) => p.id === pedidoId);
+
         await pedidosService.updateEstado(pedidoId, nuevoEstado);
 
         toast.success('Estado actualizado correctamente');
+
+        // Si el pedido pasa a "listo", notificar al repartidor
+        if (nuevoEstado === 'listo' && pedidoActual) {
+          try {
+            // Si tiene repartidor asignado, notificar directamente
+            if (pedidoActual.reparto?.repartidorId) {
+              await notificacionesService.create({
+                tipo: 'pedido_listo',
+                titulo: '🎉 Pedido Listo para Entrega',
+                mensaje: `Pedido #${pedidoActual.numeroPedido.toString().padStart(3, '0')} de ${pedidoActual.cliente.nombre} está listo. ${pedidoActual.cliente.colonia ? `Entregar en ${pedidoActual.cliente.colonia}` : ''}`,
+                usuarioId: pedidoActual.reparto.repartidorId,
+                leida: false,
+                prioridad: 'alta',
+                relacionadoId: pedidoId,
+                fechaCreacion: new Date() as any,
+              });
+
+              toast.success('Repartidor notificado', {
+                description: `Se notificó a ${pedidoActual.reparto.repartidorNombre}`,
+              });
+            } else {
+              // Si no tiene repartidor, notificar a todos los repartidores
+              await notificacionesService.crearParaRol(
+                'repartidor',
+                'pedido_listo',
+                '🎉 Pedido Listo para Entrega',
+                `Pedido #${pedidoActual.numeroPedido.toString().padStart(3, '0')} de ${pedidoActual.cliente.nombre} está listo. ${pedidoActual.cliente.colonia ? `Entregar en ${pedidoActual.cliente.colonia}` : ''}`,
+                'alta',
+                pedidoId
+              );
+
+              toast.success('Repartidores notificados', {
+                description: 'Pedido disponible para asignar',
+              });
+            }
+          } catch (notifError) {
+            console.error('Error enviando notificación:', notifError);
+            // No bloquear el flujo si falla la notificación
+          }
+        }
       } catch (error) {
         console.error('Error actualizando estado:', error);
         toast.error('Error al actualizar el estado');
@@ -210,7 +254,7 @@ export function TableroComandas({ pedidosIniciales = [] }: TableroComandasProps)
         setLoadingAccion(null);
       }
     },
-    []
+    [pedidos]
   );
 
   // Handlers de drag & drop
