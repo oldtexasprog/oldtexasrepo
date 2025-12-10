@@ -246,13 +246,13 @@
 - [x] Notificación sonora cuando llega nuevo pedido
 - [x] Alerta visual y sonora para pedidos urgentes (>30 min)
 - [x] Badge de contador por columna
-- [ ] Modo pantalla completa (sin distracciones)
+- [x] Modo pantalla completa (sin distracciones)
 
 ### Lógica de Cocina
 
 - [x] Función `marcarEnPreparacion(pedidoId)` - Implementada en TableroComandas
 - [x] Función `marcarListo(pedidoId)` - Implementada en TableroComandas
-- [ ] Trigger notificación a reparto cuando pedido listo
+- [x] Trigger notificación a reparto cuando pedido listo
 - [x] Actualizar timestamps en Firestore
 - [x] Ordenar por prioridad/tiempo de espera (más antiguos primero)
 - [x] Filtrar solo pedidos del día actual (pendiente, en_preparacion, listo)
@@ -263,30 +263,30 @@
 
 ### Panel de Repartidores
 
-- [ ] Crear página `/reparto`
-- [ ] Componente `PedidosListosParaRecoger`
-- [ ] Componente `MisPedidosAsignados`
-- [ ] Componente `PedidoRepartoCard`
-- [ ] Mostrar: ID, Monto total, Envío, Colonia, Observaciones
-- [ ] **NO mostrar:** Teléfono completo ni nombre completo del cliente
-- [ ] Botón "Aceptar Pedido"
-- [ ] Botón "Marcar como Entregado"
-- [ ] Botón "Reportar Incidencia"
-- [ ] Vista de mapa con dirección (opcional)
-- [ ] Historial de mis entregas del día
+- [x] Crear página `/reparto`
+- [x] Componente `PedidosListosParaRecoger`
+- [x] Componente `MisPedidosAsignados`
+- [x] Componente `PedidoRepartoCard`
+- [x] Mostrar: ID, Monto total, Envío, Colonia, Observaciones
+- [x] **NO mostrar:** Teléfono completo ni nombre completo del cliente
+- [x] Botón "Aceptar Pedido"
+- [x] Botón "Marcar como Entregado"
+- [x] Botón "Reportar Incidencia"
+- [ ] Vista de mapa con dirección (opcional) - NO IMPLEMENTADO
+- [x] Historial de mis entregas del día
 
 ### Lógica de Reparto
 
-- [ ] Implementar hook `useReparto`
-- [ ] Función `asignarRepartidor(pedidoId, repartidorId)`
-- [ ] Función `confirmarRecogida(pedidoId)`
-- [ ] Función `confirmarEntrega(pedidoId)`
-- [ ] Registrar pago adelantado (true/false)
-- [ ] Calcular comisión de repartidor
-- [ ] Trigger notificación cuando asignan pedido
-- [ ] Actualizar estado "en_reparto" al aceptar
-- [ ] Actualizar estado "entregado" al confirmar
-- [ ] Registrar timestamp de entrega
+- [x] Implementar hook `useReparto`
+- [x] Función `asignarRepartidor(pedidoId, repartidorId)`
+- [ ] Función `confirmarRecogida(pedidoId)` - NO NECESARIA (se marca automático al aceptar)
+- [x] Función `confirmarEntrega(pedidoId)` - Implementada como `marcarComoEntregado`
+- [ ] Registrar pago adelantado (true/false) - YA EXISTE EN MODELO
+- [x] Calcular comisión de repartidor - TODO: Obtener de configuración
+- [x] Trigger notificación cuando asignan pedido
+- [x] Actualizar estado "en_reparto" al aceptar
+- [x] Actualizar estado "entregado" al confirmar
+- [x] Registrar timestamp de entrega
 
 ### Gestión de Liquidaciones
 

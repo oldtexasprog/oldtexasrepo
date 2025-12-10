@@ -528,6 +528,49 @@ class PedidosService extends BaseService<Pedido> {
       onError
     );
   }
+
+  /**
+   * Escucha pedidos listos para recoger (sin repartidor asignado)
+   */
+  onPedidosListosParaRecoger(
+    callback: (pedidos: Pedido[]) => void,
+    onError?: (error: Error) => void
+  ) {
+    return this.onCollectionChange(
+      callback,
+      {
+        filters: [
+          { field: 'estado', operator: '==', value: 'listo' },
+          { field: 'reparto', operator: '==', value: null },
+        ],
+        orderByField: 'fechaCreacion',
+        orderDirection: 'asc',
+      },
+      onError
+    );
+  }
+
+  /**
+   * Escucha pedidos asignados a un repartidor específico
+   */
+  onPedidosAsignadosARepartidor(
+    repartidorId: string,
+    callback: (pedidos: Pedido[]) => void,
+    onError?: (error: Error) => void
+  ) {
+    return this.onCollectionChange(
+      callback,
+      {
+        filters: [
+          { field: 'reparto.repartidorId', operator: '==', value: repartidorId },
+          { field: 'estado', operator: 'in', value: ['en_reparto', 'listo'] },
+        ],
+        orderByField: 'fechaCreacion',
+        orderDirection: 'desc',
+      },
+      onError
+    );
+  }
 }
 
 // Exportar instancia única (Singleton)
