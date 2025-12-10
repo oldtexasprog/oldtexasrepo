@@ -20,10 +20,10 @@ export default function LoginPage() {
 
   // Redirigir cuando userData esté listo después del login
   useEffect(() => {
-    if (userData && !authLoading && loading) {
+    if (userData && !authLoading) {
       router.push('/dashboard');
     }
-  }, [userData, authLoading, loading, router]);
+  }, [userData, authLoading, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,6 +33,7 @@ export default function LoginPage() {
     try {
       await signIn(formData.email, formData.password);
       // El redirect se manejará en useEffect cuando userData esté listo
+      // No resetear loading aquí - dejar que el redirect ocurra
     } catch (err: any) {
       setError(err.message);
       setLoading(false);
