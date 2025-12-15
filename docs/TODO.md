@@ -315,11 +315,15 @@
 
 ### Corte de Turno (Histórico)
 
-- [ ] Crear página `/caja/corte`
-- [ ] Componente `CorteCaja` para ver turnos cerrados
-- [ ] Filtro por fecha
-- [ ] Ver detalles de turnos pasados
-- [ ] Exportar PDF del corte
+- [x] Crear página `/caja/corte`
+- [x] Componente `CorteCaja` para ver turnos cerrados
+- [x] Filtro por fecha (rango desde-hasta)
+- [x] Filtro por tipo de turno (matutino/vespertino)
+- [x] Búsqueda por cajero
+- [x] Ver detalles de turnos pasados
+- [x] Modal `DetallesTurnoModal` con información completa
+- [x] Ver transacciones del turno
+- [x] Exportar PDF del corte con diseño profesional
 
 ### Reportes y Métricas
 
