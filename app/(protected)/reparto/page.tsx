@@ -4,12 +4,14 @@ import { useState } from 'react';
 import { useAuth } from '@/lib/auth/useAuth';
 import { PedidosListosParaRecoger } from '@/components/reparto/PedidosListosParaRecoger';
 import { MisPedidosAsignados } from '@/components/reparto/MisPedidosAsignados';
-import { Package, User, Clock } from 'lucide-react';
+import { LiquidacionesPendientes } from '@/components/reparto/LiquidacionesPendientes';
+import { HistorialLiquidaciones } from '@/components/reparto/HistorialLiquidaciones';
+import { Package, User, Clock, Wallet, History } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function RepartoPage() {
   const { userData } = useAuth();
-  const [activeTab, setActiveTab] = useState<'listos' | 'asignados'>('listos');
+  const [activeTab, setActiveTab] = useState<'listos' | 'asignados' | 'liquidaciones' | 'historial'>('listos');
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
@@ -46,8 +48,8 @@ export default function RepartoPage() {
         </div>
 
         {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'listos' | 'asignados')} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-6">
+        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'listos' | 'asignados' | 'liquidaciones' | 'historial')} className="w-full">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-6">
             <TabsTrigger value="listos" className="flex items-center gap-2">
               <Package className="h-4 w-4" />
               Pedidos Listos
@@ -55,6 +57,14 @@ export default function RepartoPage() {
             <TabsTrigger value="asignados" className="flex items-center gap-2">
               <User className="h-4 w-4" />
               Mis Pedidos
+            </TabsTrigger>
+            <TabsTrigger value="liquidaciones" className="flex items-center gap-2">
+              <Wallet className="h-4 w-4" />
+              Liquidar
+            </TabsTrigger>
+            <TabsTrigger value="historial" className="flex items-center gap-2">
+              <History className="h-4 w-4" />
+              Historial
             </TabsTrigger>
           </TabsList>
 
@@ -64,6 +74,14 @@ export default function RepartoPage() {
 
           <TabsContent value="asignados">
             <MisPedidosAsignados />
+          </TabsContent>
+
+          <TabsContent value="liquidaciones">
+            <LiquidacionesPendientes />
+          </TabsContent>
+
+          <TabsContent value="historial">
+            <HistorialLiquidaciones />
           </TabsContent>
         </Tabs>
       </div>

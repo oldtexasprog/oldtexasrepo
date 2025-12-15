@@ -290,12 +290,12 @@
 
 ### Gestión de Liquidaciones
 
-- [ ] Componente `LiquidacionesPendientes`
-- [ ] Vista de pedidos por liquidar del repartidor
-- [ ] Botón "Liquidar" (repartidor o cajera)
-- [ ] Calcular monto a entregar (total - comisión)
-- [ ] Marcar como liquidado en Firestore
-- [ ] Historial de liquidaciones
+- [x] Componente `LiquidacionesPendientes`
+- [x] Vista de pedidos por liquidar del repartidor
+- [x] Botón "Liquidar" (repartidor o cajera)
+- [x] Calcular monto a entregar (total - comisión)
+- [x] Marcar como liquidado en Firestore
+- [x] Historial de liquidaciones
 
 ---
 
