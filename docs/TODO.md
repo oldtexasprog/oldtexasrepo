@@ -327,16 +327,16 @@
 
 ### Reportes y Métricas
 
-- [ ] Crear página `/reportes`
-- [ ] Componente `ResumenDiario`
-- [ ] Gráfica de ventas por hora
-- [ ] Pedidos por canal
-- [ ] Productos más vendidos
-- [ ] Desempeño de repartidores
-- [ ] Comparativa vs día anterior
-- [ ] Filtro por rango de fechas
-- [ ] Exportar reportes a Excel
-- [ ] Implementar hook `useReportes`
+- [x] Crear página `/reportes`
+- [x] Componente `ResumenDiario`
+- [x] Gráfica de ventas por hora
+- [x] Pedidos por canal
+- [x] Productos más vendidos
+- [x] Desempeño de repartidores
+- [x] Comparativa vs día anterior
+- [x] Filtro por rango de fechas
+- [x] Exportar reportes a Excel
+- [x] Implementar hook `useReportes`
 
 ---
 
