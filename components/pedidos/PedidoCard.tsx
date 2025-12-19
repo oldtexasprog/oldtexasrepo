@@ -157,9 +157,9 @@ export function PedidoCard({
         </div>
         <div className="text-right">
           <p className="font-bold text-lg">{formatCurrency(pedido.totales.total)}</p>
-          {pedido.totales.costoEnvio > 0 && (
+          {pedido.totales.envio > 0 && (
             <p className="text-xs text-muted-foreground">
-              (Envío: {formatCurrency(pedido.totales.costoEnvio)})
+              (Envío: {formatCurrency(pedido.totales.envio)})
             </p>
           )}
         </div>

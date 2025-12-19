@@ -202,8 +202,9 @@ export function PedidoRepartoCard({
       {showDetalleModal && (
         <PedidoDetalleModal
           pedido={pedido}
-          isOpen={showDetalleModal}
+          open={showDetalleModal}
           onClose={() => setShowDetalleModal(false)}
+          onCambiarEstado={() => {}}
         />
       )}
     </>

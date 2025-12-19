@@ -210,35 +210,37 @@ export function PedidoDetalleModal({
                         {/* Personalizaciones */}
                         {item.personalizaciones && (
                           <div className="mt-2 text-sm text-muted-foreground space-y-1">
-                            {item.personalizaciones.salpiconType && (
-                              <p>
-                                <span className="font-medium">Tipo:</span>{' '}
-                                {item.personalizaciones.salpiconType}
-                              </p>
-                            )}
-                            {item.personalizaciones.spicinessLevel && (
-                              <p>
-                                <span className="font-medium">Nivel:</span>{' '}
-                                {item.personalizaciones.spicinessLevel}
-                              </p>
-                            )}
-                            {item.personalizaciones.includeRice !== undefined && (
-                              <p>
-                                <span className="font-medium">Arroz:</span>{' '}
-                                {item.personalizaciones.includeRice ? 'Sí' : 'No'}
-                              </p>
-                            )}
-                            {item.personalizaciones.extraTortillas && (
-                              <p>
-                                <span className="font-medium">Tortillas extra:</span>{' '}
-                                {item.personalizaciones.extraTortillas}
-                              </p>
-                            )}
-                            {item.personalizaciones.sauces &&
-                              item.personalizaciones.sauces.length > 0 && (
+                            {item.personalizaciones.salsa &&
+                              item.personalizaciones.salsa.length > 0 && (
                                 <p>
                                   <span className="font-medium">Salsas:</span>{' '}
-                                  {item.personalizaciones.sauces.join(', ')}
+                                  {item.personalizaciones.salsa.join(', ')}
+                                </p>
+                              )}
+                            {item.personalizaciones.presentacion && (
+                              <p>
+                                <span className="font-medium">Presentación:</span>{' '}
+                                {item.personalizaciones.presentacion}
+                              </p>
+                            )}
+                            {item.personalizaciones.temperatura && (
+                              <p>
+                                <span className="font-medium">Temperatura:</span>{' '}
+                                {item.personalizaciones.temperatura}
+                              </p>
+                            )}
+                            {item.personalizaciones.extras &&
+                              item.personalizaciones.extras.length > 0 && (
+                                <p>
+                                  <span className="font-medium">Extras:</span>{' '}
+                                  {item.personalizaciones.extras.join(', ')}
+                                </p>
+                              )}
+                            {item.personalizaciones.sinIngredientes &&
+                              item.personalizaciones.sinIngredientes.length > 0 && (
+                                <p>
+                                  <span className="font-medium">Sin:</span>{' '}
+                                  {item.personalizaciones.sinIngredientes.join(', ')}
                                 </p>
                               )}
                           </div>
@@ -299,11 +301,11 @@ export function PedidoDetalleModal({
                 <span>Método de pago</span>
                 <Badge variant="outline">{pedido.pago.metodo.toUpperCase()}</Badge>
               </div>
-              {pedido.pago.metodo === 'efectivo' && pedido.pago.montoPagado && (
+              {pedido.pago.metodo === 'efectivo' && pedido.pago.montoRecibido && (
                 <>
                   <div className="flex justify-between text-sm">
                     <span>Pagó con</span>
-                    <span>{formatCurrency(pedido.pago.montoPagado)}</span>
+                    <span>{formatCurrency(pedido.pago.montoRecibido)}</span>
                   </div>
                   <div className="flex justify-between text-sm font-medium text-green-600">
                     <span>Cambio</span>

@@ -4,6 +4,7 @@ import { initializeApp, getApps, getApp, type FirebaseApp } from 'firebase/app';
 import { getAuth, type Auth } from 'firebase/auth';
 import { getFirestore, type Firestore } from 'firebase/firestore';
 import { getStorage, type FirebaseStorage } from 'firebase/storage';
+import { getMessaging, type Messaging, isSupported } from 'firebase/messaging';
 
 // Solo claves públicas necesarias en el cliente (Next.js expone NEXT_PUBLIC_*)
 const firebaseConfig = {
@@ -22,5 +23,19 @@ export const app: FirebaseApp = getApps().length ? getApp() : initializeApp(fire
 export const auth: Auth = getAuth(app);
 export const db: Firestore = getFirestore(app);
 export const storage: FirebaseStorage = getStorage(app);
+
+// Messaging (solo en el cliente y si es soportado)
+export const getMessagingInstance = async (): Promise<Messaging | null> => {
+  try {
+    const supported = await isSupported();
+    if (typeof window !== 'undefined' && supported) {
+      return getMessaging(app);
+    }
+    return null;
+  } catch (error) {
+    console.warn('Firebase Messaging no está soportado:', error);
+    return null;
+  }
+};
 
 export default app;

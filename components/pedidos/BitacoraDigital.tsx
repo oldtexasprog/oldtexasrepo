@@ -112,7 +112,7 @@ export function BitacoraDigital() {
 
     const totalEnvios = pedidosFiltrados
       .filter((p) => p.estado !== 'cancelado')
-      .reduce((sum, p) => sum + (p.totales.costoEnvio || 0), 0);
+      .reduce((sum, p) => sum + (p.totales.envio || 0), 0);
 
     const totalCambio = pedidosFiltrados
       .filter((p) => p.pago.metodo === 'efectivo' && p.estado !== 'cancelado')
@@ -157,7 +157,7 @@ export function BitacoraDigital() {
       p.totales.total,
       p.pago.metodo.toUpperCase(),
       p.pago.cambio || 0,
-      p.totales.costoEnvio || 0,
+      p.totales.envio || 0,
       p.reparto?.repartidorNombre || 'Sin asignar',
       p.estado,
       p.fechaCreacion.toDate().toLocaleTimeString('es-MX'),

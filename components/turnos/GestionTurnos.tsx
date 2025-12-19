@@ -65,9 +65,9 @@ export function GestionTurnos() {
 
       await turnosService.abrirTurno(
         datosApertura.tipo,
-        parseFloat(datosApertura.fondoInicial),
         userData.id,
         userData.nombre,
+        parseFloat(datosApertura.fondoInicial),
         userData.id, // Asumiendo que el mismo usuario es cajero y encargado
         userData.nombre
       );
@@ -100,7 +100,8 @@ export function GestionTurnos() {
       await turnosService.cerrarTurno(
         turno.id,
         parseFloat(datosCierre.efectivoReal),
-        datosCierre.observaciones
+        datosCierre.observaciones,
+        userData?.id || 'sistema'
       );
 
       toast.success('Turno cerrado exitosamente');
@@ -189,23 +190,23 @@ export function GestionTurnos() {
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Total Ventas</p>
               <p className="font-semibold text-green-600">
-                {formatCurrency(turno.totales?.totalVentas || 0)}
+                {formatCurrency(turno.resumen?.totalVentas || 0)}
               </p>
             </div>
 
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Efectivo</p>
-              <p className="font-semibold">{formatCurrency(turno.totales?.efectivo || 0)}</p>
+              <p className="font-semibold">{formatCurrency(turno.resumen?.efectivo || 0)}</p>
             </div>
 
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Tarjeta</p>
-              <p className="font-semibold">{formatCurrency(turno.totales?.tarjeta || 0)}</p>
+              <p className="font-semibold">{formatCurrency(turno.resumen?.tarjeta || 0)}</p>
             </div>
 
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Transferencias</p>
-              <p className="font-semibold">{formatCurrency(turno.totales?.transferencia || 0)}</p>
+              <p className="font-semibold">{formatCurrency(turno.resumen?.transferencia || 0)}</p>
             </div>
           </div>
         ) : (
@@ -343,7 +344,7 @@ export function GestionTurnos() {
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Efectivo esperado:</span>
                   <span className="font-medium">
-                    {formatCurrency(turno.fondoInicial + (turno.totales?.efectivo || 0))}
+                    {formatCurrency(turno.fondoInicial + (turno.resumen?.efectivo || 0))}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm">
@@ -357,7 +358,7 @@ export function GestionTurnos() {
                   <span
                     className={
                       parseFloat(datosCierre.efectivoReal) -
-                        (turno.fondoInicial + (turno.totales?.efectivo || 0)) >=
+                        (turno.fondoInicial + (turno.resumen?.efectivo || 0)) >=
                       0
                         ? 'text-green-600'
                         : 'text-red-600'
@@ -365,7 +366,7 @@ export function GestionTurnos() {
                   >
                     {formatCurrency(
                       parseFloat(datosCierre.efectivoReal) -
-                        (turno.fondoInicial + (turno.totales?.efectivo || 0))
+                        (turno.fondoInicial + (turno.resumen?.efectivo || 0))
                     )}
                   </span>
                 </div>

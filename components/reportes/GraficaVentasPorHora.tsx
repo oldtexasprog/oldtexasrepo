@@ -92,11 +92,11 @@ export function GraficaVentasPorHora({ datos, isLoading }: Props) {
               color: 'hsl(var(--foreground))',
             }}
             labelStyle={{ color: 'hsl(var(--foreground))' }}
-            formatter={(value: number, name: string) => {
+            formatter={(value, name) => {
               if (name === 'total') {
-                return [`$${value.toLocaleString('es-MX')}`, 'Total'];
+                return [`$${(value || 0).toLocaleString('es-MX')}`, 'Total'];
               }
-              return [value, 'Pedidos'];
+              return [value || 0, 'Pedidos'];
             }}
           />
           <Legend

@@ -41,7 +41,9 @@ export default function CreateAdminPage() {
         rol: 'admin',
         activo: true,
         fcmTokens: [],
-      });
+        creadoPor: 'sistema',
+        ultimaConexion: new Date() as any,
+      } as any);
 
       // Iniciar sesión y redirigir al dashboard
       await signInWithEmailAndPassword(auth, email, password);

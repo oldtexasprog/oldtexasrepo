@@ -86,7 +86,7 @@ export function GraficaVentasPorCanal({ datos, isLoading }: Props) {
               cx="50%"
               cy="50%"
               labelLine={false}
-              label={({ name, porcentaje }) => `${name}: ${porcentaje}%`}
+              label={(entry: any) => `${entry.name}: ${entry.porcentaje}%`}
               outerRadius={80}
               fill="#8884d8"
               dataKey="value"
@@ -106,8 +106,8 @@ export function GraficaVentasPorCanal({ datos, isLoading }: Props) {
                 borderRadius: '8px',
                 color: 'hsl(var(--foreground))',
               }}
-              formatter={(value: number, name: string, props: any) => [
-                `$${value.toLocaleString('es-MX')} (${props.payload.cantidad} pedidos)`,
+              formatter={(value, name, props: any) => [
+                `$${(value || 0).toLocaleString('es-MX')} (${props.payload.cantidad} pedidos)`,
                 name,
               ]}
             />

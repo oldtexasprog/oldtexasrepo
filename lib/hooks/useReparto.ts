@@ -53,26 +53,27 @@ export function useReparto() {
       setActionLoading(true);
       try {
         // Asignar repartidor al pedido
-        await pedidosService.asignarRepartidor(pedidoId, {
-          repartidorId: userData.id,
-          repartidorNombre: `${userData.nombre} ${userData.apellido}`,
-          comisionRepartidor: 0, // TODO: Calcular comisión según configuración
-          estadoReparto: 'asignado' as EstadoReparto,
-          horaAsignacion: Timestamp.now(),
-          liquidado: false,
-        });
+        await pedidosService.asignarRepartidor(
+          pedidoId,
+          userData.id,
+          `${userData.nombre} ${userData.apellido}`,
+          0, // TODO: Calcular comisión según configuración
+          userData.id,
+          userData.nombre
+        );
 
         // Actualizar estado del pedido a "en_reparto"
-        await pedidosService.updateEstado(pedidoId, 'en_reparto');
+        await pedidosService.actualizarEstado(pedidoId, 'en_reparto', userData.id, userData.nombre);
 
         // Notificar a cajera
-        await notificacionesService.crearParaRol('cajera', {
-          tipo: 'info',
-          titulo: '🛵 Pedido Asignado',
-          mensaje: `${userData.nombre} aceptó el pedido y está en camino`,
-          prioridad: 'normal',
-          metadata: { pedidoId },
-        });
+        await notificacionesService.crearParaRol(
+          'cajera',
+          'info',
+          '🛵 Pedido Asignado',
+          `${userData.nombre} aceptó el pedido y está en camino`,
+          'normal',
+          pedidoId
+        );
 
         toast.success('Pedido aceptado exitosamente');
       } catch (error: any) {
@@ -101,25 +102,25 @@ export function useReparto() {
         }
 
         // Actualizar estado a entregado
-        await pedidosService.updateEstado(pedidoId, 'entregado');
+        await pedidosService.actualizarEstado(pedidoId, 'entregado', userData.id, userData.nombre);
 
         // Actualizar estado de reparto
         if (pedido.reparto) {
-          await pedidosService.updateReparto(pedidoId, {
-            ...pedido.reparto,
-            estadoReparto: 'entregado' as EstadoReparto,
-            horaEntrega: Timestamp.now(),
-          });
+          await pedidosService.update(pedidoId, {
+            'reparto.estadoReparto': 'entregado',
+            'reparto.horaEntrega': Timestamp.now(),
+          } as any);
         }
 
         // Notificar a cajera
-        await notificacionesService.crearParaRol('cajera', {
-          tipo: 'pedido_entregado',
-          titulo: '✅ Pedido Entregado',
-          mensaje: `Pedido #${pedido.numeroPedido} entregado por ${userData.nombre}`,
-          prioridad: 'normal',
-          metadata: { pedidoId },
-        });
+        await notificacionesService.crearParaRol(
+          'cajera',
+          'pedido_entregado',
+          '✅ Pedido Entregado',
+          `Pedido #${pedido.numeroPedido} entregado por ${userData.nombre}`,
+          'normal',
+          pedidoId
+        );
 
         toast.success('Pedido marcado como entregado');
       } catch (error: any) {
@@ -161,21 +162,23 @@ export function useReparto() {
         });
 
         // Notificar a encargado/admin
-        await notificacionesService.crearParaRol('encargado', {
-          tipo: 'alerta',
-          titulo: '⚠️ Incidencia Reportada',
-          mensaje: `${userData.nombre} reportó: "${motivo}" en pedido #${pedido.numeroPedido}`,
-          prioridad: 'alta',
-          metadata: { pedidoId, motivo },
-        });
+        await notificacionesService.crearParaRol(
+          'encargado',
+          'alerta',
+          '⚠️ Incidencia Reportada',
+          `${userData.nombre} reportó: "${motivo}" en pedido #${pedido.numeroPedido}`,
+          'alta',
+          pedidoId
+        );
 
-        await notificacionesService.crearParaRol('admin', {
-          tipo: 'alerta',
-          titulo: '⚠️ Incidencia Reportada',
-          mensaje: `${userData.nombre} reportó: "${motivo}" en pedido #${pedido.numeroPedido}`,
-          prioridad: 'alta',
-          metadata: { pedidoId, motivo },
-        });
+        await notificacionesService.crearParaRol(
+          'admin',
+          'alerta',
+          '⚠️ Incidencia Reportada',
+          `${userData.nombre} reportó: "${motivo}" en pedido #${pedido.numeroPedido}`,
+          'alta',
+          pedidoId
+        );
 
         toast.success('Incidencia reportada al encargado');
       } catch (error: any) {

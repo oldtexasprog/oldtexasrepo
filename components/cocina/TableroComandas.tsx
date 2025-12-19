@@ -204,7 +204,7 @@ export function TableroComandas({ pedidosIniciales = [] }: TableroComandasProps)
         // Obtener el pedido actual para acceder a sus datos
         const pedidoActual = pedidos.find((p) => p.id === pedidoId);
 
-        await pedidosService.updateEstado(pedidoId, nuevoEstado);
+        await pedidosService.actualizarEstado(pedidoId, nuevoEstado, 'sistema', 'Cocina');
 
         toast.success('Estado actualizado correctamente');
 
@@ -213,16 +213,14 @@ export function TableroComandas({ pedidosIniciales = [] }: TableroComandasProps)
           try {
             // Si tiene repartidor asignado, notificar directamente
             if (pedidoActual.reparto?.repartidorId) {
-              await notificacionesService.create({
-                tipo: 'pedido_listo',
-                titulo: '🎉 Pedido Listo para Entrega',
-                mensaje: `Pedido #${pedidoActual.numeroPedido.toString().padStart(3, '0')} de ${pedidoActual.cliente.nombre} está listo. ${pedidoActual.cliente.colonia ? `Entregar en ${pedidoActual.cliente.colonia}` : ''}`,
-                usuarioId: pedidoActual.reparto.repartidorId,
-                leida: false,
-                prioridad: 'alta',
-                relacionadoId: pedidoId,
-                fechaCreacion: new Date() as any,
-              });
+              await notificacionesService.crearParaUsuario(
+                pedidoActual.reparto.repartidorId,
+                'pedido_listo',
+                '🎉 Pedido Listo para Entrega',
+                `Pedido #${pedidoActual.numeroPedido.toString().padStart(3, '0')} de ${pedidoActual.cliente.nombre} está listo. ${pedidoActual.cliente.colonia ? `Entregar en ${pedidoActual.cliente.colonia}` : ''}`,
+                'alta',
+                pedidoId
+              );
 
               toast.success('Repartidor notificado', {
                 description: `Se notificó a ${pedidoActual.reparto.repartidorNombre}`,

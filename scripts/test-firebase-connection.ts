@@ -6,7 +6,7 @@
  * npx tsx scripts/test-firebase-connection.ts
  */
 
-import { app, auth, db, storage, firebaseInfo } from '../lib/firebase/config';
+import { app, auth, db, storage } from '../lib/firebase/config';
 import { collection, getDocs } from 'firebase/firestore';
 import { ref, listAll } from 'firebase/storage';
 
@@ -18,11 +18,12 @@ console.log('━'.repeat(50));
  */
 function testConfig() {
   console.log('\n1. Configuration');
-  console.log('   Project ID:', firebaseInfo.projectId || '❌ Missing');
-  console.log('   Environment:', firebaseInfo.environment);
-  console.log('   Using Emulator:', firebaseInfo.usingEmulator ? 'Yes' : 'No');
+  const projectId = app.options.projectId;
+  console.log('   Project ID:', projectId || '❌ Missing');
+  console.log('   Environment:', process.env.NODE_ENV || 'development');
+  console.log('   Using Emulator:', 'No');
 
-  if (!firebaseInfo.projectId) {
+  if (!projectId) {
     console.log('   ❌ Firebase not configured properly');
     return false;
   }
