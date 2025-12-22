@@ -4,6 +4,10 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth/useAuth';
 import { Loader2 } from 'lucide-react';
+import { NotificationCenter } from '@/components/notifications/NotificationCenter';
+import { NotificationBadge } from '@/components/notifications/NotificationBadge';
+import { NotificationListener } from '@/components/notifications/notification-listener';
+import { initializeFCM } from '@/lib/notifications/fcm';
 
 export default function ProtectedLayout({
   children,
@@ -19,6 +23,17 @@ export default function ProtectedLayout({
       router.push('/login');
     }
   }, [userData, loading, router]);
+
+  // Inicializar FCM cuando el usuario esté autenticado
+  useEffect(() => {
+    if (userData?.id) {
+      initializeFCM(userData.id).then((token) => {
+        if (token) {
+          console.log('✅ FCM inicializado para usuario:', userData.id);
+        }
+      });
+    }
+  }, [userData?.id]);
 
   // Mostrar loading mientras verifica autenticación
   if (loading) {
@@ -38,5 +53,21 @@ export default function ProtectedLayout({
   }
 
   // Usuario autenticado, mostrar contenido
-  return <>{children}</>;
+  return (
+    <>
+      {/* Listener de notificaciones en tiempo real */}
+      <NotificationListener />
+
+      {/* Contenido principal */}
+      {children}
+
+      {/* Botón flotante de notificaciones (bottom-right) */}
+      <div className="fixed bottom-6 right-6 z-40">
+        <NotificationBadge />
+      </div>
+
+      {/* Panel de notificaciones */}
+      <NotificationCenter />
+    </>
+  );
 }

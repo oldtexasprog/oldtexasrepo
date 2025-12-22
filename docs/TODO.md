@@ -344,25 +344,25 @@
 
 ### Firebase Cloud Messaging (FCM)
 
-- [ ] Configurar FCM en Firebase Console
-- [ ] Agregar `firebase-messaging-sw.js` (service worker)
-- [ ] Crear `lib/notifications/fcm.ts`
-- [ ] Función `requestNotificationPermission()`
-- [ ] Función `subscribeUserToTopic(userId, role)`
-- [ ] Guardar FCM tokens en Firestore por usuario
-- [ ] Crear función Cloud para enviar notificaciones
-- [ ] Implementar `sendNotificationToRole(role, message)`
+- [x] Configurar FCM en Firebase Console
+- [x] Agregar `firebase-messaging-sw.js` (service worker)
+- [x] Crear `lib/notifications/fcm.ts`
+- [x] Función `requestNotificationPermission()`
+- [x] Función `subscribeUserToTopic(userId, role)`
+- [x] Guardar FCM tokens en Firestore por usuario
+- [x] Crear función Cloud para enviar notificaciones
+- [x] Implementar `sendNotificationToRole(role, message)`
 
 ### Notificaciones UI (In-App)
 
-- [ ] Crear componente `NotificationCenter`
-- [ ] Implementar store de notificaciones (Zustand)
-- [ ] Componente `NotificationBadge` (contador)
-- [ ] Lista de notificaciones no leídas
-- [ ] Marcar como leída
-- [ ] Eliminar notificación
-- [ ] Notificación con sonido personalizado
-- [ ] Integrar sonidos de alerta (`/public/sounds/`)
+- [x] Crear componente `NotificationCenter`
+- [x] Implementar store de notificaciones (Zustand)
+- [x] Componente `NotificationBadge` (contador)
+- [x] Lista de notificaciones no leídas
+- [x] Marcar como leída
+- [x] Eliminar notificación
+- [x] Notificación con sonido personalizado
+- [x] Integrar sonidos de alerta (`/public/sounds/`)
 
 ### Triggers de Notificaciones
 
