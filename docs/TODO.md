@@ -372,6 +372,49 @@
 - [x] Notificar encargado en caso de incidencia
 - [x] Notificar en caso de retrasos (>30 min)
 
+### Sistema de Activación de Notificaciones (UI)
+
+- [x] Crear hook `useNotificationPermission`
+- [x] Crear componente `NotificationPermissionBanner` (variantes: banner, inline, floating)
+- [x] Crear componente `NotificationToggle` (variantes: button, icon, compact)
+- [x] Documentación completa de activación de notificaciones
+- [x] Ejemplo de integración en layout
+
+---
+
+## ✅ FASE 8: SISTEMA DE NOTIFICACIONES - COMPLETADA (100%)
+
+**Fecha de Completación:** Diciembre 2025
+
+### Resumen de Implementación:
+
+#### 1. Triggers Automáticos (5/5)
+- ✅ Nuevo Pedido → Cocina (alta prioridad)
+- ✅ Pedido Listo → Repartidores (normal)
+- ✅ Pedido Entregado → Cajera (normal)
+- ✅ Incidencia → Encargado (urgente)
+- ✅ Retraso >30min → Encargado (urgente)
+
+#### 2. Sistema de Activación (UI Completa)
+- ✅ Hook de gestión de permisos
+- ✅ Banner para solicitar activación (3 variantes)
+- ✅ Toggle compacto para settings (3 variantes)
+- ✅ Auto-inicialización de FCM
+- ✅ Manejo de estados: default, granted, denied
+
+#### 3. Documentación
+- ✅ `NOTIFICACIONES_TRIGGERS.md` - Guía de triggers
+- ✅ `NOTIFICACIONES_UI.md` - Guía de componentes UI
+- ✅ Ejemplos de integración en layouts
+
+#### 4. Bugfixes Críticos
+- ✅ Error Firebase undefined fields resuelto
+- ✅ `BUGFIX_FIREBASE_UNDEFINED.md` documentado
+
+**Total de archivos nuevos:** 8
+**Total de archivos modificados:** 7
+**Líneas de código agregadas:** +2,327
+
 ---
 
 ## 🌐 FASE 9: FORMULARIO WEB PÚBLICO
