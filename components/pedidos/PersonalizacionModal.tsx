@@ -107,12 +107,26 @@ export function PersonalizacionModal({
   };
 
   const handleConfirm = () => {
-    onConfirm({
-      salsas: salsas.length > 0 ? salsas : undefined,
-      extras: extras.length > 0 ? extras : undefined,
-      presentacion: presentacion || undefined,
-      notas: notas.trim() || undefined,
-    });
+    const personalizacion: any = {};
+
+    // Solo agregar campos si tienen valor
+    if (salsas.length > 0) {
+      personalizacion.salsas = salsas;
+    }
+
+    if (extras.length > 0) {
+      personalizacion.extras = extras;
+    }
+
+    if (presentacion) {
+      personalizacion.presentacion = presentacion;
+    }
+
+    if (notas.trim()) {
+      personalizacion.notas = notas.trim();
+    }
+
+    onConfirm(personalizacion);
     onOpenChange(false);
   };
 

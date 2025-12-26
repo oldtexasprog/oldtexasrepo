@@ -79,24 +79,34 @@ export function ModalColonia({ open, colonia, onClose }: ModalColoniaProps) {
 
       if (colonia) {
         // Actualizar colonia existente
-        await coloniasService.update(colonia.id, {
+        const updateData: any = {
           nombre: nombre.trim(),
-          zona: zona || undefined,
           costoEnvio: costoNumerico,
           activa,
-        });
+        };
+
+        // Solo agregar zona si tiene valor
+        if (zona) {
+          updateData.zona = zona;
+        }
+
+        await coloniasService.update(colonia.id, updateData);
         toast.success('Colonia actualizada correctamente');
       } else {
         // Crear nueva colonia
-        const nuevaColonia: Omit<Colonia, 'id'> = {
+        const nuevaColonia: any = {
           nombre: nombre.trim(),
-          zona: zona || undefined,
           costoEnvio: costoNumerico,
           activa,
           fechaCreacion: Timestamp.now(),
           fechaActualizacion: Timestamp.now(),
           creadoPor: user?.uid || 'sistema',
         };
+
+        // Solo agregar zona si tiene valor
+        if (zona) {
+          nuevaColonia.zona = zona;
+        }
 
         await coloniasService.create(nuevaColonia);
         toast.success('Colonia creada correctamente');

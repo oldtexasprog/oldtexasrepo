@@ -366,11 +366,11 @@
 
 ### Triggers de Notificaciones
 
-- [ ] Notificar cocina cuando nuevo pedido
-- [ ] Notificar repartidores cuando pedido listo
-- [ ] Notificar cajera cuando pedido entregado
-- [ ] Notificar encargado en caso de incidencia
-- [ ] Notificar en caso de retrasos (>30 min)
+- [x] Notificar cocina cuando nuevo pedido
+- [x] Notificar repartidores cuando pedido listo
+- [x] Notificar cajera cuando pedido entregado
+- [x] Notificar encargado en caso de incidencia
+- [x] Notificar en caso de retrasos (>30 min)
 
 ---
 

@@ -28,10 +28,31 @@ import {
   NuevoPedido,
   PedidoConDatos,
 } from '@/lib/types/firestore';
+import { notificacionesService } from './notificaciones.service';
 
 class PedidosService extends BaseService<Pedido> {
   constructor() {
     super('pedidos');
+  }
+
+  // ==========================================================================
+  // MÉTODOS PRIVADOS DE UTILIDAD
+  // ==========================================================================
+
+  /**
+   * Elimina campos con valor undefined de un objeto
+   * Firebase no acepta campos con undefined
+   */
+  private removeUndefinedFields<T extends Record<string, any>>(obj: T): Partial<T> {
+    const cleaned: any = {};
+
+    for (const key in obj) {
+      if (obj[key] !== undefined) {
+        cleaned[key] = obj[key];
+      }
+    }
+
+    return cleaned;
   }
 
   // ==========================================================================
@@ -49,11 +70,14 @@ class PedidosService extends BaseService<Pedido> {
       // 1. Obtener el número de pedido del día
       const numeroPedido = await this.getNextNumeroPedido();
 
-      // 2. Crear el pedido principal
-      const pedidoId = await this.create({
+      // 2. Limpiar campos undefined antes de crear
+      const pedidoLimpio = this.removeUndefinedFields({
         ...pedidoData,
         numeroPedido,
-      } as any);
+      });
+
+      // 3. Crear el pedido principal
+      const pedidoId = await this.create(pedidoLimpio as any);
 
       // 3. Agregar items
       await this.addItems(pedidoId, items);
@@ -66,6 +90,9 @@ class PedidosService extends BaseService<Pedido> {
         usuarioNombre: 'Sistema', // TODO: obtener nombre del usuario
         detalles: `Pedido creado vía ${pedidoData.canal}`,
       });
+
+      // 5. 🔔 TRIGGER: Notificar a cocina sobre nuevo pedido
+      await this.notificarNuevoPedido(pedidoId, numeroPedido);
 
       return pedidoId;
     } catch (error) {
@@ -212,6 +239,15 @@ class PedidosService extends BaseService<Pedido> {
       usuarioNombre,
       detalles: detalles || `Estado cambiado de ${estadoAnterior} a ${nuevoEstado}`,
     });
+
+    // 🔔 TRIGGERS: Notificaciones según el nuevo estado
+    if (nuevoEstado === 'listo') {
+      // Notificar a repartidores que hay pedido listo para recoger
+      await this.notificarPedidoListo(pedidoId, pedido.numeroPedido);
+    } else if (nuevoEstado === 'entregado') {
+      // Notificar a cajera que el pedido fue entregado
+      await this.notificarPedidoEntregado(pedidoId, pedido.numeroPedido, pedido.cliente.nombre);
+    }
   }
 
   /**
@@ -570,6 +606,182 @@ class PedidosService extends BaseService<Pedido> {
       },
       onError
     );
+  }
+
+  // ==========================================================================
+  // MÉTODOS DE NOTIFICACIONES (TRIGGERS)
+  // ==========================================================================
+
+  /**
+   * 🔔 TRIGGER 1: Notifica a cocina cuando se crea un nuevo pedido
+   */
+  private async notificarNuevoPedido(
+    pedidoId: string,
+    numeroPedido: number
+  ): Promise<void> {
+    try {
+      await notificacionesService.crearParaRol(
+        'cocina',
+        'nuevo_pedido',
+        'Nuevo Pedido',
+        `Pedido #${numeroPedido} recibido y listo para preparar`,
+        'alta',
+        pedidoId
+      );
+    } catch (error) {
+      console.error('Error al notificar nuevo pedido a cocina:', error);
+      // No lanzar error para no bloquear la creación del pedido
+    }
+  }
+
+  /**
+   * 🔔 TRIGGER 2: Notifica a repartidores cuando un pedido está listo
+   */
+  private async notificarPedidoListo(
+    pedidoId: string,
+    numeroPedido: number
+  ): Promise<void> {
+    try {
+      await notificacionesService.crearParaRol(
+        'repartidor',
+        'pedido_listo',
+        'Pedido Listo para Recoger',
+        `Pedido #${numeroPedido} está listo para entrega`,
+        'normal',
+        pedidoId
+      );
+    } catch (error) {
+      console.error('Error al notificar pedido listo a repartidores:', error);
+    }
+  }
+
+  /**
+   * 🔔 TRIGGER 3: Notifica a cajera cuando un pedido es entregado
+   */
+  private async notificarPedidoEntregado(
+    pedidoId: string,
+    numeroPedido: number,
+    nombreCliente: string
+  ): Promise<void> {
+    try {
+      await notificacionesService.crearParaRol(
+        'cajera',
+        'pedido_entregado',
+        'Pedido Entregado',
+        `Pedido #${numeroPedido} entregado a ${nombreCliente}`,
+        'normal',
+        pedidoId
+      );
+    } catch (error) {
+      console.error('Error al notificar pedido entregado a cajera:', error);
+    }
+  }
+
+  /**
+   * 🔔 TRIGGER 4: Reporta una incidencia y notifica a encargado
+   */
+  async reportarIncidencia(
+    pedidoId: string,
+    tipoIncidencia: string,
+    descripcion: string,
+    usuarioId: string,
+    usuarioNombre: string
+  ): Promise<void> {
+    try {
+      const pedido = await this.getById(pedidoId);
+      if (!pedido) throw new Error('Pedido no encontrado');
+
+      // Agregar al historial del pedido
+      await this.addHistorial(pedidoId, {
+        accion: 'actualizado',
+        usuarioId,
+        usuarioNombre,
+        detalles: `INCIDENCIA: ${tipoIncidencia} - ${descripcion}`,
+      });
+
+      // Notificar a encargado
+      await notificacionesService.crearParaRol(
+        'encargado',
+        'alerta',
+        `Incidencia: ${tipoIncidencia}`,
+        `Pedido #${pedido.numeroPedido} - ${descripcion}`,
+        'urgente',
+        pedidoId
+      );
+    } catch (error) {
+      console.error('Error al reportar incidencia:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * 🔔 TRIGGER 5: Verifica pedidos con retrasos y notifica a encargado
+   * Esta función debe ejecutarse periódicamente (ej: cada 5-10 minutos)
+   */
+  async verificarYNotificarRetrasos(): Promise<void> {
+    try {
+      const TIEMPO_LIMITE_MINUTOS = 30;
+      const ahora = Timestamp.now();
+
+      // Obtener pedidos activos (no entregados ni cancelados)
+      const pedidosActivos = await this.getPedidosHoy({
+        filters: [
+          {
+            field: 'estado',
+            operator: 'in',
+            value: ['pendiente', 'en_preparacion', 'listo', 'en_reparto'],
+          },
+        ],
+      });
+
+      // Filtrar pedidos con más de 30 minutos
+      const pedidosRetrasados = pedidosActivos.filter((pedido) => {
+        const tiempoTranscurrido =
+          (ahora.toMillis() - pedido.fechaCreacion.toMillis()) / 1000 / 60; // En minutos
+        return tiempoTranscurrido > TIEMPO_LIMITE_MINUTOS;
+      });
+
+      // Notificar por cada pedido retrasado
+      for (const pedido of pedidosRetrasados) {
+        const tiempoTranscurrido = Math.round(
+          (ahora.toMillis() - pedido.fechaCreacion.toMillis()) / 1000 / 60
+        );
+
+        // Verificar si ya se notificó este retraso (para no duplicar)
+        const historial = await this.getHistorial(pedido.id);
+        const yaNotificado = historial.some(
+          (h) =>
+            h.detalles?.includes('RETRASO') &&
+            h.timestamp.toMillis() > ahora.toMillis() - 10 * 60 * 1000 // Últimos 10 min
+        );
+
+        if (!yaNotificado) {
+          // Agregar al historial
+          await this.addHistorial(pedido.id, {
+            accion: 'actualizado',
+            usuarioId: 'system',
+            usuarioNombre: 'Sistema',
+            detalles: `RETRASO: Pedido lleva ${tiempoTranscurrido} minutos sin completarse`,
+          });
+
+          // Notificar a encargado
+          await notificacionesService.crearParaRol(
+            'encargado',
+            'alerta',
+            'Pedido Retrasado',
+            `Pedido #${pedido.numeroPedido} lleva ${tiempoTranscurrido} min en estado: ${pedido.estado}`,
+            'urgente',
+            pedido.id
+          );
+        }
+      }
+
+      console.log(
+        `✅ Verificación de retrasos: ${pedidosRetrasados.length} pedido(s) retrasado(s)`
+      );
+    } catch (error) {
+      console.error('Error al verificar retrasos:', error);
+    }
   }
 }
 

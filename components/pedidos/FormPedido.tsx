@@ -184,7 +184,7 @@ export function FormPedido() {
       }
 
       // Preparar datos del pedido
-      const pedidoData: Omit<NuevoPedido, 'numeroPedido'> = {
+      const pedidoData: any = {
         canal: canal!,
         cliente,
         estado: 'pendiente',
@@ -194,7 +194,6 @@ export function FormPedido() {
           descuento: montoDescuento,
           total,
         },
-        descuento: descuento || undefined,
         pago: {
           metodo: metodoPago!,
           requiereCambio: metodoPago === 'efectivo' && cambioFinal > 0,
@@ -202,12 +201,20 @@ export function FormPedido() {
           cambio: cambioFinal,
           pagoAdelantado: false,
         },
-        observaciones,
         horaRecepcion: ahora,
         creadoPor: user.uid,
         turnoId: turno.id,
         cancelado: false,
       };
+
+      // Solo agregar campos opcionales si tienen valor
+      if (descuento) {
+        pedidoData.descuento = descuento;
+      }
+
+      if (observaciones) {
+        pedidoData.observaciones = observaciones;
+      }
 
       // Si hay repartidor asignado, agregar datos de reparto
       if (repartidorId && repartidorNombre) {
@@ -450,7 +457,7 @@ export function FormPedido() {
                 descuento={montoDescuento}
                 total={total}
                 cantidadProductos={cantidadProductos}
-                metodoPago={metodoPago || undefined}
+                metodoPago={metodoPago}
                 cambio={cambio}
               />
 
