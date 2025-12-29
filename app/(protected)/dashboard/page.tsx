@@ -1,16 +1,28 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useAuth } from '@/lib/auth/useAuth';
 import { useRouter } from 'next/navigation';
 import { LABELS_ROL } from '@/lib/types/firestore';
 import { User, Settings, Lock, LogOut, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
+import { getModulesForRole, getUserMenuItems } from '@/lib/config/dashboard-modules';
 
 function DashboardContent() {
   const { userData, signOut } = useAuth();
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Filtrar módulos y opciones de menú según el rol del usuario
+  const allowedModules = useMemo(() => {
+    if (!userData?.rol) return [];
+    return getModulesForRole(userData.rol);
+  }, [userData?.rol]);
+
+  const userMenuItems = useMemo(() => {
+    if (!userData?.rol) return [];
+    return getUserMenuItems(userData.rol);
+  }, [userData?.rol]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -66,32 +78,25 @@ function DashboardContent() {
                     </div>
 
                     <div className="py-2">
-                      <Link
-                        href="/perfil"
-                        className="flex items-center gap-3 px-4 py-2 hover:bg-muted transition"
-                        onClick={() => setMenuOpen(false)}
-                      >
-                        <User className="h-4 w-4" />
-                        <span className="text-sm">Mi Perfil</span>
-                      </Link>
+                      {userMenuItems.map((item) => {
+                        const IconComponent =
+                          item.icon === 'user' ? User :
+                          item.icon === 'lock' ? Lock :
+                          item.icon === 'settings' ? Settings :
+                          User;
 
-                      <Link
-                        href="/cambiar-password"
-                        className="flex items-center gap-3 px-4 py-2 hover:bg-muted transition"
-                        onClick={() => setMenuOpen(false)}
-                      >
-                        <Lock className="h-4 w-4" />
-                        <span className="text-sm">Cambiar Contraseña</span>
-                      </Link>
-
-                      <Link
-                        href="/dashboard/usuarios"
-                        className="flex items-center gap-3 px-4 py-2 hover:bg-muted transition"
-                        onClick={() => setMenuOpen(false)}
-                      >
-                        <Settings className="h-4 w-4" />
-                        <span className="text-sm">Gestión de Usuarios</span>
-                      </Link>
+                        return (
+                          <Link
+                            key={item.id}
+                            href={item.href || '#'}
+                            className="flex items-center gap-3 px-4 py-2 hover:bg-muted transition"
+                            onClick={() => setMenuOpen(false)}
+                          >
+                            <IconComponent className="h-4 w-4" />
+                            <span className="text-sm">{item.title}</span>
+                          </Link>
+                        );
+                      })}
                     </div>
 
                     <div className="border-t border-border">
@@ -148,95 +153,31 @@ function DashboardContent() {
         {/* Contenido según rol */}
         <div className="bg-card border border-border rounded-lg p-6">
           <h2 className="text-2xl font-bold mb-4">Acceso Rápido</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <a
-              href="/pedidos"
-              className="p-4 border border-border rounded-lg hover:bg-muted transition"
-            >
-              <div className="text-3xl mb-2">📝</div>
-              <h3 className="font-bold mb-1">Pedidos</h3>
-              <p className="text-sm text-muted-foreground">
-                Gestionar pedidos del restaurante
-              </p>
-            </a>
 
-            <a
-              href="/turnos"
-              className="p-4 border border-border rounded-lg hover:bg-muted transition"
-            >
-              <div className="text-3xl mb-2">⏰</div>
-              <h3 className="font-bold mb-1">Turnos</h3>
-              <p className="text-sm text-muted-foreground">
-                Gestionar turnos del restaurante
+          {allowedModules.length === 0 ? (
+            <div className="text-center py-8 text-muted-foreground">
+              <p>No tienes módulos asignados a tu rol.</p>
+              <p className="text-sm mt-2">
+                Contacta al administrador si necesitas acceso.
               </p>
-            </a>
-
-            <a
-              href="/cocina"
-              className="p-4 border border-border rounded-lg hover:bg-muted transition"
-            >
-              <div className="text-3xl mb-2">👨‍🍳</div>
-              <h3 className="font-bold mb-1">Cocina</h3>
-              <p className="text-sm text-muted-foreground">
-                Ver comandas en tiempo real
-              </p>
-            </a>
-
-            <a
-              href="/reparto"
-              className="p-4 border border-border rounded-lg hover:bg-muted transition"
-            >
-              <div className="text-3xl mb-2">🛵</div>
-              <h3 className="font-bold mb-1">Reparto</h3>
-              <p className="text-sm text-muted-foreground">
-                Gestión de entregas
-              </p>
-            </a>
-
-            <a
-              href="/bitacora"
-              className="p-4 border border-border rounded-lg hover:bg-muted transition"
-            >
-              <div className="text-3xl mb-2">📋</div>
-              <h3 className="font-bold mb-1">Bitácora</h3>
-              <p className="text-sm text-muted-foreground">
-                Registro de pedidos del día
-              </p>
-            </a>
-
-            <a
-              href="/dashboard/usuarios"
-              className="p-4 border border-border rounded-lg hover:bg-muted transition"
-            >
-              <div className="text-3xl mb-2">👥</div>
-              <h3 className="font-bold mb-1">Usuarios</h3>
-              <p className="text-sm text-muted-foreground">
-                Gestión de usuarios del restaurante
-              </p>
-            </a>
-
-            <a
-              href="/colonias"
-              className="p-4 border border-border rounded-lg hover:bg-muted transition"
-            >
-              <div className="text-3xl mb-2">📍</div>
-              <h3 className="font-bold mb-1">Colonias</h3>
-              <p className="text-sm text-muted-foreground">
-                Gestión de colonias y costos de envío
-              </p>
-            </a>
-
-            <a
-              href="/reportes"
-              className="p-4 border border-border rounded-lg hover:bg-muted transition"
-            >
-              <div className="text-3xl mb-2">📊</div>
-              <h3 className="font-bold mb-1">Reportes</h3>
-              <p className="text-sm text-muted-foreground">
-                Análisis y métricas
-              </p>
-            </a>
-          </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {allowedModules.map((module) => (
+                <Link
+                  key={module.id}
+                  href={module.href}
+                  className="p-4 border border-border rounded-lg hover:bg-muted transition"
+                >
+                  <div className="text-3xl mb-2">{module.icon}</div>
+                  <h3 className="font-bold mb-1">{module.title}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {module.description}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

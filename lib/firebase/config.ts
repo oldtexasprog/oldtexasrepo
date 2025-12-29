@@ -24,6 +24,23 @@ export const auth: Auth = getAuth(app);
 export const db: Firestore = getFirestore(app);
 export const storage: FirebaseStorage = getStorage(app);
 
+// Segunda instancia de Firebase App para crear usuarios sin afectar la sesión actual
+// Esto es necesario para crear repartidores desde el panel de admin
+let secondaryApp: FirebaseApp | null = null;
+
+export const getSecondaryAuth = (): Auth => {
+  if (!secondaryApp) {
+    const apps = getApps();
+    const existingSecondary = apps.find((a) => a.name === 'secondary');
+    if (existingSecondary) {
+      secondaryApp = existingSecondary;
+    } else {
+      secondaryApp = initializeApp(firebaseConfig, 'secondary');
+    }
+  }
+  return getAuth(secondaryApp);
+};
+
 // Messaging (solo en el cliente y si es soportado)
 export const getMessagingInstance = async (): Promise<Messaging | null> => {
   try {
