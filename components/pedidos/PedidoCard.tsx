@@ -96,7 +96,11 @@ export function PedidoCard({
   onCambiarEstado,
   loadingAccion,
 }: PedidoCardProps) {
-  const estadoConfig = ESTADOS_CONFIG[pedido.estado];
+  const estadoConfig = ESTADOS_CONFIG[pedido.estado] || {
+    label: 'Desconocido',
+    color: 'bg-gray-500/10 text-gray-700 border-gray-500/20',
+    icon: <Package className="h-3 w-3" />,
+  };
   const siguienteEstado = ACCIONES_POR_ESTADO[pedido.estado];
   const tiempoTranscurrido = calcularTiempoTranscurrido(
     pedido.fechaCreacion.toDate()

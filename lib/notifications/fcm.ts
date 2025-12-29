@@ -103,22 +103,33 @@ export async function getFCMToken(): Promise<string | null> {
 
     // Registrar service worker
     if ('serviceWorker' in navigator) {
-      const registration = await navigator.serviceWorker.register(
-        '/firebase-messaging-sw.js',
-        {
-          scope: '/',
-        }
-      );
-      console.log('✅ Service Worker registrado:', registration);
+      try {
+        const registration = await navigator.serviceWorker.register(
+          '/firebase-messaging-sw.js',
+          {
+            scope: '/',
+          }
+        );
+        console.log('✅ Service Worker registrado:', registration);
 
-      // Esperar a que esté activo
-      await navigator.serviceWorker.ready;
+        // Esperar a que esté activo
+        await navigator.serviceWorker.ready;
+      } catch (swError) {
+        console.warn('⚠️ No se pudo registrar Service Worker:', swError);
+        // Continuar sin service worker (FCM no funcionará pero la app sí)
+      }
+    }
+
+    // Verificar que tenemos VAPID key
+    if (!VAPID_KEY) {
+      console.warn('⚠️ VAPID key no configurada. FCM no funcionará.');
+      return null;
     }
 
     // Obtener token
     console.log('🔑 Obteniendo token FCM...');
     const token = await getToken(messaging, {
-      vapidKey: VAPID_KEY || undefined,
+      vapidKey: VAPID_KEY,
     });
 
     if (token) {

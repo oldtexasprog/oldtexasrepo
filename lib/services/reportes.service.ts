@@ -98,15 +98,15 @@ class ReportesService {
 
     // Calcular totales
     const totalVentas = pedidosValidos.reduce(
-      (sum, p) => sum + p.totales.total,
+      (sum, p) => sum + (p.totales?.total || 0),
       0
     );
     const totalEnvios = pedidosValidos.reduce(
-      (sum, p) => sum + (p.totales.envio || 0),
+      (sum, p) => sum + (p.totales?.envio || 0),
       0
     );
     const totalDescuentos = pedidosValidos.reduce(
-      (sum, p) => sum + (p.totales.descuento || 0),
+      (sum, p) => sum + (p.totales?.descuento || 0),
       0
     );
 
@@ -129,12 +129,13 @@ class ReportesService {
       efectivo: 0,
       tarjeta: 0,
       transferencia: 0,
-      uber: 0,
-      didi: 0,
+      app: 0,
     };
 
     pedidosValidos.forEach((p) => {
-      ventasPorMetodoPago[p.pago.metodo] += p.totales.total;
+      if (p.pago?.metodo && ventasPorMetodoPago.hasOwnProperty(p.pago.metodo)) {
+        ventasPorMetodoPago[p.pago.metodo] += p.totales.total || 0;
+      }
     });
 
     return {

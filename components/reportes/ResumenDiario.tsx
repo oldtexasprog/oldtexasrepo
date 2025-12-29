@@ -55,7 +55,7 @@ function MetricaCard({
           <p className="text-sm font-medium text-muted-foreground">{titulo}</p>
           <p className="mt-2 text-3xl font-bold text-foreground">{valor}</p>
 
-          {variacion !== undefined && (
+          {variacion !== undefined && typeof variacion === 'number' && !isNaN(variacion) && (
             <div
               className={`mt-2 flex items-center gap-1 text-sm font-medium ${getTendenciaColor(variacion)}`}
             >
@@ -155,7 +155,7 @@ export function ResumenDiario({ resumen, comparativa, isLoading }: Props) {
                     {estado.replace(/_/g, ' ')}
                   </span>
                   <span className="font-semibold text-foreground">
-                    {cantidad}
+                    {typeof cantidad === 'number' && !isNaN(cantidad) ? cantidad : 0}
                   </span>
                 </div>
               )
@@ -170,7 +170,7 @@ export function ResumenDiario({ resumen, comparativa, isLoading }: Props) {
           </h3>
           <div className="space-y-3">
             {Object.entries(resumen.ventasPorMetodoPago)
-              .filter(([, total]) => total > 0)
+              .filter(([, total]) => typeof total === 'number' && !isNaN(total) && total > 0)
               .map(([metodo, total]) => (
                 <div
                   key={metodo}
@@ -180,7 +180,7 @@ export function ResumenDiario({ resumen, comparativa, isLoading }: Props) {
                     {metodo}
                   </span>
                   <span className="font-semibold text-foreground">
-                    ${total.toLocaleString('es-MX', {
+                    ${(total || 0).toLocaleString('es-MX', {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
                     })}
