@@ -113,21 +113,19 @@ export function CatalogoProductos({
           Todos
         </Button>
         {categorias.map((categoria) => (
-          <>
-            <Button
-              key={categoria}
-              variant={
-                categoriaSeleccionada === categoria ? 'default' : 'outline'
-              }
-              onClick={() => setCategoriaSeleccionada(categoria)}
-              className={cn(
-                categoriaSeleccionada === categoria &&
-                'bg-red-600 hover:bg-red-700'
-              )}
-            >
-              {categoria}
-            </Button>
-          </>
+          <Button
+            key={categoria}
+            variant={
+              categoriaSeleccionada === categoria ? 'default' : 'outline'
+            }
+            onClick={() => setCategoriaSeleccionada(categoria)}
+            className={cn(
+              categoriaSeleccionada === categoria &&
+              'bg-red-600 hover:bg-red-700'
+            )}
+          >
+            {categoria}
+          </Button>
         ))}
       </div>
 
