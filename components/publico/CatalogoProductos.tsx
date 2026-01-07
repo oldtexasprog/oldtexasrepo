@@ -107,7 +107,7 @@ export function CatalogoProductos({
           variant={categoriaSeleccionada === null ? 'default' : 'outline'}
           onClick={() => setCategoriaSeleccionada(null)}
           className={cn(
-            categoriaSeleccionada === null && 'bg-red-600 hover:bg-red-700'
+            categoriaSeleccionada === null && 'bg-red-600 text-white hover:bg-red-700'
           )}
         >
           Todos

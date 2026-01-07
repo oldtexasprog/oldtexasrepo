@@ -45,10 +45,10 @@ export function CarritoPedidoPublico({
     return (
       <Card className="p-12 text-center">
         <ShoppingBag className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+        <h3 className="text-xl font-semibold text-foreground mb-2">
           Tu carrito está vacío
         </h3>
-        <p className="text-gray-500">
+        <p className="text-foreground/90">
           Agrega productos del catálogo para continuar
         </p>
       </Card>
@@ -80,16 +80,16 @@ export function CarritoPedidoPublico({
 
               {/* Información */}
               <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-lg text-gray-900 truncate">
+                <h3 className="font-semibold text-lg text-foreground truncate">
                   {item.nombre}
                 </h3>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-foreground/90">
                   ${item.precio.toFixed(2)} c/u
                 </p>
 
                 {/* Personalizaciones */}
                 {item.personalizaciones && (
-                  <div className="mt-2 text-xs text-gray-500 space-y-1">
+                  <div className="mt-2 text-xs text-foreground/90 space-y-1">
                     {item.personalizaciones.salsas &&
                       item.personalizaciones.salsas.length > 0 && (
                         <p>
@@ -163,7 +163,7 @@ export function CarritoPedidoPublico({
                   </Button>
                 </div>
 
-                <p className="font-bold text-lg text-gray-900">
+                <p className="font-bold text-lg text-foreground">
                   ${item.subtotal.toFixed(2)}
                 </p>
               </div>
@@ -175,15 +175,15 @@ export function CarritoPedidoPublico({
       {/* Resumen */}
       <div className="lg:col-span-1">
         <Card className="p-6 sticky top-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Resumen</h3>
+          <h3 className="text-xl font-bold text-foreground mb-4">Resumen</h3>
 
           <div className="space-y-3 mb-6">
-            <div className="flex justify-between text-gray-600">
+            <div className="flex justify-between text-foreground/90">
               <span>Productos ({items.length})</span>
               <span className="font-medium">${subtotal.toFixed(2)}</span>
             </div>
 
-            <div className="pt-3 border-t border-gray-200">
+            <div className="pt-3 border-t border-foreground/10">
               <div className="flex justify-between text-lg font-bold">
                 <span>Subtotal</span>
                 <span className="text-red-600">${subtotal.toFixed(2)}</span>
@@ -191,14 +191,14 @@ export function CarritoPedidoPublico({
             </div>
           </div>
 
-          <p className="text-xs text-gray-500 mb-4">
+          <p className="text-xs text-foreground/90 mb-4">
             El costo de envío se calculará en el siguiente paso según tu
             colonia
           </p>
 
           <Button
             onClick={onContinuar}
-            className="w-full gap-2 bg-red-600 hover:bg-red-700 h-12 text-lg"
+            className="w-full gap-2 bg-red-600 hover:bg-red-700 h-12 text-white text-lg"
             size="lg"
           >
             Continuar

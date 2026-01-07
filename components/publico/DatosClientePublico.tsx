@@ -179,7 +179,7 @@ export function DatosClientePublico({
         <div className="lg:col-span-2 space-y-6">
           {/* Datos personales */}
           <Card className="p-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">
+            <h3 className="text-xl font-bold text-foreground mb-4">
               1. Datos de Contacto
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -217,7 +217,7 @@ export function DatosClientePublico({
 
           {/* Dirección */}
           <Card className="p-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">
+            <h3 className="text-xl font-bold text-foreground mb-4">
               2. Dirección de Entrega
             </h3>
             <div className="space-y-4">
@@ -275,7 +275,7 @@ export function DatosClientePublico({
 
           {/* Método de pago */}
           <Card className="p-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">
+            <h3 className="text-xl font-bold text-foreground mb-4">
               3. Método de Pago
             </h3>
 
@@ -315,9 +315,9 @@ export function DatosClientePublico({
                   <RadioGroupItem value="transferencia" id="transferencia" />
                   <Smartphone className="h-5 w-5 text-purple-600" />
                   <div className="flex-1">
-                    <p className="font-medium">Transferencia</p>
+                    <p className="font-medium">MercadoPago / PayPal</p>
                     <p className="text-sm text-gray-500">
-                      Transferencia bancaria
+                      Paga con MercadoPago o PayPal
                     </p>
                   </div>
                 </label>
@@ -357,17 +357,17 @@ export function DatosClientePublico({
         {/* Resumen */}
         <div className="lg:col-span-1">
           <Card className="p-6 sticky top-6">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">
+            <h3 className="text-xl font-bold text-foreground mb-4">
               Resumen del Pedido
             </h3>
 
             <div className="space-y-3 mb-6">
-              <div className="flex justify-between text-gray-600">
+              <div className="flex justify-between text-foreground/90">
                 <span>Subtotal</span>
                 <span className="font-medium">${subtotal.toFixed(2)}</span>
               </div>
 
-              <div className="flex justify-between text-gray-600">
+              <div className="flex justify-between text-foreground/90">
                 <span>Envío</span>
                 {costoEnvio > 0 ? (
                   <span className="font-medium">${costoEnvio.toFixed(2)}</span>
@@ -376,7 +376,7 @@ export function DatosClientePublico({
                 )}
               </div>
 
-              <div className="pt-3 border-t border-gray-200">
+              <div className="pt-3 border-t border-foreground/10">
                 <div className="flex justify-between text-xl font-bold">
                   <span>Total</span>
                   <span className="text-red-600">${total.toFixed(2)}</span>
@@ -387,7 +387,7 @@ export function DatosClientePublico({
             <Button
               type="submit"
               disabled={!puedeEnviar || enviando}
-              className="w-full gap-2 bg-red-600 hover:bg-red-700 h-12 text-lg"
+              className="w-full gap-2 bg-red-600 hover:bg-red-700 h-12 text-white text-lg"
               size="lg"
             >
               {enviando ? (
@@ -415,7 +415,7 @@ export function DatosClientePublico({
               </p>
             )}
 
-            <p className="text-xs text-gray-500 text-center mt-4">
+            <p className="text-xs text-foreground/90 text-center mt-4">
               Tiempo estimado de entrega: 45-60 minutos
             </p>
           </Card>

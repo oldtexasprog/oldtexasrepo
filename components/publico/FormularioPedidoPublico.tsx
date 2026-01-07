@@ -244,7 +244,7 @@ export function FormularioPedidoPublico() {
               {cantidadProductos > 0 && (
                 <Button
                   onClick={() => setPaso('carrito')}
-                  className="gap-2 bg-red-600 hover:bg-red-700"
+                  className="gap-2 bg-red-600 text-white hover:bg-red-700"
                 >
                   <ShoppingCart className="h-5 w-5" />
                   Ver Carrito
@@ -289,7 +289,7 @@ export function FormularioPedidoPublico() {
                 <ArrowLeft className="h-4 w-4" />
                 Seguir Comprando
               </Button>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground">
                 Tu Carrito
               </h2>
             </div>
@@ -315,7 +315,7 @@ export function FormularioPedidoPublico() {
                 <ArrowLeft className="h-4 w-4" />
                 Volver al Carrito
               </Button>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground">
                 Completa tu Pedido
               </h2>
             </div>

@@ -48,7 +48,7 @@ export function Footer() {
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
             <span>Hecho con</span>
             <Heart className="h-3 w-3 text-red-500 fill-current" />
-            <span>en Piedras Negras</span>
+            <span>en Monterrey, Nuevo León</span>
           </div>
         </div>
       </div>
