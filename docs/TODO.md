@@ -535,6 +535,8 @@
 
 ---
 
+- [] cuando se hace un pedido desde /pedir tiene que haber una opcion en dashboard al momento de enviar a reparto si no existe repartidor se pueda seleccionar uno
+
 ## 🍔 FASE 11: GESTIÓN DE PRODUCTOS (MENÚ)
 
 ### Página de Gestión de Productos
