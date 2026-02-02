@@ -42,11 +42,6 @@ export function ClipPaymentButton({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { isEnabled: isClipEnabled } = useClipPaymentsFlag();
 
-  // Si el feature flag no está activo, no mostrar nada
-  if (!isClipEnabled) {
-    return null;
-  }
-
   const handleSuccess = (paymentId: string) => {
     setIsModalOpen(false);
     onPaymentSuccess?.(paymentId);
@@ -56,6 +51,11 @@ export function ClipPaymentButton({
     onPaymentError?.(error);
     // No cerramos el modal para permitir reintentar
   };
+
+  // Si el feature flag no está activo, no mostrar nada
+  if (!isClipEnabled) {
+    return null;
+  }
 
   return (
     <>

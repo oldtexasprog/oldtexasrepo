@@ -33,7 +33,7 @@ export interface DatosClienteForm {
   colonia: string;
   coloniaId: string;
   referencia: string;
-  metodoPago: 'efectivo' | 'tarjeta' | 'transferencia' | null;
+  metodoPago: 'efectivo' | 'tarjeta' | 'transferencia' | 'tarjeta_linea' | null;
   montoPagado: number;
 }
 

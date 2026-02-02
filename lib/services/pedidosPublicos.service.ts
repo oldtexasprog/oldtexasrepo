@@ -2,7 +2,8 @@
  * Servicio de Pedidos Públicos
  * Old Texas BBQ - CRM
  *
- * Permite crear pedidos desde el formulario web público sin autenticación
+ * Permite crear pedidos desde el formulario web público
+ * Usa autenticación anónima temporal para tener permisos de escritura
  */
 
 import {
@@ -15,7 +16,8 @@ import {
   writeBatch,
   doc,
 } from 'firebase/firestore';
-import { db } from '@/lib/firebase/config';
+import { signInAnonymously } from 'firebase/auth';
+import { db, auth } from '@/lib/firebase/config';
 import { NuevoPedido, ItemPedido } from '@/lib/types/firestore';
 import { notificacionesService } from './notificaciones.service';
 
@@ -59,13 +61,19 @@ class PedidosPublicosService {
   }
 
   /**
-   * Crea un pedido público completo (sin requerir autenticación)
+   * Crea un pedido público completo
+   * Usa autenticación anónima temporal para tener permisos de escritura
    */
   async crearPedidoPublico(
     pedidoData: Omit<NuevoPedido, 'numeroPedido' | 'turnoId'>,
     items: Omit<ItemPedido, 'id'>[]
   ): Promise<{ pedidoId: string; numeroPedido: number }> {
     try {
+      // 0. Autenticación anónima temporal para tener permisos
+      if (!auth.currentUser) {
+        await signInAnonymously(auth);
+      }
+
       // 1. Obtener el número de pedido del día
       const numeroPedido = await this.getNextNumeroPedido();
 

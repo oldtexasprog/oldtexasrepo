@@ -53,11 +53,6 @@ export function ClipPaymentLinkButton({
   const { state, createPaymentLink } = useClipPayment();
   const { isEnabled: isClipEnabled } = useClipPaymentsFlag();
 
-  // Si el feature flag no está activo, no mostrar el botón
-  if (!isClipEnabled) {
-    return null;
-  }
-
   const handleCreateLink = useCallback(async () => {
     // Calcular fecha de expiración
     const expiresAt = new Date();
@@ -101,6 +96,11 @@ export function ClipPaymentLinkButton({
     setPaymentLink(null);
     setCopied(false);
   }, []);
+
+  // Si el feature flag no está activo, no mostrar el botón
+  if (!isClipEnabled) {
+    return null;
+  }
 
   return (
     <>

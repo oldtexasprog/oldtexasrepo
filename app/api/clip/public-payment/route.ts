@@ -1,12 +1,36 @@
 /**
- * API Route: Procesar Pago con Clip
- * POST /api/clip/payment
+ * API Route: Procesar Pago Público con Clip
+ * POST /api/clip/public-payment
+ *
+ * Esta ruta permite pagos desde el formulario público /pedir
+ * sin requerir autenticación del usuario
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { isSandbox, CLIP_TEST_CARDS } from '@/lib/clip';
-import { getSession } from '@/lib/auth/session';
 import crypto from 'crypto';
+
+// Rate limiting simple en memoria (en producción usar Redis)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT = 5; // máximo 5 intentos
+const RATE_LIMIT_WINDOW = 60 * 1000; // por minuto
+
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const record = rateLimitMap.get(ip);
+
+  if (!record || now > record.resetTime) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return true;
+  }
+
+  if (record.count >= RATE_LIMIT) {
+    return false;
+  }
+
+  record.count++;
+  return true;
+}
 
 // Simular respuesta de pago en sandbox
 function simulateSandboxPayment(
@@ -17,7 +41,8 @@ function simulateSandboxPayment(
     expMonth: number;
     expYear: number;
   },
-  amount: number
+  amount: number,
+  description: string
 ) {
   const { cardNumber, cardType, lastFour } = tokenPayload;
 
@@ -36,16 +61,12 @@ function simulateSandboxPayment(
       id: paymentId,
       status: 'declined',
       amount,
-      currency: 'MXN',
-      description: '',
       lastFourDigits: lastFour,
       cardType,
-      authorizationCode: undefined,
+      authorizationCode: null,
       requires3ds: false,
-      redirectUrl: undefined,
+      redirectUrl: null,
       errorMessage: 'Tarjeta rechazada por el banco emisor',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     };
   }
 
@@ -55,64 +76,56 @@ function simulateSandboxPayment(
       id: paymentId,
       status: 'declined',
       amount,
-      currency: 'MXN',
-      description: '',
       lastFourDigits: lastFour,
       cardType,
-      authorizationCode: undefined,
+      authorizationCode: null,
       requires3ds: false,
-      redirectUrl: undefined,
+      redirectUrl: null,
       errorMessage: 'Fondos insuficientes',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     };
   }
 
-  // Requiere 3DS
+  // Requiere 3DS (simulado como aprobado para simplificar pruebas)
   if (cardNumber === visa3ds) {
     return {
       id: paymentId,
       status: 'approved',
       amount,
-      currency: 'MXN',
-      description: '',
       lastFourDigits: lastFour,
       cardType,
       authorizationCode: authCode,
-      requires3ds: false,
-      redirectUrl: undefined,
-      errorMessage: undefined,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      requires3ds: false, // Simulamos que 3DS pasó
+      redirectUrl: null,
+      errorMessage: null,
     };
   }
 
-  // Tarjeta aprobada (default)
+  // Tarjeta aprobada (default para tarjetas de prueba válidas)
   return {
     id: paymentId,
     status: 'approved',
     amount,
-    currency: 'MXN',
-    description: '',
     lastFourDigits: lastFour,
     cardType,
     authorizationCode: authCode,
     requires3ds: false,
-    redirectUrl: undefined,
-    errorMessage: undefined,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    redirectUrl: null,
+    errorMessage: null,
   };
 }
 
 export async function POST(request: NextRequest) {
   try {
-    // Verificar autenticación
-    const session = await getSession();
-    if (!session) {
+    // Obtener IP para rate limiting
+    const ip = request.headers.get('x-forwarded-for') ||
+               request.headers.get('x-real-ip') ||
+               'unknown';
+
+    // Verificar rate limit
+    if (!checkRateLimit(ip)) {
       return NextResponse.json(
-        { error: 'No autorizado' },
-        { status: 401 }
+        { error: 'Demasiados intentos. Espera un momento antes de intentar de nuevo.' },
+        { status: 429 }
       );
     }
 
@@ -120,11 +133,30 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     // Validar campos requeridos
-    const { amount, cardToken, description } = body;
+    const {
+      amount,
+      cardToken,
+      description,
+    } = body;
 
     if (!amount || typeof amount !== 'number') {
       return NextResponse.json(
         { error: 'El monto es requerido y debe ser un número' },
+        { status: 400 }
+      );
+    }
+
+    // Validar monto mínimo y máximo
+    if (amount < 10) {
+      return NextResponse.json(
+        { error: 'El monto mínimo es $10.00 MXN' },
+        { status: 400 }
+      );
+    }
+
+    if (amount > 50000) {
+      return NextResponse.json(
+        { error: 'El monto máximo para pagos en línea es $50,000.00 MXN' },
         { status: 400 }
       );
     }
@@ -147,8 +179,7 @@ export async function POST(request: NextRequest) {
     if (isSandbox()) {
       try {
         const tokenPayload = JSON.parse(Buffer.from(cardToken, 'base64').toString('utf-8'));
-        const payment = simulateSandboxPayment(tokenPayload, amount);
-        payment.description = description;
+        const payment = simulateSandboxPayment(tokenPayload, amount, description);
 
         return NextResponse.json({
           success: payment.status === 'approved',
@@ -163,16 +194,17 @@ export async function POST(request: NextRequest) {
     }
 
     // En producción, usar el servicio real de Clip
+    // TODO: Implementar llamada real a Clip API cuando esté en producción
     return NextResponse.json(
       { error: 'Pagos en producción no configurados aún' },
       { status: 501 }
     );
 
   } catch (error) {
-    console.error('Error procesando pago Clip:', error);
+    console.error('Error procesando pago público Clip:', error);
 
     return NextResponse.json(
-      { error: 'Error interno del servidor' },
+      { error: 'Error procesando el pago. Intenta de nuevo.' },
       { status: 500 }
     );
   }

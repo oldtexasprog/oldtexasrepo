@@ -9,11 +9,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { SelectorColoniaPublico } from './SelectorColoniaPublico';
 import { DatosClienteForm, ItemCarritoPublico } from './FormularioPedidoPublico';
-import { Loader2, CreditCard, Banknote, Smartphone } from 'lucide-react';
+import { ClipPublicPaymentModal } from '@/components/payments/ClipPublicPaymentModal';
+import { Loader2, CreditCard, Banknote, Smartphone, Shield, Lock } from 'lucide-react';
 import { toast } from 'sonner';
 import { pedidosPublicosService } from '@/lib/services/pedidosPublicos.service';
-import { ItemPedido } from '@/lib/types/firestore';
-import { Timestamp } from 'firebase/firestore';
 
 interface DatosClientePublicoProps {
   datosCliente: DatosClienteForm;
@@ -39,6 +38,9 @@ export function DatosClientePublico({
   onFinalizarPedido,
 }: DatosClientePublicoProps) {
   const [enviando, setEnviando] = useState(false);
+  const [showClipModal, setShowClipModal] = useState(false);
+  const [pagoEnLineaCompletado, setPagoEnLineaCompletado] = useState(false);
+  const [paymentId, setPaymentId] = useState<string | null>(null);
 
   const puedeEnviar = useMemo(() => {
     const validacionesBasicas =
@@ -56,21 +58,34 @@ export function DatosClientePublico({
       return datosCliente.montoPagado >= total;
     }
 
-    return true;
-  }, [datosCliente, carrito, total]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!puedeEnviar) {
-      toast.error('Por favor completa todos los campos');
-      return;
+    // Si es tarjeta en línea, debe estar completado el pago
+    if (datosCliente.metodoPago === 'tarjeta_linea') {
+      return pagoEnLineaCompletado;
     }
 
+    return true;
+  }, [datosCliente, carrito, total, pagoEnLineaCompletado]);
+
+  // Validar si puede mostrar botón de pago en línea
+  const puedeIniciarPago = useMemo(() => {
+    return (
+      datosCliente.nombre &&
+      datosCliente.telefono &&
+      datosCliente.direccion &&
+      datosCliente.coloniaId &&
+      datosCliente.metodoPago === 'tarjeta_linea' &&
+      carrito.length > 0 &&
+      total >= 10
+    );
+  }, [datosCliente, carrito, total]);
+
+  // Función para crear el pedido directamente desde el cliente
+  const crearPedido = async (clipPaymentId?: string) => {
     try {
       setEnviando(true);
 
       // Preparar datos del pedido
+      const esPagoEnLinea = datosCliente.metodoPago === 'tarjeta_linea';
       const montoPagadoFinal =
         datosCliente.metodoPago === 'efectivo'
           ? datosCliente.montoPagado
@@ -97,20 +112,20 @@ export function DatosClientePublico({
           total,
         },
         pago: {
-          metodo: datosCliente.metodoPago!,
+          metodo: esPagoEnLinea ? 'tarjeta' : datosCliente.metodoPago!,
           requiereCambio:
             datosCliente.metodoPago === 'efectivo' && cambioFinal > 0,
           montoRecibido: montoPagadoFinal,
           cambio: cambioFinal,
-          pagoAdelantado: false,
+          pagoAdelantado: esPagoEnLinea,
+          ...(clipPaymentId && { referenciaPago: clipPaymentId }),
         },
-        horaRecepcion: Timestamp.now(),
         creadoPor: 'sistema-web',
         cancelado: false,
       };
 
       // Preparar items
-      const items: Omit<ItemPedido, 'id'>[] = carrito.map((item) => {
+      const items = carrito.map((item) => {
         const itemPedido: any = {
           productoId: item.productoId,
           productoNombre: item.nombre,
@@ -153,23 +168,60 @@ export function DatosClientePublico({
         return itemPedido;
       });
 
-      // Crear pedido público
-      const { pedidoId, numeroPedido } =
-        await pedidosPublicosService.crearPedidoPublico(pedidoData, items);
+      // Crear pedido usando el servicio directamente (cliente)
+      const { pedidoId, numeroPedido } = await pedidosPublicosService.crearPedidoPublico(
+        pedidoData as any,
+        items
+      );
 
       console.log('Pedido público creado:', pedidoId);
       toast.success('¡Pedido recibido con éxito!');
 
       // Llamar al callback
       onFinalizarPedido(pedidoId, numeroPedido);
+      return true;
     } catch (error: any) {
       console.error('Error enviando pedido:', error);
       toast.error(
         error?.message || 'Error al enviar el pedido. Intenta nuevamente.'
       );
+      return false;
     } finally {
       setEnviando(false);
     }
+  };
+
+  // Handler para pago exitoso con Clip - crea el pedido automáticamente
+  const handleClipPaymentSuccess = async (clipPaymentId: string) => {
+    setPaymentId(clipPaymentId);
+    setPagoEnLineaCompletado(true);
+    setShowClipModal(false);
+
+    // Crear el pedido automáticamente después del pago exitoso
+    toast.success('Pago realizado con éxito. Procesando tu pedido...');
+    await crearPedido(clipPaymentId);
+  };
+
+  // Handler para error en pago
+  const handleClipPaymentError = (error: string) => {
+    toast.error(`Error en el pago: ${error}`);
+    setPagoEnLineaCompletado(false);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Si es pago en línea y ya se completó, el pedido ya fue creado
+    if (datosCliente.metodoPago === 'tarjeta_linea' && pagoEnLineaCompletado) {
+      return;
+    }
+
+    if (!puedeEnviar) {
+      toast.error('Por favor completa todos los campos');
+      return;
+    }
+
+    await crearPedido(paymentId || undefined);
   };
 
   return (
@@ -281,43 +333,68 @@ export function DatosClientePublico({
 
             <RadioGroup
               value={datosCliente.metodoPago || ''}
-              onValueChange={(value) =>
+              onValueChange={(value) => {
+                // Resetear estado de pago en línea si cambia de método
+                if (value !== 'tarjeta_linea') {
+                  setPagoEnLineaCompletado(false);
+                  setPaymentId(null);
+                }
                 onDatosChange({
                   ...datosCliente,
-                  metodoPago: value as 'efectivo' | 'tarjeta' | 'transferencia',
-                })
-              }
+                  metodoPago: value as 'efectivo' | 'tarjeta' | 'transferencia' | 'tarjeta_linea',
+                });
+              }}
             >
               <div className="space-y-3">
-                <label className="flex items-center gap-3 p-4 border rounded-lg cursor-pointer ">
+                {/* Pago en línea con tarjeta - DESTACADO */}
+                <label className="flex items-center gap-3 p-4 border-2 border-primary rounded-lg cursor-pointer bg-primary/5 hover:bg-primary/10 transition-colors">
+                  <RadioGroupItem value="tarjeta_linea" id="tarjeta_linea" />
+                  <div className="relative">
+                    <CreditCard className="h-5 w-5 text-primary" />
+                    <Shield className="h-3 w-3 text-green-500 absolute -bottom-1 -right-1" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium text-primary">Pagar ahora con tarjeta</p>
+                      <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
+                        Recomendado
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Pago seguro en línea - Visa, Mastercard, Amex
+                    </p>
+                  </div>
+                </label>
+
+                <label className="flex items-center gap-3 p-4 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
                   <RadioGroupItem value="efectivo" id="efectivo" />
                   <Banknote className="h-5 w-5 text-green-600" />
                   <div className="flex-1">
                     <p className="font-medium">Efectivo</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-muted-foreground">
                       Paga al recibir tu pedido
                     </p>
                   </div>
                 </label>
 
-                <label className="flex items-center gap-3 p-4 border rounded-lg cursor-pointer ">
+                <label className="flex items-center gap-3 p-4 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
                   <RadioGroupItem value="tarjeta" id="tarjeta" />
                   <CreditCard className="h-5 w-5 text-blue-600" />
                   <div className="flex-1">
-                    <p className="font-medium">Tarjeta</p>
-                    <p className="text-sm text-gray-500">
-                      Paga con tarjeta al recibir
+                    <p className="font-medium">Tarjeta al recibir</p>
+                    <p className="text-sm text-muted-foreground">
+                      Terminal en el domicilio
                     </p>
                   </div>
                 </label>
 
-                <label className="flex items-center gap-3 p-4 border rounded-lg cursor-pointer ">
+                <label className="flex items-center gap-3 p-4 border rounded-lg cursor-pointer hover:bg-muted/50 transition-colors">
                   <RadioGroupItem value="transferencia" id="transferencia" />
                   <Smartphone className="h-5 w-5 text-purple-600" />
                   <div className="flex-1">
-                    <p className="font-medium">MercadoPago / PayPal</p>
-                    <p className="text-sm text-gray-500">
-                      Paga con MercadoPago o PayPal
+                    <p className="font-medium">Transferencia</p>
+                    <p className="text-sm text-muted-foreground">
+                      Envía comprobante por WhatsApp
                     </p>
                   </div>
                 </label>
@@ -348,6 +425,80 @@ export function DatosClientePublico({
                   <p className="text-sm text-green-600 mt-2">
                     Tu cambio será: <strong>${cambio.toFixed(2)}</strong>
                   </p>
+                )}
+              </div>
+            )}
+
+            {/* Sección de pago en línea con Clip */}
+            {datosCliente.metodoPago === 'tarjeta_linea' && (
+              <div className="mt-4 space-y-4">
+                {pagoEnLineaCompletado ? (
+                  <div className="p-4 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                        <Shield className="h-5 w-5 text-green-600" />
+                      </div>
+                      <div>
+                        <p className="font-semibold text-green-700 dark:text-green-400">
+                          Pago completado
+                        </p>
+                        <p className="text-sm text-green-600 dark:text-green-500">
+                          Tu pago de ${total.toFixed(2)} fue procesado exitosamente
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <div className="p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg">
+                      <div className="flex items-start gap-3">
+                        <Lock className="h-5 w-5 text-blue-600 mt-0.5" />
+                        <div className="text-sm">
+                          <p className="font-medium text-blue-700 dark:text-blue-400">
+                            Pago seguro con Clip
+                          </p>
+                          <p className="text-blue-600 dark:text-blue-500">
+                            Tus datos están protegidos con encriptación de nivel bancario
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <Button
+                      type="button"
+                      onClick={() => setShowClipModal(true)}
+                      disabled={!puedeIniciarPago}
+                      className="w-full h-12 gap-2 bg-primary hover:bg-primary/90"
+                      size="lg"
+                    >
+                      <CreditCard className="h-5 w-5" />
+                      Pagar ${total.toFixed(2)} con tarjeta
+                    </Button>
+
+                    {!puedeIniciarPago && (
+                      <p className="text-xs text-muted-foreground text-center">
+                        Completa tus datos de contacto y dirección para continuar
+                      </p>
+                    )}
+
+                    <div className="flex items-center justify-center gap-4 pt-2">
+                      <img
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/100px-Visa_Inc._logo.svg.png"
+                        alt="Visa"
+                        className="h-6 object-contain opacity-60"
+                      />
+                      <img
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/100px-Mastercard-logo.svg.png"
+                        alt="Mastercard"
+                        className="h-6 object-contain opacity-60"
+                      />
+                      <img
+                        src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/American_Express_logo_%282018%29.svg/100px-American_Express_logo_%282018%29.svg.png"
+                        alt="Amex"
+                        className="h-6 object-contain opacity-60"
+                      />
+                    </div>
+                  </div>
                 )}
               </div>
             )}
@@ -411,7 +562,10 @@ export function DatosClientePublico({
                       : datosCliente.metodoPago === 'efectivo' &&
                           datosCliente.montoPagado < total
                         ? 'Ingresa con cuánto vas a pagar'
-                        : 'Completa todos los campos'}
+                        : datosCliente.metodoPago === 'tarjeta_linea' &&
+                            !pagoEnLineaCompletado
+                          ? 'Completa el pago con tarjeta'
+                          : 'Completa todos los campos'}
               </p>
             )}
 
@@ -421,6 +575,18 @@ export function DatosClientePublico({
           </Card>
         </div>
       </div>
+
+      {/* Modal de pago público con Clip */}
+      <ClipPublicPaymentModal
+        isOpen={showClipModal}
+        onClose={() => setShowClipModal(false)}
+        amount={total}
+        description={`Pedido Old Texas BBQ - ${carrito.length} producto(s)`}
+        customerPhone={datosCliente.telefono}
+        onPaymentSuccess={handleClipPaymentSuccess}
+        onPaymentError={handleClipPaymentError}
+        showInstallments={total >= 300}
+      />
     </form>
   );
 }

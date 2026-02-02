@@ -17,7 +17,12 @@ const PUBLIC_PATHS: RegExp[] = [
   /^\/login(?:\/)??$/,
   /^\/unauthorized(?:\/)??$/,
   /^\/public\//,
+  /^\/pedir(?:\/)??$/, // Formulario público de pedidos
+  /^\/test-clip(?:\/)??$/, // Página de pruebas Clip
   /^\/api\/auth\//, // API de auth es pública
+  /^\/api\/clip\/tokenize/, // API de tokenización Clip (pública para sandbox)
+  /^\/api\/clip\/public-payment/, // API de pago público Clip
+  /^\/api\/pedidos\/publico/, // API de creación de pedidos públicos
 ];
 
 // Rutas de API que requieren autenticación
