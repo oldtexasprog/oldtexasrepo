@@ -1,4 +1,4 @@
-import { FormularioPedidoPublico } from '@/components/publico/FormularioPedidoPublico';
+import { FormularioPedidoPublicoMejorado } from '@/components/publico/FormularioPedidoPublicoMejorado';
 import { Metadata } from 'next';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Phone, MapPin } from 'lucide-react';
@@ -40,7 +40,7 @@ export default function PedirPage() {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        <FormularioPedidoPublico />
+        <FormularioPedidoPublicoMejorado />
       </main>
 
       {/* Footer */}
