@@ -47,6 +47,7 @@ export const CANALES_VENTA: Record<CanalVenta, { label: string; icon: string }> 
 export const TIPOS_TURNO: Record<TipoTurno, { label: string; icon: string }> = {
   matutino: { label: 'Matutino', icon: '🌅' },
   vespertino: { label: 'Vespertino', icon: '🌆' },
+  nocturno: { label: 'Nocturno', icon: '🌙' },
 };
 
 // Configuración de paginación

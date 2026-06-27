@@ -353,6 +353,57 @@ service cloud.firestore {
     }
 
     // ========================================================================
+    // COLECCIÓN: MOVIMIENTOSCAJA (inmutable — no update, no delete)
+    // ========================================================================
+
+    match /MovimientosCaja/{movId} {
+      // LEER
+      allow read: if isAuthenticated() && isActive() &&
+                     hasAnyRole(['admin', 'encargado', 'cajera']);
+
+      // CREAR — cajera registra, managers también
+      allow create: if isActive() &&
+                       hasAnyRole(['admin', 'encargado', 'cajera']) &&
+                       request.resource.data.usuario_id == request.auth.uid;
+
+      // ACTUALIZAR y ELIMINAR — bloqueados para todos (audit trail)
+      allow update, delete: if false;
+    }
+
+    // ========================================================================
+    // COLECCIÓN: CIERRESCAJA (inmutable — no update, no delete)
+    // ========================================================================
+
+    match /CierresCaja/{cierreId} {
+      // LEER
+      allow read: if isAuthenticated() && isActive() &&
+                     hasAnyRole(['admin', 'encargado', 'cajera']);
+
+      // CREAR — solo una vez por turno (validado en servicio)
+      allow create: if isActive() &&
+                       hasAnyRole(['admin', 'encargado', 'cajera']) &&
+                       request.resource.data.usuario_id == request.auth.uid;
+
+      // ACTUALIZAR y ELIMINAR — bloqueados para todos (audit trail)
+      allow update, delete: if false;
+    }
+
+    // ========================================================================
+    // COLECCIÓN: CONCEPTOSFINANCIEROS
+    // ========================================================================
+
+    match /ConceptosFinancieros/{conceptoId} {
+      // LEER — cualquier usuario activo
+      allow read: if isAuthenticated() && isActive();
+
+      // CREAR, ACTUALIZAR — solo managers
+      allow create, update: if isManager() && isActive();
+
+      // ELIMINAR — solo admin
+      allow delete: if isAdmin();
+    }
+
+    // ========================================================================
     // COLECCIÓN: COLONIAS
     // ========================================================================
 

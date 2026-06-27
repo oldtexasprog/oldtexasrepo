@@ -12,15 +12,13 @@ import {
   ChefHat,
   Truck,
   Users,
-  Clock,
-  MapPin,
-  FileText,
   DollarSign,
   ChevronLeft,
   Menu,
-  Package,
   UtensilsCrossed,
   PackageOpen,
+  BarChart3,
+  Wallet,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -30,9 +28,13 @@ interface NavItem {
   href: string;
   icon: React.ElementType;
   roles: Rol[];
+  soon?: boolean; // módulo en desarrollo — no navega, solo visual
 }
 
+// ── Módulos activos del sistema ─────────────────────────────────────────────
+// Orden: operativos diarios primero, luego financieros/gerenciales
 const navigation: NavItem[] = [
+  // ── Operación ──────────────────────────────────────────────────────────────
   {
     title: 'Dashboard',
     href: '/dashboard',
@@ -64,46 +66,38 @@ const navigation: NavItem[] = [
     roles: ['admin', 'encargado'],
   },
   {
-    title: 'Turnos',
-    href: '/turnos',
-    icon: Clock,
-    roles: ['admin', 'encargado', 'cajera'],
-  },
-  {
-    title: 'Corte de Caja',
-    href: '/caja/corte',
-    icon: DollarSign,
-    roles: ['admin', 'encargado', 'cajera'],
-  },
-  {
     title: 'Productos',
     href: '/productos',
     icon: UtensilsCrossed,
     roles: ['admin', 'encargado'],
+  },
+  // ── Financiero / 2.0 ───────────────────────────────────────────────────────
+  {
+    title: 'Caja',
+    href: '/caja',
+    icon: DollarSign,
+    roles: ['admin', 'encargado', 'cajera'],
   },
   {
     title: 'Inventario',
     href: '/inventario',
     icon: PackageOpen,
     roles: ['admin', 'encargado'],
+    soon: true,
   },
   {
-    title: 'Colonias',
-    href: '/colonias',
-    icon: MapPin,
+    title: 'Reportes',
+    href: '/reportes',
+    icon: BarChart3,
     roles: ['admin', 'encargado'],
+    soon: true,
   },
   {
-    title: 'Bitácora',
-    href: '/bitacora',
-    icon: FileText,
+    title: 'Nómina',
+    href: '/nomina',
+    icon: Wallet,
     roles: ['admin', 'encargado'],
-  },
-  {
-    title: 'Componentes',
-    href: '/componentes',
-    icon: Package,
-    roles: ['admin'],
+    soon: true,
   },
 ];
 
@@ -187,29 +181,69 @@ export function Sidebar({ isOpen, onClose, isCollapsed, onCollapsedChange }: Sid
           {/* Navegación */}
           <ScrollArea className="flex-1 px-3 py-4">
             <nav className="space-y-1">
-              {filteredNavigation.map((item) => {
+              {/* Separador antes de la sección financiera */}
+              {!isCollapsed && (
+                <p className="px-3 pt-1 pb-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+                  Operación
+                </p>
+              )}
+
+              {filteredNavigation.map((item, idx) => {
                 const Icon = item.icon;
-                const isActive = pathname === item.href;
+                const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+
+                // Insertar label de sección antes de "Caja"
+                const esPrimerFinanciero = item.href === '/caja';
 
                 return (
-                  <Link key={item.href} href={item.href} onClick={onClose}>
-                    <div
-                      className={cn(
-                        'flex items-center gap-3 px-3 py-2 rounded-lg transition-colors',
-                        'hover:bg-accent hover:text-accent-foreground',
-                        isActive
-                          ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-                          : 'text-muted-foreground'
-                      )}
-                    >
-                      <Icon className="h-5 w-5 shrink-0" />
-                      {!isCollapsed && (
-                        <span className="font-medium text-sm">
-                          {item.title}
-                        </span>
-                      )}
-                    </div>
-                  </Link>
+                  <div key={item.href}>
+                    {esPrimerFinanciero && !isCollapsed && (
+                      <p className="px-3 pt-3 pb-2 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+                        Financiero
+                      </p>
+                    )}
+                    {esPrimerFinanciero && isCollapsed && (
+                      <div className="border-t border-border my-2" />
+                    )}
+
+                    {item.soon ? (
+                      // Item deshabilitado — próximamente
+                      <div
+                        className={cn(
+                          'flex items-center gap-3 px-3 py-2 rounded-lg',
+                          'opacity-40 cursor-not-allowed select-none text-muted-foreground'
+                        )}
+                        title={`${item.title} — próximamente`}
+                      >
+                        <Icon className="h-5 w-5 shrink-0" />
+                        {!isCollapsed && (
+                          <div className="flex items-center justify-between flex-1 min-w-0">
+                            <span className="font-medium text-sm">{item.title}</span>
+                            <span className="text-[9px] font-semibold uppercase tracking-wide bg-muted px-1.5 py-0.5 rounded">
+                              Soon
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <Link href={item.href} onClick={onClose}>
+                        <div
+                          className={cn(
+                            'flex items-center gap-3 px-3 py-2 rounded-lg transition-colors',
+                            'hover:bg-accent hover:text-accent-foreground',
+                            isActive
+                              ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+                              : 'text-muted-foreground'
+                          )}
+                        >
+                          <Icon className="h-5 w-5 shrink-0" />
+                          {!isCollapsed && (
+                            <span className="font-medium text-sm">{item.title}</span>
+                          )}
+                        </div>
+                      </Link>
+                    )}
+                  </div>
                 );
               })}
             </nav>

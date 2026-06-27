@@ -42,7 +42,7 @@ export type EstadoReparto =
   | 'en_camino'
   | 'entregado';
 
-export type TipoTurno = 'matutino' | 'vespertino';
+export type TipoTurno = 'matutino' | 'vespertino' | 'nocturno';
 
 export type EstadoTurno = 'abierto' | 'cerrado';
 
@@ -426,6 +426,12 @@ export interface CorteCaja {
   observaciones?: string;
   cerradoPor: string;
   horaCierre: Timestamp;
+  /** Justificación del descuadre — requerida para |diferencia| >= $50 */
+  justificacion?: string;
+  /** ID del usuario que registró la justificación */
+  justificadoPor?: string;
+  /** Timestamp en que se justificó */
+  fechaJustificacion?: Timestamp;
 }
 
 export interface Turno {
@@ -674,4 +680,61 @@ export const LABELS_ROL: Record<Rol, string> = {
   cajera: 'Cajera',
   cocina: 'Cocina',
   repartidor: 'Repartidor',
+};
+
+// ============================================================================
+// MÓDULO CAJA 2.0 — Colecciones independientes
+// ============================================================================
+
+export type TipoMovimientoCaja = 'ingreso' | 'egreso';
+
+// ============================================================================
+// COLECCIÓN: MovimientosCaja
+// ============================================================================
+
+/**
+ * Representa un movimiento de dinero dentro de un turno de caja.
+ * Cada ingreso o egreso queda registrado con referencia al turno activo.
+ */
+export interface MovimientoCaja {
+  id: string;
+  turno_id: string;
+  tipo: TipoMovimientoCaja;
+  monto: number;
+  concepto: string;        // etiqueta estandarizada (referencia a ConceptosFinancieros)
+  descripcion?: string;
+  fecha: Timestamp;
+  usuario_id: string;
+}
+
+export type NuevoMovimientoCaja = Omit<MovimientoCaja, 'id'>;
+
+// ============================================================================
+// COLECCIÓN: CierresCaja
+// ============================================================================
+
+/**
+ * Registro del cierre de un turno: conciliación entre efectivo esperado y real.
+ * Se crea una sola vez por turno al momento de cerrarlo.
+ */
+export interface CierreCaja {
+  id: string;
+  turno_id: string;
+  monto_esperado: number;
+  monto_real: number;
+  diferencia: number;      // monto_real - monto_esperado (negativo = faltante)
+  notas?: string;
+  fecha: Timestamp;
+  usuario_id: string;      // quien realizó el cierre
+}
+
+export type NuevoCierreCaja = Omit<CierreCaja, 'id'>;
+
+// ============================================================================
+// HELPERS CAJA 2.0
+// ============================================================================
+
+export const LABELS_TIPO_MOVIMIENTO: Record<TipoMovimientoCaja, string> = {
+  ingreso: 'Ingreso',
+  egreso: 'Egreso',
 };
