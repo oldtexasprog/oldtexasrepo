@@ -1,13 +1,13 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { ArrowDownCircle, ArrowUpCircle, Loader2 } from 'lucide-react';
 import { useRegistrarMovimiento } from '@/lib/hooks/useCaja';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { useRolGuard } from '@/lib/hooks/useRolGuard';
 import { useConceptosPorTipo } from '@/lib/hooks/useConceptosFinancieros';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { CurrencyInput } from '@/components/ui/currency-input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -48,7 +48,9 @@ export function RegistroMovimiento({ turnoId }: RegistroMovimientoProps) {
   const {
     register,
     handleSubmit,
+    control,
     setValue,
+    setFocus,
     watch,
     reset,
     formState: { errors },
@@ -95,7 +97,12 @@ export function RegistroMovimiento({ turnoId }: RegistroMovimientoProps) {
           toast.success(
             data.tipo === 'ingreso' ? 'Ingreso registrado' : 'Egreso registrado'
           );
-          reset({ tipo: data.tipo, monto: 0, concepto: '', descripcion: '' });
+          // Mantenemos tipo y concepto: en la práctica se registran varios
+          // movimientos seguidos del mismo concepto (ej. "Venta mostrador").
+          // Solo se limpian monto y descripción, y el foco vuelve al monto
+          // para encadenar el siguiente registro sin usar el mouse.
+          reset({ tipo: data.tipo, monto: 0, concepto: data.concepto, descripcion: '' });
+          setFocus('monto');
         },
         onError: (err) =>
           toast.error(err instanceof Error ? err.message : 'Error al registrar movimiento'),
@@ -141,24 +148,23 @@ export function RegistroMovimiento({ turnoId }: RegistroMovimientoProps) {
           {/* Monto */}
           <div className="space-y-1">
             <Label htmlFor="monto">Monto ($)</Label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
-                $
-              </span>
-              <Input
-                id="monto"
-                type="number"
-                step="0.01"
-                min="0.01"
-                placeholder="0.00"
-                className="pl-7"
-                {...register('monto', {
-                  required: 'El monto es requerido',
-                  valueAsNumber: true,
-                  min: { value: 0.01, message: 'El monto debe ser mayor a 0' },
-                })}
-              />
-            </div>
+            <Controller
+              name="monto"
+              control={control}
+              rules={{
+                required: 'El monto es requerido',
+                min: { value: 0.01, message: 'El monto debe ser mayor a 0' },
+              }}
+              render={({ field }) => (
+                <CurrencyInput
+                  id="monto"
+                  ref={field.ref}
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  onBlur={field.onBlur}
+                />
+              )}
+            />
             {errors.monto && (
               <p className="text-sm text-destructive">{errors.monto.message}</p>
             )}

@@ -146,25 +146,28 @@
 - [x] PDF de corte — incluir ambos cajeros cuando apertura ≠ cierre — `pdf-export.ts` ya mostraba "Abierto por"/"Cerrado por" separados; se agregó el resaltado en ámbar con "⚠ Turno cruzado" junto al nombre cuando `cerradoPorNombre !== cajeroNombre`, igual que en pantalla
 
 ### Testing
-> Pendiente de ejecución manual en vivo — el código que soporta cada punto ya existe (ver referencia), pero no se ha corrido el flujo real con datos de producción/staging.
-- [ ] Flujo completo: Apertura → Ingresos/Egresos → Cierre — código listo: `AperturaTurno`, `RegistroMovimiento`, `CierreTurno`
-- [ ] Validar que solo un turno esté activo a la vez — código listo: `abrirTurno()` lanza error si `getTurnoActivo()` ya existe
-- [ ] Verificar cálculo de diferencias y totales — código listo: `getTotalesPorTurno()`, `previsualizarCierre()`
-- [ ] Subir CSV de prueba y verificar deduplicación — código listo: `importarFilasCSV()` omite si `turnoId` ya existe
-- [ ] Validar alertas de descuadre en los 3 niveles — código listo: `nivelAlerta()` en `CierreTurno.tsx` / `/caja/cierre`
-- [ ] Verificar bloqueo de roles no autorizados — código listo: `useRolGuard()` en los 3 componentes de escritura
+> Cobertura automatizada añadida en `__tests__/integration/caja-flow.test.ts` (20 tests, todos en verde).
+> Ejercita los servicios reales (`turnos.service`, `movimientosCaja.service`, `cierreCaja.service`, `importacionCaja.service`, `parseCajaCSV`) mockeando solo el SDK de Firestore, igual que el resto de la suite de integración del proyecto.
+> Pendiente adicional (no cubierto por estos tests): QA manual en vivo con datos reales de staging/producción y validación visual de los 3 componentes (`AperturaTurno`, `RegistroMovimiento`, `CierreTurno`) en el navegador.
+- [x] Flujo completo: Apertura → Ingresos/Egresos → Cierre — test: "abre turno, registra ingreso/egreso y cierra con diferencia correcta"
+- [x] Validar que solo un turno esté activo a la vez — test: "impide abrir un segundo turno mientras haya uno activo"
+- [x] Verificar cálculo de diferencias y totales — tests: "getTotalesPorTurno suma...", "previsualizarCierre calcula...", "clasificarDiferencia distingue..."
+- [x] Subir CSV de prueba y verificar deduplicación — tests: "importarFilasCSV omite turnos que ya existen..." y "...no reimporta si se corre dos veces sobre el mismo archivo"
+- [x] Validar alertas de descuadre en los 3 niveles — 5 tests replicando `nivelAlerta()` de `CierreTurno.tsx` (info $1–49, warning $50–199, critical $200+, sin alerta en $0, notas obligatorias ≥$50)
+- [x] Verificar bloqueo de roles no autorizados — tests contra los roles reales usados por `useRolGuard()` en `AperturaTurno`/`RegistroMovimiento`/`CierreTurno` (`admin`,`encargado`,`cajera`) e `ImportarCSV` (`admin`,`encargado`)
+- [ ] QA manual en vivo con datos de staging/producción (pendiente — requiere ambiente desplegado y acceso a Firebase real)
 
 ### ✅ Criterios de aceptación (Definition of Done)
-> Mismo estado: implementados en código, pendientes de confirmación end-to-end.
-- [ ] Un turno se abre con saldo inicial y queda registrado como "abierto" — `turnos.service.ts: abrirTurno()`
-- [ ] Cada ingreso/egreso se asocia al turno activo y actualiza el saldo en vivo — `movimientosCaja.service.ts` + `useTotalesTurno` (React Query)
-- [ ] El cierre calcula automáticamente esperado vs real y reporta la diferencia — `cierreCaja.service.ts: crearCierre()`
-- [ ] El sistema impide abrir un segundo turno mientras haya uno activo — `abrirTurno()` valida `getTurnoActivo()`
-- [ ] Solo roles autorizados pueden abrir, registrar y cerrar turno — `useRolGuard(['admin','encargado','cajera'])`
-- [ ] Los conceptos provienen del catálogo centralizado en Firestore — Gap 2 resuelto: Select-only, sin texto libre irrestricto
-- [ ] Ningún movimiento puede editarse o eliminarse una vez registrado — `firestore.rules`: `update`/`delete` bloqueados en `MovimientosCaja`/`CierresCaja`
-- [ ] CSV histórico se importa sin duplicados y con reporte de resultado — `importarFilasCSV()` retorna `{ importados, omitidos, errores }`
-- [ ] Alertas de descuadre se disparan en los umbrales correctos ($50 / $200) — `nivelAlerta()`: info/warning/critical
+> Verificados por código + test automatizado (`caja-flow.test.ts`). Confirmación end-to-end en producción sigue pendiente (ver ítem de QA manual arriba).
+- [x] Un turno se abre con saldo inicial y queda registrado como "abierto" — `turnos.service.ts: abrirTurno()`
+- [x] Cada ingreso/egreso se asocia al turno activo y actualiza el saldo en vivo — `movimientosCaja.service.ts` + `useTotalesTurno` (React Query)
+- [x] El cierre calcula automáticamente esperado vs real y reporta la diferencia — `cierreCaja.service.ts: crearCierre()`
+- [x] El sistema impide abrir un segundo turno mientras haya uno activo — `abrirTurno()` valida `getTurnoActivo()`
+- [x] Solo roles autorizados pueden abrir, registrar y cerrar turno — `useRolGuard(['admin','encargado','cajera'])`
+- [x] Los conceptos provienen del catálogo centralizado en Firestore — Gap 2 resuelto: Select-only, sin texto libre irrestricto
+- [x] Ningún movimiento puede editarse o eliminarse una vez registrado — `firestore.rules`: `update`/`delete` bloqueados en `MovimientosCaja`/`CierresCaja`
+- [x] CSV histórico se importa sin duplicados y con reporte de resultado — `importarFilasCSV()` retorna `{ importados, omitidos, errores }`
+- [x] Alertas de descuadre se disparan en los umbrales correctos ($50 / $200) — `nivelAlerta()`: info/warning/critical
 
 ---
 

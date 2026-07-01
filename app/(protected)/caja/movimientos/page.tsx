@@ -18,6 +18,7 @@ import { useAuthStore } from '@/lib/stores/auth.store';
 import { useRolGuard } from '@/lib/hooks/useRolGuard';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -130,8 +131,10 @@ export default function MovimientosPage() {
 
   if (loadingTurno) {
     return (
-      <div className="container mx-auto p-6 flex justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      <div className="container mx-auto p-6 space-y-6">
+        <Skeleton className="h-8 w-64" />
+        <Skeleton className="h-16 w-full" />
+        <Skeleton className="h-48 w-full" />
       </div>
     );
   }

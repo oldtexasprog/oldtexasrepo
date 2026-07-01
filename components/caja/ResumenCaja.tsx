@@ -14,6 +14,7 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 import { useMovimientosTurno, useTotalesTurno, useEgresosPorConcepto } from '@/lib/hooks/useCaja';
+import { TIPOS_TURNO } from '@/lib/utils/constants';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -156,7 +157,7 @@ export function ResumenCaja({ turno }: ResumenCajaProps) {
           <div className="flex items-center justify-between">
             <span className="text-muted-foreground">Tipo</span>
             <Badge variant={turno.tipo === 'matutino' ? 'default' : 'secondary'}>
-              {turno.tipo === 'matutino' ? '🌅 Matutino' : '🌆 Vespertino'}
+              {TIPOS_TURNO[turno.tipo].icon} {TIPOS_TURNO[turno.tipo].label}
             </Badge>
           </div>
           {turno.resumen.totalPedidos > 0 && (

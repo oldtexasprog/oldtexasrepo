@@ -172,7 +172,8 @@ export default function CajaPage() {
               <p className="font-semibold text-sm">Modo consulta — turno de {turno.cajeroNombre}</p>
               <p className="text-xs mt-0.5 text-blue-600 dark:text-blue-500">
                 Estás viendo el turno activo de otro cajero. Solo {turno.cajeroNombre} puede registrar
-                movimientos o cerrar este turno.
+                nuevos ingresos/egresos o cerrar este turno. Si necesitas corregir un movimiento ya
+                registrado, puedes hacerlo desde <strong>Movimientos</strong>.
               </p>
             </div>
           </div>

@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { format } from 'date-fns';
+import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, subDays } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Search, Download, Filter, Upload, TrendingDown, TrendingUp, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { Turno, TipoTurno } from '@/lib/types/firestore';
 import { turnosService } from '@/lib/services/turnos.service';
+import { TIPOS_TURNO } from '@/lib/utils/constants';
 import { ImportarCSV } from '@/components/caja/ImportarCSV';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,6 +28,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
 import {
   Dialog,
@@ -154,6 +156,18 @@ export function CorteCaja() {
     setBusqueda('');
   };
 
+  // Atajos de rango de fecha — el caso de uso más frecuente de esta pantalla
+  // es "hoy", "esta semana" o "este mes", no elegir dos fechas a mano.
+  const aplicarRango = (desde: Date, hasta: Date) => {
+    setFechaDesde(format(desde, 'yyyy-MM-dd'));
+    setFechaHasta(format(hasta, 'yyyy-MM-dd'));
+  };
+  const rangoHoy = () => aplicarRango(new Date(), new Date());
+  const rangoAyer = () => aplicarRango(subDays(new Date(), 1), subDays(new Date(), 1));
+  const rangoEstaSemana = () =>
+    aplicarRango(startOfWeek(new Date(), { weekStartsOn: 1 }), endOfWeek(new Date(), { weekStartsOn: 1 }));
+  const rangoEsteMes = () => aplicarRango(startOfMonth(new Date()), endOfMonth(new Date()));
+
   const verDetalles = (turno: Turno) => {
     setTurnoSeleccionado(turno);
     setModalAbierto(true);
@@ -236,6 +250,14 @@ export function CorteCaja() {
           <div className="flex items-center gap-2">
             <Filter className="h-5 w-5" />
             <h3 className="text-lg font-semibold">Filtros</h3>
+          </div>
+
+          {/* Atajos de rango — cubren el caso de uso más común sin tocar los date pickers */}
+          <div className="flex flex-wrap gap-2">
+            <Button variant="secondary" size="sm" onClick={rangoHoy}>Hoy</Button>
+            <Button variant="secondary" size="sm" onClick={rangoAyer}>Ayer</Button>
+            <Button variant="secondary" size="sm" onClick={rangoEstaSemana}>Esta semana</Button>
+            <Button variant="secondary" size="sm" onClick={rangoEsteMes}>Este mes</Button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -373,8 +395,10 @@ export function CorteCaja() {
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          <div className="space-y-2">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="h-10 w-full" />
+            ))}
           </div>
         ) : turnosFiltrados.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
@@ -413,8 +437,7 @@ export function CorteCaja() {
                     </TableCell>
                     <TableCell>
                       <Badge variant={turno.tipo === 'matutino' ? 'default' : turno.tipo === 'nocturno' ? 'outline' : 'secondary'}>
-                        {turno.tipo === 'matutino' ? '🌅' : turno.tipo === 'vespertino' ? '🌆' : '🌙'}{' '}
-                        {turno.tipo.charAt(0).toUpperCase() + turno.tipo.slice(1)}
+                        {TIPOS_TURNO[turno.tipo].icon} {TIPOS_TURNO[turno.tipo].label}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-sm">{turno.cajeroNombre}</TableCell>
