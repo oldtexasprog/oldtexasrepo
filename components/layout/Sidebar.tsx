@@ -19,6 +19,7 @@ import {
   PackageOpen,
   BarChart3,
   Wallet,
+  TrendingUp,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -72,6 +73,12 @@ const navigation: NavItem[] = [
     roles: ['admin', 'encargado'],
   },
   // ── Financiero / 2.0 ───────────────────────────────────────────────────────
+  {
+    title: 'Financiero',
+    href: '/financiero',
+    icon: TrendingUp,
+    roles: ['admin', 'encargado'],
+  },
   {
     title: 'Caja',
     href: '/caja',
@@ -192,8 +199,8 @@ export function Sidebar({ isOpen, onClose, isCollapsed, onCollapsedChange }: Sid
                 const Icon = item.icon;
                 const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
 
-                // Insertar label de sección antes de "Caja"
-                const esPrimerFinanciero = item.href === '/caja';
+                // Insertar label de sección antes del primer módulo financiero
+                const esPrimerFinanciero = item.href === '/financiero';
 
                 return (
                   <div key={item.href}>
