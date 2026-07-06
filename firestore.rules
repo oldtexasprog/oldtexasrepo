@@ -514,6 +514,27 @@ service cloud.firestore {
     }
 
     // ========================================================================
+    // COLECCIÓN: MOVIMIENTOSINVENTARIO
+    // ========================================================================
+
+    match /MovimientosInventario/{movId} {
+      allow read: if isAuthenticated() && isActive() && isManager();
+      allow create: if isActive() && isManager();
+      allow update, delete: if isAdmin();
+    }
+
+    // ========================================================================
+    // COLECCIÓN: PROVEEDORES
+    // ========================================================================
+
+    match /Proveedores/{provId} {
+      allow read: if isAuthenticated() && isActive() && isManager();
+      allow create: if isActive() && isManager();
+      allow update: if isActive() && isManager();
+      allow delete: if isAdmin();
+    }
+
+    // ========================================================================
     // COLECCIONES DE IMPORTACIÓN LOYVERSE
     // ========================================================================
 

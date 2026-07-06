@@ -123,6 +123,49 @@ class ProductosService extends BaseService<Producto> {
   }
 
   /**
+   * Registra una venta de producto acumulando cantidad en turno y día.
+   * Llama esto cada vez que se confirma un pedido con este producto.
+   */
+  async registrarVenta(params: {
+    productoId: string;
+    cantidad: number;
+    turnoId: string;   // ej. "turno_2025-07-06_matutino"
+    fecha: string;     // YYYY-MM-DD
+  }): Promise<void> {
+    if (!db) return;
+    const producto = await this.getById(params.productoId);
+    if (!producto) return;
+
+    const porTurno = producto.cantidadVendidaPorTurno ?? {};
+    const porDia   = producto.cantidadVendidaPorDia ?? {};
+
+    porTurno[params.turnoId] = (porTurno[params.turnoId] ?? 0) + params.cantidad;
+    porDia[params.fecha]     = (porDia[params.fecha] ?? 0) + params.cantidad;
+
+    await this.update(params.productoId, {
+      cantidadVendidaPorTurno: porTurno,
+      cantidadVendidaPorDia:   porDia,
+      popularidad: (producto.popularidad ?? 0) + params.cantidad,
+    } as any);
+  }
+
+  /**
+   * Devuelve los N productos más vendidos en un rango de fechas.
+   */
+  async getTopVendidos(fechas: string[], topN = 10): Promise<Array<{ id: string; nombre: string; total: number }>> {
+    const todos = await this.getAll();
+    return todos
+      .map((p) => {
+        const porDia = p.cantidadVendidaPorDia ?? {};
+        const total  = fechas.reduce((s, f) => s + (porDia[f] ?? 0), 0);
+        return { id: p.id, nombre: p.nombre, total };
+      })
+      .filter((p) => p.total > 0)
+      .sort((a, b) => b.total - a.total)
+      .slice(0, topN);
+  }
+
+  /**
    * Configura una promoción en un producto
    */
   async setPromocion(

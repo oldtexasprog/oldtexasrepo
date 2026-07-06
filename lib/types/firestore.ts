@@ -303,6 +303,12 @@ export interface Producto {
 
   // Audit Log
   historialCambios?: CambioProducto[];
+
+  // Rastreo de ventas por turno y por día
+  // { "turno_2025-07-06_matutino": 12, "turno_2025-07-06_vespertino": 8 }
+  cantidadVendidaPorTurno?: Record<string, number>;
+  // { "2025-07-06": 20, "2025-07-05": 15 }
+  cantidadVendidaPorDia?: Record<string, number>;
 }
 
 /**

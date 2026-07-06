@@ -29,10 +29,22 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 
+export type CategoriaConcepto =
+  | 'operacion'     // gastos/ingresos del día a día
+  | 'insumos'       // compras de materias primas
+  | 'nomina'        // sueldos y pagos de personal
+  | 'servicios'     // agua, luz, gas, internet
+  | 'mantenimiento' // reparaciones y equipo
+  | 'ventas'        // ingresos por ventas directas
+  | 'delivery'      // comisiones y cobros de apps
+  | 'otro';
+
 export interface ConceptoFinanciero {
   id: string;
   nombre: string;
   tipo: 'ingreso' | 'egreso';
+  categoria: CategoriaConcepto;
+  descripcion?: string;
   activo: boolean;
   orden?: number;
 }
@@ -98,21 +110,21 @@ export async function eliminarConcepto(id: string): Promise<void> {
 // Llama esta función una sola vez para poblar la colección en un entorno vacío.
 export async function seedConceptos(): Promise<void> {
   const ingresos: Omit<ConceptoFinanciero, 'id'>[] = [
-    { nombre: 'Venta mostrador', tipo: 'ingreso', activo: true, orden: 1 },
-    { nombre: 'Venta delivery', tipo: 'ingreso', activo: true, orden: 2 },
-    { nombre: 'Anticipo cliente', tipo: 'ingreso', activo: true, orden: 3 },
-    { nombre: 'Recuperación faltante', tipo: 'ingreso', activo: true, orden: 4 },
-    { nombre: 'Otro ingreso', tipo: 'ingreso', activo: true, orden: 99 },
+    { nombre: 'Venta mostrador',       tipo: 'ingreso', categoria: 'ventas',     activo: true, orden: 1 },
+    { nombre: 'Venta delivery',        tipo: 'ingreso', categoria: 'delivery',   activo: true, orden: 2 },
+    { nombre: 'Anticipo cliente',      tipo: 'ingreso', categoria: 'ventas',     activo: true, orden: 3 },
+    { nombre: 'Recuperación faltante', tipo: 'ingreso', categoria: 'operacion',  activo: true, orden: 4 },
+    { nombre: 'Otro ingreso',          tipo: 'ingreso', categoria: 'otro',       activo: true, orden: 99 },
   ];
   const egresos: Omit<ConceptoFinanciero, 'id'>[] = [
-    { nombre: 'Compra insumos', tipo: 'egreso', activo: true, orden: 1 },
-    { nombre: 'Pago proveedor', tipo: 'egreso', activo: true, orden: 2 },
-    { nombre: 'Nómina', tipo: 'egreso', activo: true, orden: 3 },
-    { nombre: 'Servicios (agua/luz/gas)', tipo: 'egreso', activo: true, orden: 4 },
-    { nombre: 'Mantenimiento', tipo: 'egreso', activo: true, orden: 5 },
-    { nombre: 'Retiro para depósito', tipo: 'egreso', activo: true, orden: 6 },
-    { nombre: 'Gastos varios', tipo: 'egreso', activo: true, orden: 7 },
-    { nombre: 'Otro egreso', tipo: 'egreso', activo: true, orden: 99 },
+    { nombre: 'Compra insumos',        tipo: 'egreso', categoria: 'insumos',      activo: true, orden: 1 },
+    { nombre: 'Pago proveedor',        tipo: 'egreso', categoria: 'insumos',      activo: true, orden: 2 },
+    { nombre: 'Nómina',                tipo: 'egreso', categoria: 'nomina',       activo: true, orden: 3 },
+    { nombre: 'Servicios (agua/luz/gas)', tipo: 'egreso', categoria: 'servicios', activo: true, orden: 4 },
+    { nombre: 'Mantenimiento',         tipo: 'egreso', categoria: 'mantenimiento',activo: true, orden: 5 },
+    { nombre: 'Retiro para depósito',  tipo: 'egreso', categoria: 'operacion',   activo: true, orden: 6 },
+    { nombre: 'Gastos varios',         tipo: 'egreso', categoria: 'otro',        activo: true, orden: 7 },
+    { nombre: 'Otro egreso',           tipo: 'egreso', categoria: 'otro',        activo: true, orden: 99 },
   ];
   for (const c of [...ingresos, ...egresos]) {
     await crearConcepto(c);
