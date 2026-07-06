@@ -514,6 +514,66 @@ service cloud.firestore {
     }
 
     // ========================================================================
+    // COLECCIONES DE IMPORTACIÓN LOYVERSE
+    // ========================================================================
+
+    // Recibos — detalle por pedido importado desde CSV
+    match /Recibos/{reciboId} {
+      allow read: if isAuthenticated() && isActive() &&
+                     hasAnyRole(['admin', 'encargado', 'cajera']);
+      allow create: if isActive() && isManager();
+      allow update, delete: if isAdmin();
+    }
+
+    // RecibosArticulo — línea a línea de productos por pedido
+    match /RecibosArticulo/{itemId} {
+      allow read: if isAuthenticated() && isActive() &&
+                     hasAnyRole(['admin', 'encargado', 'cajera']);
+      allow create: if isActive() && isManager();
+      allow update, delete: if isAdmin();
+    }
+
+    // ResumenVentas — resumen diario de ventas
+    match /ResumenVentas/{fechaId} {
+      allow read: if isAuthenticated() && isActive() && isManager();
+      allow create: if isActive() && isManager();
+      allow update: if isActive() && isManager();
+      allow delete: if isAdmin();
+    }
+
+    // VentasArticulo — ranking de productos por período
+    match /VentasArticulo/{docId} {
+      allow read: if isAuthenticated() && isActive() && isManager();
+      allow create: if isActive() && isManager();
+      allow update: if isActive() && isManager();
+      allow delete: if isAdmin();
+    }
+
+    // VentasCategoria — ventas por categoría por período
+    match /VentasCategoria/{docId} {
+      allow read: if isAuthenticated() && isActive() && isManager();
+      allow create: if isActive() && isManager();
+      allow update: if isActive() && isManager();
+      allow delete: if isAdmin();
+    }
+
+    // VentasEmpleado — ventas por empleado por período
+    match /VentasEmpleado/{docId} {
+      allow read: if isAuthenticated() && isActive() && isManager();
+      allow create: if isActive() && isManager();
+      allow update: if isActive() && isManager();
+      allow delete: if isAdmin();
+    }
+
+    // VentasModificador — uso de modificadores por período
+    match /VentasModificador/{docId} {
+      allow read: if isAuthenticated() && isActive() && isManager();
+      allow create: if isActive() && isManager();
+      allow update: if isActive() && isManager();
+      allow delete: if isAdmin();
+    }
+
+    // ========================================================================
     // REGLA POR DEFECTO: DENEGAR TODO LO NO ESPECIFICADO
     // ========================================================================
 

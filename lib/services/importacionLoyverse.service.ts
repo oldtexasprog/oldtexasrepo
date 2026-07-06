@@ -240,6 +240,7 @@ async function importarMovimientos(
         tienda: fila.tienda || '',
         tpv: fila.tpv || '',
         numeroCierreLoyverse: fila.numeroCierre || '',
+        usuario_id: importadoPor,
         importadoDesdeCsv: true,
         importadoPor,
         creadoEn: Timestamp.now(),
